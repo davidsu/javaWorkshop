@@ -24,6 +24,6 @@ CREATE TABLE tasks(
     FOREIGN KEY (assignee) REFERENCES usrs(id) ON DELETE RESTRICT,
     FOREIGN KEY (resolved_by) REFERENCES usrs(id) ON DELETE RESTRICT,
     PRIMARY KEY (ID)
-)
+);
 -- populate some basic data
 INSERT INTO usrs VALUES (332519404, 'David Susskind', 'admin');
