@@ -1,2 +1,29 @@
 DROP DATABASE IF EXISTS java_workshop;
 CREATE DATABASE java_workshop;
+use java_workshop;
+
+-- table creation
+CREATE TABLE usrs(
+    id CHAR(9) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE tasks(
+    id int NOT NULL AUTO_INCREMENT,
+    description VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    open_date DATE NOT NULL,
+    exec_date DATE,
+    reporter CHAR(9),
+    assignee CHAR(9),
+    resolved_by CHAR(9),
+    -- you can't delete a user from the database without first assgning its tasks to some other user
+    FOREIGN KEY (reporter) REFERENCES usrs(id) ON DELETE RESTRICT,
+    FOREIGN KEY (assignee) REFERENCES usrs(id) ON DELETE RESTRICT,
+    FOREIGN KEY (resolved_by) REFERENCES usrs(id) ON DELETE RESTRICT,
+    PRIMARY KEY (ID)
+)
+-- populate some basic data
+INSERT INTO usrs VALUES (332519404, 'David Susskind', 'admin');
