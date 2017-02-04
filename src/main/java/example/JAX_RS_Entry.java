@@ -1,4 +1,6 @@
 package example;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 
@@ -42,7 +44,8 @@ public class JAX_RS_Entry {
     }
 
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServerFactory.create("http://localhost:9998/");
+        ResourceConfig rc = new PackagesResourceConfig("example");
+        HttpServer server = HttpServerFactory.create("http://localhost:9998/", rc);
         server.start();
 
         System.out.println("Server running");
