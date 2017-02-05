@@ -40,7 +40,12 @@ public class JAX_RS_Entry {
             e.printStackTrace();
         }
         return null;
+    }
 
+    @GET
+    @Path("/users")
+    public String getUsers(){
+        return "<users>someUser</users>";
     }
 
     public static void main(String[] args) throws IOException {
