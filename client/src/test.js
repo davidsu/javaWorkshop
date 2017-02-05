@@ -3,6 +3,6 @@
  */
 $('#getUsers').click(()=>{
     $.get('users', (data, status) => {
-        $('#response').text(data)
+        $('#response').html(_.escape(data).replace(/\n/gm, '<br>'))
     })
 })

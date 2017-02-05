@@ -3,15 +3,18 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
+import org.w3c.dom.Document;
 
 import java.io.*;
 import java.net.URL;
+import java.sql.SQLException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by davidsu on 01/02/2017.
@@ -45,14 +48,20 @@ public class JAX_RS_Entry {
     @GET
     @Path("/users")
     public String getUsers(){
-        return "<users>someUser</users>";
+        try {
+            Document doc = JDBC.getInstance().getUsrs();
+            return JDBC.toString(doc);
+        } catch (Exception e) {
+            System.out.println("exception in getUsers");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void main(String[] args) throws IOException {
         ResourceConfig rc = new PackagesResourceConfig("example");
         HttpServer server = HttpServerFactory.create("http://localhost:9998/", rc);
         server.start();
-
         System.out.println("Server running");
         System.out.println("Visit: http://localhost:9998/helloworld");
         System.out.println("Hit return to stop...");
