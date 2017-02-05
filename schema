@@ -7,6 +7,8 @@ CREATE TABLE usrs(
     id CHAR(9) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -26,4 +28,8 @@ CREATE TABLE tasks(
     PRIMARY KEY (ID)
 );
 -- populate some basic data
-INSERT INTO usrs VALUES (332519404, 'David Susskind', 'admin');
+INSERT INTO usrs VALUES (332519404, 'David Susskind', 'admin', 'dchamud@gmail.com', 'bla');
+INSERT INTO usrs VALUES (000000001, 'Barak Obama', 'admin', 'barakobama@gmail.com',  'bla');
+INSERT INTO usrs VALUES (000000002, 'Luiz Inacio', 'admin', 'luizinacio@gmail.com', 'bla');
+INSERT INTO usrs VALUES (000000003, 'Alon Dangaur', 'admin', 'alondx2@gmail.com', 'bla');
+INSERT INTO usrs VALUES (000000004, 'benjamin netanyahu', 'admin', 'benjaminnetanyahu@gmail.com', 'bla');
