@@ -31,7 +31,7 @@ public class JAX_RS_Entry {
     }
 
     @GET
-    @Path("/static/{fileName : .+?(html|js|css)}")
+    @Path("/static/{fileName : (.+/?)+(html|js|css)}")
     public InputStream getStaticFile(@PathParam("fileName") String fileName) {
         System.out.println("../" + fileName + ".html");
         URL url = getClass().getResource("../" + fileName);
