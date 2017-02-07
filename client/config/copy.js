@@ -4,7 +4,7 @@ module.exports.tasks = {
             files: [{
                 expand: true,
                 cwd: 'src/',
-                src: ['**'],
+                src: ['**/*.html'],
                 dest: 'target/'
             }]
         },
