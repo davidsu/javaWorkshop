@@ -8,6 +8,11 @@ if [ -n "$SHOULD_INSTALL" ]; then
 
     echo running mvn clean install &&
     mvn clean install
+
+    echo running npm install
+    cd client &&
+    npm i
+    cd ../
 fi
 cd client &&
 npm run build &&
