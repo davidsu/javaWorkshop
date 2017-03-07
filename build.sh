@@ -1,5 +1,6 @@
 #!/bin/bash
-mysql.server start
+set -e
+mysql -uroot -e status || mysql.server start
 SHOULD_INSTALL=$1
 if [ -n "$SHOULD_INSTALL" ]; then
     echo recreating database from schema
@@ -19,4 +20,3 @@ npm run build
 cd ../
 cp -R ./client/target/ src/main/resources
 mvn compile && mvn exec:java -Dexec.mainClass="example.JAX_RS_Entry"
-mysql.server stop
