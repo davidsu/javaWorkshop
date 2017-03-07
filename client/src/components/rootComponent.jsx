@@ -7,6 +7,12 @@ class rootComponent extends React.Component {
         window.rootComponent = this;
     }
 
+    getUsers() {
+        $.get('users', (data, status) => {
+            $('#response').html(_.escape(data).replace(/\n/gm, '<br>'))
+        })
+    }
+
     activePage() {
         switch(window.activeMenu) {
             case 'login':
@@ -15,7 +21,7 @@ class rootComponent extends React.Component {
                 return (
                     <div>
                         <h1>Hello World Html</h1>
-                        <button id="getUsers">getUsers</button>
+                        <button id="getUsers" onClick={this.getUsers}>getUsers</button>
                         <div id="response"></div>
                     </div>
                 );

@@ -6,8 +6,3 @@ ReactDOM.render(
     <RootComponent></RootComponent>,
     $('#root')[0]
 )
-$('#getUsers').click(()=> {
-    $.get('users', (data, status) => {
-        $('#response').html(_.escape(data).replace(/\n/gm, '<br>'))
-    })
-})
