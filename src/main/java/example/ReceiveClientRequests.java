@@ -26,9 +26,9 @@ public class ReceiveClientRequests {
     }
 
     @GET
-    @Path("/static/{fileName : (.+/?)+(html|js|css)}")
+    @Path("/static/{fileName : (.+/?)+(html|js|css|map)}")
     public InputStream getStaticFile(@PathParam("fileName") String fileName) {
-        System.out.println("../" + fileName + ".html");
+        System.out.println("../" + fileName);
         URL url = getClass().getResource("../" + fileName);
         File file = new File(url.getPath());
         try {
