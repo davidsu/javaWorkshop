@@ -1,6 +1,7 @@
 import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
+import Request from './request.jsx'
 class rootComponent extends React.Component {
 
     componentWillMount(){
@@ -17,6 +18,8 @@ class rootComponent extends React.Component {
         switch(window.activeMenu) {
             case 'login':
                 return <SystemLogin></SystemLogin>
+            case 'request':
+                return <Request></Request>
             default:
                 return (
                     <div>
