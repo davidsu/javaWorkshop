@@ -2,6 +2,7 @@ import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
 import Request from './request.jsx'
+import Users from './users.jsx'
 class rootComponent extends React.Component {
 
     componentWillMount(){
@@ -20,6 +21,8 @@ class rootComponent extends React.Component {
                 return <SystemLogin></SystemLogin>
             case 'request':
                 return <Request></Request>
+            case 'users':
+                return <Users users={window.store.users}></Users>
             default:
                 return (
                     <div>
