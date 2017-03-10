@@ -3,6 +3,7 @@ import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
 import Request from './request.jsx'
 import Users from './users.jsx'
+import User from './user.jsx'
 class rootComponent extends React.Component {
 
     componentWillMount(){
@@ -16,16 +17,18 @@ class rootComponent extends React.Component {
     }
 
     activePage() {
-        switch(window.activeMenu) {
-            case 'login':
+        switch(true) {
+            case /login/.test(window.activeMenu):
                 return <SystemLogin></SystemLogin>
-            case 'request':
+            case /request/.test(window.activeMenu):
                 return <Request></Request>
-            case 'users':
+            case /users/.test(window.activeMenu):
                 return <Users users={window.store.users}></Users>
+            case /user:.*/.test(window.activeMenu):
+                return <User user={window.store.user}></User>
             default:
                 return (
-                    <div>
+                    <div className="container row">
                         <h1>Hello World Html</h1>
                         <button id="getUsers" onClick={this.getUsers}>getUsers</button>
                         <div id="response"></div>
@@ -38,9 +41,7 @@ class rootComponent extends React.Component {
         return (
             <div>
                 <NavigationMenu></NavigationMenu>
-                <div className="container">
-                    {this.activePage()}
-                </div>
+                {this.activePage()}
             </div>
         )
     }

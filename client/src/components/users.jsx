@@ -52,6 +52,12 @@ class request extends React.Component {
         this.setState({isFiltering: !this.state.isFiltering})
     }
 
+    tableRowClicked(user) {
+        window.activeMenu = 'user:'
+        window.store.user = user
+        rootComponent.forceUpdate()
+    }
+
     renderTableHeader() {
         //here filtering should be done client side, we expect to get the whole table from the server
         const disabled = {disabled: !this.state.isFiltering}
@@ -93,7 +99,7 @@ class request extends React.Component {
                     return arr.sort((a,b) => self.alphabetical(a[sortKey], b[sortKey]))
                 })
                 .map(user => (
-                <tr key={user.id}>
+                <tr key={user.id} onClick={() => self.tableRowClicked(user)}>
                     <td>{user.id}</td>
                     <td>{user.full_name}</td>
                     <td>{user.type}</td>
