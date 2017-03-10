@@ -14,8 +14,8 @@ class systemLogin extends React.Component {
     render() {
         return (
             <div className="container">
-                <div className="row vertical-offset-100">
-                    <div className="col-md-4 col-md-offset-4">
+                <div className="row" style={{marginTop:120 + 'px'}}>
+                    <div className="col-md-4 col-md-offset-4 ">
                         <div className="panel panel-default">
                             <div className="panel-heading">
                                 <h3 className="panel-title">Please sign in</h3>
