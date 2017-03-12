@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "webpack && copyfiles -u 1 target/*.* ../target/classes",
-    "watch": "onchange 'src/**/*' -- npm run build"
+    "watch": "npm run build; onchange 'src/**/*' -- npm run build"
   },
   "repository": {
     "type": "git",
