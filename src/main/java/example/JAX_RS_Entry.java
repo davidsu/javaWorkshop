@@ -27,7 +27,7 @@ public class JAX_RS_Entry {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        GetUsers us = new GetUsers();
+        Users us = new Users();
         System.out.println(us.getUsers());
         System.out.println("Server running");
         System.out.println("Visit: http://localhost:9998/helloworld");

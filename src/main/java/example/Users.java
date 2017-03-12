@@ -2,14 +2,16 @@ package example;
 
 import org.w3c.dom.Document;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 /**
  * Created by davidsu on 06/03/2017.
  */
 @Path("/users")
-public class GetUsers {
+public class Users {
     @GET
     public String getUsers() {
         System.out.println("this is the new getUsers");
@@ -21,6 +23,16 @@ public class GetUsers {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @POST
+    @Path("/create")
+    @Consumes("application/xml")
+    public String createUser(String incomingXML){
+        //todo add this user to the database
+        System.out.println("/users/create");
+        System.out.println(incomingXML);
+        return incomingXML;
     }
 
     @GET
