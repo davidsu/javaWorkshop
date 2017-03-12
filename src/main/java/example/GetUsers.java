@@ -14,7 +14,7 @@ public class GetUsers {
     public String getUsers() {
         System.out.println("this is the new getUsers");
         try {
-            Document doc = JDBC.getInstance().getUsrs();
+            Document doc = JDBC.getInstance().getUsers();
             return JDBC.toString(doc);
         } catch (Exception e) {
             System.out.println("exception in getUsers");

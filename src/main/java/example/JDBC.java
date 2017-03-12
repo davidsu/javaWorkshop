@@ -47,7 +47,7 @@ public class JDBC {
 
     }
 
-    public Document getUsrs() throws SQLException, ParserConfigurationException {
+    public Document getUsers() throws SQLException, ParserConfigurationException {
         Statement stmt;
         ResultSet rs;
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -60,7 +60,7 @@ public class JDBC {
 
 
         stmt = conn.createStatement();
-        rs = stmt.executeQuery("SELECT * FROM usrs");
+        rs = stmt.executeQuery("SELECT * FROM users");
         while(rs.next()){
             rootElement.appendChild(generateUserElement(rs, doc));
         }
@@ -87,7 +87,7 @@ public class JDBC {
     public static void main(String[] args) {
         try {
             JDBC jdbc = new JDBC();
-            Document doc = jdbc.getUsrs();
+            Document doc = jdbc.getUsers();
             System.out.println(toString(doc));
         } catch (Exception ex) {
             System.out.println("threw exception");
