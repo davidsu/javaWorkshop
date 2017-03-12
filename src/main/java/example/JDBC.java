@@ -13,6 +13,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 public class JDBC {
     private Connection conn;
@@ -66,6 +67,34 @@ public class JDBC {
         }
         return doc;
     }
+
+    /*
+    SP Parameters:
+        IN taskTypeId int,
+        IN productId int,
+        IN envId int,
+        IN requesterId int,
+        IN priority int,
+        IN open_date DATE,
+        IN status VARCHAR(20),
+        IN qaGO bool,
+        IN rollBack bool,
+        IN urgent bool,
+        IN additionalInfoText TEXT
+     */
+    public boolean saveTask(Task task) throws SQLException, ParserConfigurationException
+    {
+        Statement stmt;
+        ResultSet rs;
+        stmt = conn.createStatement();
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(task.getOpenDate());
+        String sqlCommand = String.format("CALL addTask (%1s,%2s,%3s,%4s,%5s,'%6s','%7s',%8s,%9s,%10s,'%11s')",
+                task.getTaskTypeId(),task.getProductId(),task.getEnvId(), task.getRequesterId(), task.getPriority(),
+                date, task.getStatus(), task.getQaGo(), task.getRollback(), task.getUrgent(), task.getAdditionalInfo());
+        stmt.execute(sqlCommand);
+        return true;
+    }
+
 
     public static String toString(Document doc) {
         try {
