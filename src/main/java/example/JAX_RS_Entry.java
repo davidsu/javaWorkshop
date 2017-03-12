@@ -17,11 +17,16 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class JAX_RS_Entry {
-
     public static void main(String[] args) throws IOException {
         ResourceConfig rc = new PackagesResourceConfig("example");
         HttpServer server = HttpServerFactory.create("http://localhost:9998/", rc);
         server.start();
+        Task task = new Task(1, 2, 2, 1, 3, "11/03/2017", null, "New", true, true, false,"just a test");
+        try {
+            JDBC.getInstance().saveTask(task);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         GetUsers us = new GetUsers();
         System.out.println(us.getUsers());
         System.out.println("Server running");

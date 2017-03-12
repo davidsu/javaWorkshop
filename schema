@@ -106,7 +106,6 @@ BEGIN
          BEGIN
             INSERT INTO additionalInfo (information) VALUES (additionalInfoText);
             SET additionalInfoId = LAST_INSERT_ID();
-            SELECT additionalInfoId;
          END;
      END IF;
      INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priority,open_date,exec_date,status,qaGO,rollBack,urgent,additionalInfoId,assigneeId,resolved_by_Id)
