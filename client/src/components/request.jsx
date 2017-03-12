@@ -36,7 +36,7 @@ class request extends React.Component {
                     <div className="panel panel-primary filterable">
                         <div className="panel-heading">
                             <h3 className="panel-title">Requests List</h3>
-                            <div className="pull-right">
+                            <div className="pull-right table-filter-btn">
                                 <button className="btn btn-default btn-xs btn-filter" onClick={this.filterButtonClicked}><span
                                     className="glyphicon glyphicon-filter"></span> Filter
                                 </button>

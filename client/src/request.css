@@ -1,7 +1,7 @@
 .filterable {
     margin-top: 15px;
 }
-.pull-right {
+.table-filter-btn {
     margin-top: -20px;
 }
 .filterable .filters input[disabled] {

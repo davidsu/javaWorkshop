@@ -2,6 +2,12 @@ import React from 'react'
 
 window.activeMenu = '';
 class navigationMenu extends React.Component {
+    constructor() {
+        super();
+        if(window.activeMenu === 'users' && !window.store.users){
+            this.setActiveMenu('users');
+        }
+    }
 
     setActiveMenu(activeMenu) {
         switch(activeMenu){

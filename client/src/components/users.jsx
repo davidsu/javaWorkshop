@@ -111,15 +111,25 @@ class request extends React.Component {
         )
     }
 
+    addUser() {
+        window.store.user = _.reduce(columns, (acc, val) => {
+            acc[val] = '';
+            return acc;
+        }, {})
+        window.activeMenu = 'user:'
+        rootComponent.forceUpdate()
+    }
+
     render() {
         return (
             <div className="container">
                 <div className="row">
-                    <div className="panel panel-primary filterable">
+                    <button className="btn btn-default text-right" style={{float: 'right'}} onClick={this.addUser}>Add User</button>
+                    <div className="panel panel-primary filterable" style={{marginTop: '50px'}}>
                         <div className="panel-heading">
                             <h3 className="panel-title">Users</h3>
 
-                            <div className="pull-right">
+                            <div className="pull-right table-filter-btn">
                                 <button className="btn btn-default btn-xs btn-filter"
                                         onClick={this.filterButtonClicked}><span
                                     className="glyphicon glyphicon-filter"></span> Filter
