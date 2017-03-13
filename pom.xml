@@ -13,19 +13,43 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+
     <dependencies>
+
+        <!-- jetty -->
         <dependency>
-            <groupId>com.sun.jersey</groupId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-deploy</artifactId>
+            <version>9.2.0.M1</version>
+        </dependency>
+
+
+        <!-- jersey -->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.19</version>
-            <scope>compile</scope>
+            <version>2.7</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.net.httpserver</groupId>
-            <artifactId>http</artifactId>
-            <version>20070405</version>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.7</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http</artifactId>
+            <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>2.7</version>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
