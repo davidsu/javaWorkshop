@@ -3,18 +3,8 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
-import org.w3c.dom.Document;
 
 import java.io.*;
-import java.net.URL;
-import java.sql.SQLException;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.xml.parsers.ParserConfigurationException;
 
 public class JAX_RS_Entry {
     public static void main(String[] args) throws IOException {
