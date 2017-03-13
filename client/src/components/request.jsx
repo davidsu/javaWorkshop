@@ -2,11 +2,11 @@ import React from 'react'
 import _ from 'lodash'
 //see example here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
 const columns = [
-    'ID',
-    'Type',
-    'Open Date',
-    'Status',
-    'Exec. Date'
+    'id',
+    'taskType',
+    'open_date',
+    'status',
+    'exec_date'
 ];
 class request extends React.Component {
     constructor() {
@@ -18,7 +18,7 @@ class request extends React.Component {
         this.setState({isFiltering: !this.state.isFiltering})
     }
 
-    renderFilters() {
+    renderTableHeader() {
         const disabled = {disabled: !this.state.isFiltering}
         return (
             <thead>
@@ -26,6 +26,21 @@ class request extends React.Component {
                 {_.map(columns, val => <th  key={val}><input type="text" className="form-control" placeholder={val} {...disabled}/></th> )}
             </tr>
             </thead>
+        )
+    }
+
+    renderTableBody(){
+
+        return (
+            <tbody>
+            {_.map(window.store.tasks, val => {
+                return (
+                    <tr>
+                        {_.map(columns, colName => <td>{val[colName]}</td>)}
+                    </tr>
+                )
+            })}
+            </tbody>
         )
     }
 
@@ -43,30 +58,9 @@ class request extends React.Component {
                             </div>
                         </div>
                         <table className="table">
-                            {this.renderFilters()}
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Install</td>
-                                <td>10.1.2017</td>
-                                <td>new</td>
-                                <td>20.1.2017</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Config</td>
-                                <td>10.1.2017</td>
-                                <td>done</td>
-                                <td>20.1.2017</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Config</td>
-                                <td>10.1.2017</td>
-                                <td>expired</td>
-                                <td>20.1.2017</td>
-                            </tr>
-                            </tbody>
+                            {this.renderTableHeader()}
+                            {this.renderTableBody()}
+
                         </table>
                     </div>
                 </div>

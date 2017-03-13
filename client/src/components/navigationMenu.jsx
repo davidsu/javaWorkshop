@@ -18,6 +18,12 @@ class navigationMenu extends React.Component {
                     rootComponent.forceUpdate();
                 })
                 break;
+            case 'request':
+                ajax.getTasks(() => {
+                    window.activeMenu = activeMenu;
+                    rootComponent.forceUpdate();
+                })
+                break;
             default:
                 window.activeMenu = activeMenu;
                 rootComponent.forceUpdate();

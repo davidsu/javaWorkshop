@@ -12,6 +12,25 @@ function jsonToXml(jsonObj){
     return xmlString;
 }
 
+function xmlToJsonArray(data, elementName){
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(data, 'text/xml');
+    const result = _.map(xmlDoc.getElementsByTagName(elementName), userElement => {
+        return _.reduce(userElement.children, (acc, child)=>{
+            acc[child.tagName] = child.textContent
+            return acc
+        }, {})
+    })
+    return result;
+}
+
+function getTasks(callback = _.noop){
+    $.get('tasks', (data, status) => {
+        window.store.tasks = xmlToJsonArray(data, 'task')
+        callback();
+    })
+}
+
 function createUser(user, callback){
     console.log(jsonToXml(user));
     $.ajax({
@@ -22,25 +41,11 @@ function createUser(user, callback){
         contentType: "application/xml",
         dataType: 'json'
     });
-    //$.post('users/create', JSON.stringify(user), () => {
-    //    window.activeMenu = 'users'
-    //    rootComponent.forceUpdate()
-    //}, 'application/json')
 }
 
 function getUsers(callback) {
     $.get('users', (data, status) => {
-        const parser = new DOMParser()
-        const xmlDoc = parser.parseFromString(data, 'text/xml');
-        window.store.users = _.map(xmlDoc.getElementsByTagName('user'), userElement => {
-            return {
-                id: userElement.querySelector('id').textContent,
-                full_name: userElement.querySelector('full_name').textContent,
-                type: userElement.querySelector('type').textContent,
-                email: userElement.querySelector('email').textContent,
-                password: userElement.querySelector('password').textContent,
-            }
-        })
+        window.store.users = xmlToJsonArray(data, 'user')
         callback();
     })
 }
@@ -52,5 +57,6 @@ function updateUser() {
 module.exports = {
     createUser,
     getUsers,
+    getTasks,
     updateUser
 }

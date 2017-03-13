@@ -1,5 +1,6 @@
 package example;
 
+import org.glassfish.jersey.server.ManagedAsync;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.Consumes;
@@ -17,7 +18,7 @@ public class Users {
         System.out.println("this is the new getUsers");
         try {
             Document doc = JDBC.getInstance().getUsers();
-            return JDBC.toString(doc);
+            return Utils.DocumentToString(doc);
         } catch (Exception e) {
             System.out.println("exception in getUsers");
             e.printStackTrace();
@@ -61,8 +62,9 @@ public class Users {
 
     @GET
     @Path("/boo")
-    public String boo() {
+    public String boo() throws InterruptedException {
+        Thread.sleep(3000);
         System.out.println("this is the new getUsers");
-        return "hey look at me :)";
+        return "hey look at me :)\n";
     }
 }
