@@ -25,14 +25,38 @@ public class Users {
         return null;
     }
 
+//    @GET
+//    public void getUsers(@Suspended final AsyncResponse asyncResponse) {
+//        new Thread(() -> {
+//            System.out.println("this is the new getUsers");
+//            try {
+//                Document doc = JDBC.getInstance().getUsers();
+//                asyncResponse.resume(JDBC.toString(doc));
+//            } catch (Exception e) {
+//                System.out.println("exception in getUsers");
+//                e.printStackTrace();
+//            }
+//            asyncResponse.resume(null);
+//        }).start();
+//    }
+
     @POST
     @Path("/create")
     @Consumes("application/xml")
-    public String createUser(String incomingXML){
+    public void createUser(String incomingXML){
         //todo add this user to the database
-        System.out.println("/users/create");
-        System.out.println(incomingXML);
-        return incomingXML;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    System.out.println("/users/create");
+                    System.out.println(incomingXML);
+                    Document doc = Utils.createDocumentFromString(incomingXML);
+                    JDBC.getInstance().addUser(doc);
+                }catch(Exception e){}
+            }
+        }).start();
+
     }
 
     @GET

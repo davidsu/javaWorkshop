@@ -12,16 +12,13 @@ function jsonToXml(jsonObj){
     return xmlString;
 }
 
-function createUser(user){
+function createUser(user, callback){
     console.log(jsonToXml(user));
     $.ajax({
         type: 'POST',
         url: 'users/create',
         data: jsonToXml(user),
-        success: () => {
-            window.activeMenu = 'users'
-            rootComponent.forceUpdate()
-        },
+        success: callback,
         contentType: "application/xml",
         dataType: 'json'
     });
@@ -31,11 +28,29 @@ function createUser(user){
     //}, 'application/json')
 }
 
+function getUsers(callback) {
+    $.get('users', (data, status) => {
+        const parser = new DOMParser()
+        const xmlDoc = parser.parseFromString(data, 'text/xml');
+        window.store.users = _.map(xmlDoc.getElementsByTagName('user'), userElement => {
+            return {
+                id: userElement.querySelector('id').textContent,
+                full_name: userElement.querySelector('full_name').textContent,
+                type: userElement.querySelector('type').textContent,
+                email: userElement.querySelector('email').textContent,
+                password: userElement.querySelector('password').textContent,
+            }
+        })
+        callback();
+    })
+}
+
 function updateUser() {
 
 }
 
 module.exports = {
     createUser,
+    getUsers,
     updateUser
 }

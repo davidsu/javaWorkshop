@@ -68,6 +68,21 @@ public class JDBC {
         return doc;
     }
 
+    public void addUser(Document doc) throws SQLException {
+        String values = "";
+        values += "'" + doc.getElementsByTagName("full_name").item(0).getTextContent() + "', ";
+        values += "'" + doc.getElementsByTagName("type").item(0).getTextContent() + "' ,";
+        values += "'" + doc.getElementsByTagName("email").item(0).getTextContent() + "' ,";
+        values += "'" + doc.getElementsByTagName("password").item(0).getTextContent() + "'";
+        String sql = "INSERT INTO users (full_name,type,email,password) VALUES (" + values + ");";
+        System.out.println(sql);
+        try {
+            conn.createStatement().executeUpdate(sql);
+        } catch (Exception e) {
+            System.out.println("Exception:\n" + e);
+        }
+    }
+
     /*
     SP Parameters:
         IN taskTypeId int,

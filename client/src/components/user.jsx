@@ -25,12 +25,21 @@ class user extends React.Component{
                 const elem = document.getElementById('user'+key);
                 acc[key] = elem.value;
                 return acc;
-            }, {}));
+            }, {}), () => {
+                _.defer(() => {
+                    ajax.getUsers(() => {
+                        window.activeMenu = 'users';
+                        rootComponent.forceUpdate();
+                    })
+                })
+
+            });
         } else {
             ajax.updateUser();
+            window.activeMenu = 'users';
+            rootComponent.forceUpdate();
         }
-        window.activeMenu = 'users';
-        rootComponent.forceUpdate();
+
     }
 
     componentDidMount() {
