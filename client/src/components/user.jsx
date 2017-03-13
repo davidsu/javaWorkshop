@@ -26,12 +26,12 @@ class user extends React.Component{
                 acc[key] = elem.value;
                 return acc;
             }, {}), () => {
-                _.defer(() => {
+                setTimeout(() => {
                     ajax.getUsers(() => {
                         window.activeMenu = 'users';
                         rootComponent.forceUpdate();
                     })
-                })
+                }, 200)
 
             });
         } else {
