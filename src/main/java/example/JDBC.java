@@ -20,8 +20,8 @@ public class JDBC {
 
     private static JDBC instance = null;
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop", "root", "");
+        Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
     }
 
     public static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
