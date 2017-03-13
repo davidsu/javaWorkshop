@@ -35,8 +35,8 @@ public class Users {
 //            } catch (Exception e) {
 //                System.out.println("exception in getUsers");
 //                e.printStackTrace();
+//                asyncResponse.resume(null);
 //            }
-//            asyncResponse.resume(null);
 //        }).start();
 //    }
 
