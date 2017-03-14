@@ -18,7 +18,7 @@ class navigationMenu extends React.Component {
                     rootComponent.forceUpdate();
                 })
                 break;
-            case 'request':
+            case 'requests':
                 ajax.getTasks(() => {
                     window.activeMenu = activeMenu;
                     rootComponent.forceUpdate();
@@ -36,8 +36,8 @@ class navigationMenu extends React.Component {
                 <div className="container">
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
-                            <li className={activeMenu === 'request' ? 'active' : ''}>
-                                <a onClick={()=>this.setActiveMenu('request')}>Request List</a>
+                            <li className={activeMenu === 'requests' ? 'active' : ''}>
+                                <a onClick={()=>this.setActiveMenu('requests')}>Request List</a>
                             </li>
                             <li className={activeMenu === 'admin' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('admin')}>Admin</a>

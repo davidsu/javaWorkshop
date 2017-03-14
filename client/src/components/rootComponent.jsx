@@ -1,7 +1,7 @@
 import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
-import Request from './request.jsx'
+import Requests from './requests.jsx'
 import Users from './users.jsx'
 import User from './user.jsx'
 class rootComponent extends React.Component {
@@ -21,7 +21,7 @@ class rootComponent extends React.Component {
             case /login/.test(window.activeMenu):
                 return <SystemLogin></SystemLogin>
             case /request/.test(window.activeMenu):
-                return <Request tasks={window.store.tasks}></Request>
+                return <Requests tasks={window.store.tasks}></Requests>
             case /users/.test(window.activeMenu):
                 return <Users users={window.store.users}></Users>
             case /user:.*/.test(window.activeMenu):
