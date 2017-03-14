@@ -21,7 +21,7 @@ class rootComponent extends React.Component {
             case /login/.test(window.activeMenu):
                 return <SystemLogin></SystemLogin>
             case /request/.test(window.activeMenu):
-                return <Request></Request>
+                return <Request tasks={window.store.tasks}></Request>
             case /users/.test(window.activeMenu):
                 return <Users users={window.store.users}></Users>
             case /user:.*/.test(window.activeMenu):

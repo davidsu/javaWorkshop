@@ -76,7 +76,7 @@ class filterableTable extends React.Component{
             {_(self.props.items)
                 .filter(item => {
                     return _.every(item, (value = '', key = '0') => {
-                        return value.indexOf(self.state.filters[key]) > -1})
+                        return !self.state.filters[key] || value.indexOf(self.state.filters[key]) > -1})
                 })
                 .thru(arr => {
                     const sortKey = self.state.sort
