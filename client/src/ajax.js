@@ -24,7 +24,7 @@ function xmlToJsonArray(data, elementName){
     return result;
 }
 
-function getTasks(callback = _.noop){
+function getTasks(callback){
     $.get('tasks', (data, status) => {
         window.store.tasks = xmlToJsonArray(data, 'task')
         callback();
