@@ -17,6 +17,9 @@ class requests extends React.Component {
     }
 
     tableRowClicked(task){
+        window.store.task = task;
+        window.activeMenu = 'task:'
+        rootComponent.forceUpdate();
         console.log('tableRowClicked: ', task);
     }
 

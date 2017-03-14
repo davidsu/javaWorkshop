@@ -25,3 +25,8 @@
 .filters input:not([disabled]) {
     margin-left: -5px;
 }
+
+
+.control-label{
+    color:#999
+}

@@ -2,6 +2,7 @@ import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
 import Requests from './requests.jsx'
+import Request from './request.jsx'
 import Users from './users.jsx'
 import User from './user.jsx'
 class rootComponent extends React.Component {
@@ -26,6 +27,8 @@ class rootComponent extends React.Component {
                 return <Users users={window.store.users}></Users>
             case /user:.*/.test(window.activeMenu):
                 return <User user={window.store.user}></User>
+            case /task:.*/.test(window.activeMenu):
+                return <Request task={window.store.task}></Request>
             default:
                 return (
                     <div className="container row">
