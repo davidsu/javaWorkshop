@@ -50,15 +50,13 @@ public class JDBC {
         ResultSet rs;
 
         stmt = conn.createStatement();
-        String sql = "" +
-                "select * from tasks " +
-                "natural join users " +
-                "natural join taskTypes " +
-                "natural join products " +
-                "natural join environments;";
-        rs = stmt.executeQuery(sql);
+        String _sql = "select * from tasks t " +
+                "join taskTypes tt on t.taskTypeId = tt.id " +
+                "join products p on t.productId=p.id " +
+                "join environments e on t.envId = e.id " +
+                "join additionalInfo a on t.additionalInfoId=a.id;";
+        rs = stmt.executeQuery(_sql);
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
-
     }
     /*
     SP Parameters:
