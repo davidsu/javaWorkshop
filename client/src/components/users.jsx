@@ -9,7 +9,7 @@ const columns = [
     'email',
     'password'
 ];
-class request extends React.Component {
+class users extends React.Component {
     tableRowClicked(user) {
         window.activeMenu = 'user:'
         window.store.user = user
@@ -40,4 +40,4 @@ class request extends React.Component {
         )
     }
 }
-module.exports = request
+module.exports = users
