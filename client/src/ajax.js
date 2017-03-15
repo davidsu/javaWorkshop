@@ -36,9 +36,10 @@ function getTask(taskId, callback){
         const usersArray = xmlToJsonArray(data, 'user')
         window.store.task = {
             task: xmlToJsonArray(data, 'task')[0],
-            taskTypes: xmlToJsonArray(data, 'taskType'),
-            products: xmlToJsonArray(data, 'taskType'),
+            taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
+            products: xmlToJsonArray(data, 'product'),
             environments: xmlToJsonArray(data, 'environment'),
+            additionalInfos: xmlToJsonArray(data, 'additionalInfo'),
             users: xmlToJsonArray(data, 'user')
         }
         callback()

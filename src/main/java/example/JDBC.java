@@ -58,7 +58,7 @@ public class JDBC {
         stmt = conn.createStatement();
         _sql = "select * from taskTypes";
         rs = stmt.executeQuery(_sql);
-        Document taskTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "taskType", "taskTypes");
+        Document taskTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "taskTypeEntry", "taskTypes");
 
         stmt = conn.createStatement();
         _sql = "select * from products";
@@ -71,11 +71,16 @@ public class JDBC {
         Document environmentsDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "environment", "environments");
 
         stmt = conn.createStatement();
+        _sql = "select * from additionalInfo";
+        rs = stmt.executeQuery(_sql);
+        Document additionalInfoDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "additionalInfo", "additionalInfos");
+
+        stmt = conn.createStatement();
         _sql = "select id, full_name, email from users";
         rs = stmt.executeQuery(_sql);
         Document usersDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user", "users");
 
-        Document[] docs = {tasksDoc, taskTypesDoc, productsDoc, environmentsDoc, usersDoc};
+        Document[] docs = {tasksDoc, taskTypesDoc, productsDoc, environmentsDoc, additionalInfoDoc, usersDoc};
         return Utils.mergeDocs(docs);
 
     }

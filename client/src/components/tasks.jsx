@@ -11,7 +11,7 @@ const columns = [
     'status',
     'exec_date'
 ];
-class requests extends React.Component {
+class tasks extends React.Component {
 
     addTask() {
         console.log('add task clicked' )
@@ -33,7 +33,7 @@ class requests extends React.Component {
                     onAddItem={this.addTask}
                     addItemDisplayName='Add Task'
                     columns={columns}
-                    panelTitle='Requests'
+                    panelTitle='tasks'
                     onTableRowClicked={this.tableRowClicked}
                     items={this.props.tasks}>
                 </FilterableTable>
@@ -41,4 +41,4 @@ class requests extends React.Component {
         )
     }
 }
-module.exports = requests
+module.exports = tasks

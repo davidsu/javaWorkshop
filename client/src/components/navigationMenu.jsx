@@ -5,9 +5,7 @@ window.activeMenu = '';
 class navigationMenu extends React.Component {
     constructor() {
         super();
-        if(window.activeMenu === 'users' && !window.store.users){
-            this.setActiveMenu('users');
-        }
+        this.setActiveMenu(window.activeMenu);
     }
 
     setActiveMenu(activeMenu) {
@@ -18,7 +16,7 @@ class navigationMenu extends React.Component {
                     rootComponent.forceUpdate();
                 })
                 break;
-            case 'requests':
+            case 'tasks':
                 ajax.getTasks(() => {
                     window.activeMenu = activeMenu;
                     rootComponent.forceUpdate();
@@ -28,7 +26,6 @@ class navigationMenu extends React.Component {
                 window.activeMenu = activeMenu;
                 rootComponent.forceUpdate();
         }
-
     }
     render() {
         return (
@@ -36,8 +33,8 @@ class navigationMenu extends React.Component {
                 <div className="container">
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
-                            <li className={activeMenu === 'requests' ? 'active' : ''}>
-                                <a onClick={()=>this.setActiveMenu('requests')}>Request List</a>
+                            <li className={activeMenu === 'tasks' ? 'active' : ''}>
+                                <a onClick={()=>this.setActiveMenu('tasks')}>Request List</a>
                             </li>
                             <li className={activeMenu === 'admin' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('admin')}>Admin</a>
