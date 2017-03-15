@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import FilterableTable from './filterableTable.jsx'
+import ajax from '../ajax.js'
 
 //see example here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
 const columns = [
@@ -18,8 +19,10 @@ class requests extends React.Component {
 
     tableRowClicked(task){
         window.store.task = task;
-        window.activeMenu = 'task:'
-        rootComponent.forceUpdate();
+        ajax.getTask(task.id, () => {
+            window.activeMenu = 'task:'
+            rootComponent.forceUpdate();
+        })
         console.log('tableRowClicked: ', task);
     }
 

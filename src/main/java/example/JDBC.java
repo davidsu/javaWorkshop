@@ -45,16 +45,55 @@ public class JDBC {
         }
     }
 
+    public Document getTask(String taskId) throws SQLException, ParserConfigurationException{
+        Statement stmt;
+        ResultSet rs;
+        String _sql;
+
+        stmt = conn.createStatement();
+        _sql = "select * from tasks where id = " + taskId;
+        rs = stmt.executeQuery(_sql);
+        Document tasksDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task", "tasks");
+
+        stmt = conn.createStatement();
+        _sql = "select * from taskTypes";
+        rs = stmt.executeQuery(_sql);
+        Document taskTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "taskType", "taskTypes");
+
+        stmt = conn.createStatement();
+        _sql = "select * from products";
+        rs = stmt.executeQuery(_sql);
+        Document productsDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "product", "products");
+
+        stmt = conn.createStatement();
+        _sql = "select * from environments";
+        rs = stmt.executeQuery(_sql);
+        Document environmentsDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "environment", "environments");
+
+        stmt = conn.createStatement();
+        _sql = "select id, full_name, email from users";
+        rs = stmt.executeQuery(_sql);
+        Document usersDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user", "users");
+
+        Document[] docs = {tasksDoc, taskTypesDoc, productsDoc, environmentsDoc, usersDoc};
+        return Utils.mergeDocs(docs);
+
+    }
+
     public Document getTasks() throws SQLException, ParserConfigurationException{
         Statement stmt;
         ResultSet rs;
 
         stmt = conn.createStatement();
-        String _sql = "select * from tasks t " +
-                "join taskTypes tt on t.taskTypeId = tt.id " +
-                "join products p on t.productId=p.id " +
-                "join environments e on t.envId = e.id " +
-                "join additionalInfo a on t.additionalInfoId=a.id;";
+//        String _sql = "select * from tasks t " +
+//                "join taskTypes tt on t.taskTypeId = tt.id " +
+//                "join products p on t.productId=p.id " +
+//                "join environments e on t.envId = e.id " +
+//                "join additionalInfo a on t.additionalInfoId=a.id;";
+        String _sql = "" +
+                "select t.id, open_date, status, exec_date, taskType " +
+                "from tasks t " +
+                "join taskTypes tt on t.taskTypeId = tt.id";
         rs = stmt.executeQuery(_sql);
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
     }

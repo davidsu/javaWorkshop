@@ -31,6 +31,20 @@ function getTasks(callback){
     })
 }
 
+function getTask(taskId, callback){
+    $.get('tasks/'+taskId, (data, status) => {
+        const usersArray = xmlToJsonArray(data, 'user')
+        window.store.task = {
+            task: xmlToJsonArray(data, 'task')[0],
+            taskTypes: xmlToJsonArray(data, 'taskType'),
+            products: xmlToJsonArray(data, 'taskType'),
+            environments: xmlToJsonArray(data, 'environment'),
+            users: xmlToJsonArray(data, 'user')
+        }
+        callback()
+    })
+}
+
 function createUser(user, callback){
     console.log(jsonToXml(user));
     $.ajax({
@@ -57,6 +71,7 @@ function updateUser() {
 module.exports = {
     createUser,
     getUsers,
+    getTask,
     getTasks,
     updateUser
 }
