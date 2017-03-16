@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
  */
 @Path("/users")
 public class Users {
+    //todo return proper errors to client when failing
     @GET
     public String getUsers() {
         System.out.println("this is the new getUsers");

@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 // The Java class will be hosted at the URI path "/helloworld"
 @Path("/")
 public class ReceiveClientRequests {
+    //todo return proper errors to client when failing
     // The Java method will process HTTP GET requests
     @GET
     // The Java method will produce content identified by the MIME Media type "text/plain"
