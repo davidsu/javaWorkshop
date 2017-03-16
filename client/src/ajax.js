@@ -45,6 +45,17 @@ function getTask(taskId, callback){
         callback()
     })
 }
+function updateTask(taskObj, callback){
+    console.log(jsonToXml(taskObj));
+    $.ajax({
+        type: 'POST',
+        url: 'tasks/createOrUpdate',
+        data: jsonToXml(taskObj),
+        success: callback,
+        contentType: "application/xml",
+        dataType: 'json'
+    });
+}
 
 function createUser(user, callback){
     console.log(jsonToXml(user));
@@ -71,8 +82,9 @@ function updateUser() {
 
 module.exports = {
     createUser,
-    getUsers,
     getTask,
     getTasks,
+    getUsers,
+    updateTask,
     updateUser
 }

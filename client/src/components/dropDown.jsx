@@ -3,7 +3,7 @@ import React from 'react'
 class dropDown extends React.Component{
     render(){
         return(
-            <div>
+            <div className="col-sm-12" style={{padding:0}}>
                 <label className="col-sm-4 control-label">{this.props.label}</label>
                 <div className="col-sm-8">
                     <select className="form-control" value={this.props.value} onChange={this.props.onChange}>

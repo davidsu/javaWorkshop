@@ -1,5 +1,7 @@
 import React from 'react'
 import DropDown from './dropDown.jsx'
+import CheckBox from './checkbox.jsx'
+import ajax from '../ajax.js'
 function isEmptyTask(){return false;}
 
 class task extends React.Component {
@@ -7,37 +9,46 @@ class task extends React.Component {
         super(props)
         console.log(props)
         this.state = {
-            id: props.task.id,
-            taskTypeId: props.task.taskTypeId,
-            productId: props.task.productId,
-            envId: props.task.envId,
-            requesterId: props.task.requesterId,
+            id: props.task.id,//used
+            taskTypeId: props.task.taskTypeId,//used
+            productId: props.task.productId,//used
+            envId: props.task.envId,//used
+            requesterId: props.task.requesterId,//used
             priority: props.task.priority,
-            open_date: props.task.open_date,
+            open_date: props.task.open_date,//used
             exec_date: props.task.exec_date,
-            status: props.task.status,
-            qaGO: props.task.qaGO,
-            rollBack: props.task.rollBack,
-            urgent: props.task.urgent,
-            additionalInfoId: props.task.additionalInfoId,
+            status: props.task.status,//used
+            qaGO: !!props.task.qaGO,//used
+            rollBack: !!props.task.rollBack,//used
+            urgent: !!props.task.urgent,//used
+            additionalInfoId: props.task.additionalInfoId,//used
             assigneeId: props.task.assigneeId,
-            resolved_by_Id: props.task.resolved_by_Id
+            resolved_by_Id: props.task.resolved_by_Id,
+            additionalInfoText: _.get(_.find(props.additionalInfos, {id: this.props.task.additionalInfoId}), 'information')//used
         }
-        const self = this;
-        this.typeChange = e => self.setState({taskTypeId: e.target.value})
-        this.productChange = e => self.setState({productId: e.target.value})
-        this.environmentChange = e => self.setState({envId: e.target.value})
-        this.requesterChange = e => self.setState({requesterId: e.target.value})
-        this.priorityChange = e => self.setState({priority: e.target.value})
-        this.statusChange = e => self.setState({status: e.target.value})
-        this.executionDateChange = e => self.setState({exec_date: e.target.value})
+        this.submitClicked = this.submitClicked.bind(this)
+        this.typeChange = e => this.setState({taskTypeId: e.target.value})
+        this.productChange = e => this.setState({productId: e.target.value})
+        this.environmentChange = e => this.setState({envId: e.target.value})
+        this.requesterChange = e => this.setState({requesterId: e.target.value})
+        this.priorityChange = e => this.setState({priority: e.target.value})
+        this.statusChange = e => this.setState({status: e.target.value})
+        this.executionDateChange = e => this.setState({exec_date: e.target.value})
+        this.qaGoChanged = e => this.setState({qaGO: !this.state.qaGO})
+        this.rollBackChanged = e => this.setState({rollBack: !this.state.rollBack})
+        this.urgentChanged = e => this.setState({urgent: !this.state.urgent})
+        this.additionalInfoTextChanged = e => {console.log(e.target.value); this.setState({additionalInfoText: e.target.value})}
     }
 
     close() {
         window.activeMenu = 'tasks'
         window.rootComponent.forceUpdate()
     }
-    submitClicked(){}
+    submitClicked(){
+        ajax.updateTask(this.state, () => {
+            console.log('task updated');
+        })
+    }
 
     render() {
         return (
@@ -80,7 +91,21 @@ class task extends React.Component {
                                                 onChange={this.requesterChange}
                                                 optionsArr={this.props.users}
                                                 optionKey='full_name'/>
+
+
+                                            <label className="col-sm-12 control-label">Additional Info</label>
+                                            <div className="col-sm-12">
+                                            <textarea className="col-sm-12 form-control custom-control"
+                                                      rows="6"
+                                                      style={{resize:'none'}}
+                                                      value={this.state.additionalInfoText}
+                                                      onChange={this.additionalInfoTextChanged}
+                                                ></textarea>
+                                                </div>
+
+
                                         </div>
+
                                         <div className='col-sm-6'>
                                             <label className="col-sm-4 control-label">Open Date</label>
                                             <div className="col-sm-8">
@@ -106,7 +131,10 @@ class task extends React.Component {
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
-
+                                            <div className="col-sm-12" style={{height: '20px'}}></div>
+                                            <CheckBox checked={this.state.qaGO} onChange={this.qaGoChanged} label='QA GO'/>
+                                            <CheckBox checked={this.state.rollBack} onChange={this.rollBackChanged} label='Rollback included'/>
+                                            <CheckBox checked={this.state.urgent} onChange={this.urgentChanged} label='Urgent'/>
                                         </div>
                                         <div className='col-sm-12' style={{padding:0}}>
                                             <div className='col-sm-6'></div>
