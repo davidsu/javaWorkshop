@@ -2,21 +2,28 @@ package example;
 
 import com.mysql.cj.jdbc.result.ResultSetImpl;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class JDBC {
+    //todo need to implement something to avoid sql injection
+    //todo need to make public stuff static, let the getInstance happen only here instead of all over the place
     private Connection conn;
 
     private static JDBC instance = null;
+
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
         conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
     }
 
     public static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        if(instance == null) {
+        if (instance == null) {
             instance = new JDBC();
         }
         return instance;
@@ -28,6 +35,30 @@ public class JDBC {
         stmt = conn.createStatement();
         rs = stmt.executeQuery("SELECT * FROM users");
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user");
+    }
+
+    private static boolean needToQuote(String str) {
+        if (str.matches("^(\\d+|true|false|NULL)$")) {
+            return false;
+        }
+        return true;
+    }
+
+    private static String updateFieldsFromDocument(Document doc) {
+        NodeList children = doc.getFirstChild().getChildNodes();
+        ArrayList<String> arralistresult = new ArrayList<>();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node curr = children.item(i);
+            String text = curr.getTextContent().trim();
+            if (text != null && text.length() == 0) {
+                text = "NULL";
+            }
+            if (needToQuote(text)) {
+                text = "'" + text + "'";
+            }
+            arralistresult.add(curr.getNodeName() + "=" + text);
+        }
+        return String.join(", ", arralistresult);
     }
 
     public void addUser(Document doc) throws SQLException {
@@ -45,7 +76,54 @@ public class JDBC {
         }
     }
 
-    public Document getTask(String taskId) throws SQLException, ParserConfigurationException{
+    public static void updateTable(String tableName, Document doc, String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        String update = "UPDATE " + tableName + " ";
+        String set = "SET " + updateFieldsFromDocument(doc) + " ";
+        String where = "WHERE id=" + id + ";";
+        String sql = update + set + where;
+        System.out.println(sql);
+        getInstance().conn.createStatement().executeUpdate(sql);
+    }
+
+    public static void updateTask(Document doc) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        //todo need to wrap stuff in a transaction
+        Node idNode = doc.getElementsByTagName("id").item(0);
+        String id = idNode.getTextContent();
+        idNode.getParentNode().removeChild(idNode);
+
+        Node additionalInfoTextNode = doc.getElementsByTagName("additionalInfoText").item(0);
+        String additionalInfo = additionalInfoTextNode.getTextContent();
+        additionalInfoTextNode.getParentNode().removeChild(additionalInfoTextNode);
+
+        Node additionalInfoIdTextNode = doc.getElementsByTagName("additionalInfoId").item(0);
+        String additionalInfoId = additionalInfoIdTextNode.getTextContent();
+        if(additionalInfoId.length() == 0 && additionalInfo.length() == 0){
+            updateTable("tasks", doc, id);
+            return;
+        }else if(additionalInfoId.length() == 0){
+            String insertAdditionalInfo = "INSERT INTO additionalInfo (information) VALUES ('"+ additionalInfo + "')";
+            System.out.println(insertAdditionalInfo);
+            Statement stm = getInstance().conn.createStatement();
+            stm.executeUpdate(insertAdditionalInfo, Statement.RETURN_GENERATED_KEYS);
+            try (ResultSet generatedKeys = stm.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    additionalInfoIdTextNode.setTextContent(generatedKeys.getLong(1) + "");
+                }
+                else {
+                    throw new SQLException("Creating additionalInfo failed, no ID obtained.");
+                }
+            }
+        }else{
+            String updateAdditionalInfo = "update additionalInfo set information='" + additionalInfo + "' where id=" + additionalInfoId;
+            System.out.println(updateAdditionalInfo);
+            System.out.println(updateAdditionalInfo);
+            getInstance().conn.createStatement().executeUpdate(updateAdditionalInfo);
+        }
+
+        updateTable("tasks", doc, id);
+    }
+
+    public Document getTask(String taskId) throws SQLException, ParserConfigurationException {
         Statement stmt;
         ResultSet rs;
         String _sql;
@@ -85,7 +163,7 @@ public class JDBC {
 
     }
 
-    public Document getTasks() throws SQLException, ParserConfigurationException{
+    public Document getTasks() throws SQLException, ParserConfigurationException {
         Statement stmt;
         ResultSet rs;
 
@@ -102,6 +180,7 @@ public class JDBC {
         rs = stmt.executeQuery(_sql);
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
     }
+
     /*
     SP Parameters:
         IN taskTypeId int,
@@ -116,14 +195,13 @@ public class JDBC {
         IN urgent bool,
         IN additionalInfoText TEXT
      */
-    public boolean saveTask(Task task) throws SQLException, ParserConfigurationException
-    {
+    public boolean saveTask(Task task) throws SQLException, ParserConfigurationException {
         Statement stmt;
         ResultSet rs;
         stmt = conn.createStatement();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(task.getOpenDate());
         String sqlCommand = String.format("CALL addTask (%1s,%2s,%3s,%4s,%5s,'%6s','%7s',%8s,%9s,%10s,'%11s')",
-                task.getTaskTypeId(),task.getProductId(),task.getEnvId(), task.getRequesterId(), task.getPriority(),
+                task.getTaskTypeId(), task.getProductId(), task.getEnvId(), task.getRequesterId(), task.getPriority(),
                 date, task.getStatus(), task.getQaGo(), task.getRollback(), task.getUrgent(), task.getAdditionalInfo());
         stmt.execute(sqlCommand);
         return true;
