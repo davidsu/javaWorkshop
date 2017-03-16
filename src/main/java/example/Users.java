@@ -46,16 +46,13 @@ public class Users {
     @Consumes("application/xml")
     public void createUser(String incomingXML){
         //todo add this user to the database
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    System.out.println("/users/create");
-                    System.out.println(incomingXML);
-                    Document doc = Utils.createDocumentFromString(incomingXML);
-                    JDBC.getInstance().addUser(doc);
-                }catch(Exception e){}
-            }
+        new Thread(() -> {
+            try{
+                System.out.println("/users/create");
+                System.out.println(incomingXML);
+                Document doc = Utils.createDocumentFromString(incomingXML);
+                JDBC.getInstance().addUser(doc);
+            }catch(Exception e){}
         }).start();
 
     }
