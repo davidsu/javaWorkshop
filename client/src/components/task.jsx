@@ -1,6 +1,7 @@
 import React from 'react'
-
+import DropDown from './dropDown.jsx'
 function isEmptyTask(){return false;}
+
 class task extends React.Component {
     constructor(props) {
         super(props)
@@ -38,28 +39,6 @@ class task extends React.Component {
     }
     submitClicked(){}
 
-    makeDropDown({label, value, onChange, optionsArr, optionKey}) {
-        return(
-            <div>
-                <label className="col-sm-4 control-label">{label}</label>
-                <div className="col-sm-8">
-                    <select className="form-control" value={value} onChange={onChange}>
-                        {_.map(optionsArr, product => {
-                            return (
-                                <option
-                                    key={product.id+label}
-                                    value={product.id}>
-                                    {product[optionKey]}
-                                </option>
-                            )
-                        })}
-                    </select>
-                </div>
-                <div className="col-sm-12" style={{height: '10px'}}></div>
-            </div>
-        )
-    }
-
     render() {
         return (
             <div className="container">
@@ -78,42 +57,29 @@ class task extends React.Component {
                                 <form role="form">
                                     <fieldset>
                                         <div className='col-sm-6'>
-                                            {
-                                                this.makeDropDown({
-                                                    label: 'Type',
-                                                    value: this.state.taskTypeId,
-                                                    onChange: this.typeChange,
-                                                    optionsArr: this.props.taskTypes,
-                                                    optionKey: 'taskType'
-                                                })
-                                            }
-                                            {
-                                                this.makeDropDown({
-                                                    label: 'Product',
-                                                    value: this.state.productId,
-                                                    onChange: this.productChange,
-                                                    optionsArr: this.props.products,
-                                                    optionKey: 'productName'
-                                                })
-                                            }
-                                            {
-                                                this.makeDropDown({
-                                                    label: 'Environment',
-                                                    value: this.state.envId,
-                                                    onChange: this.environmentChange,
-                                                    optionsArr: this.props.environments,
-                                                    optionKey: 'envName'
-                                                })
-                                            }
-                                            {
-                                                this.makeDropDown({
-                                                    label: 'Requester',
-                                                    value: this.state.requesterId,
-                                                    onChange: this.requesterChange,
-                                                    optionsArr: this.props.users,
-                                                    optionKey: 'full_name'
-                                                })
-                                            }
+                                            <DropDown label='Type'
+                                                value={this.state.taskTypeId}
+                                                onChange={this.typeChange}
+                                                optionsArr={this.props.taskTypes}
+                                                optionKey='taskType'/>
+                                            <DropDown
+                                                label='Product'
+                                                value={this.state.productId}
+                                                onChange={this.productChange}
+                                                optionsArr={this.props.products}
+                                                optionKey='productName'/>
+                                            <DropDown
+                                                label='Environment'
+                                                value={this.state.envId}
+                                                onChange={this.environmentChange}
+                                                optionsArr={this.props.environments}
+                                                optionKey='envName'/>
+                                            <DropDown
+                                                label='Requester'
+                                                value={this.state.requesterId}
+                                                onChange={this.requesterChange}
+                                                optionsArr={this.props.users}
+                                                optionKey='full_name'/>
                                         </div>
                                         <div className='col-sm-6'>
                                             <label className="col-sm-4 control-label">Open Date</label>
