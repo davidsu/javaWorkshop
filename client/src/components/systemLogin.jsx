@@ -14,6 +14,8 @@ class systemLogin extends React.Component {
             window.store.token = token
             window.store.activeMenu = 'tasks';
             rootComponent.forceUpdate()
+        }, (jqXHR, textStatus, errorThrown) => {
+            alert(`server returned with ${jqXHR.status}: ${errorThrown}`)
         })
     }
     render() {

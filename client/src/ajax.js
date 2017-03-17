@@ -101,11 +101,11 @@ function getUsers(callback) {
     })
 }
 
-function login(user, password, callback) {
-    $.get(`login?user=${user}&password=${password}`, (data, status) => {
-        console.log(data)
-        callback()
+function login(user, password, onSuccess, onFail) {
+    const jqxhr = $.get(`login?user=${user}&password=${password}`, (data, status) => {
+        onSuccess(data)
     })
+    jqxhr.fail(onFail)
 }
 
 module.exports = {
