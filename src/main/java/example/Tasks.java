@@ -23,10 +23,23 @@ public class Tasks {
     }
 
     @GET
+    @Path("/newTaskMetadata")
+    public String getNewTaskMetadata(@PathParam("id") String id){
+        try {
+            Document doc = JDBC.getTaskMetadata();
+            return Utils.DocumentToString(doc);
+        } catch (Exception e) {
+            System.out.println("exception in getUsers");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GET
     @Path("/{id : [0-9]+}")
     public String getTaskById(@PathParam("id") String id){
         try {
-            Document doc = JDBC.getInstance().getTask(id);
+            Document doc = JDBC.getTask(id);
             return Utils.DocumentToString(doc);
         } catch (Exception e) {
             System.out.println("exception in getUsers");
@@ -41,9 +54,9 @@ public class Tasks {
     public String updateTask(String incomingXML){
         try {
             Document doc = Utils.createDocumentFromString(incomingXML);
-            JDBC.updateTask(doc);
+            JDBC.createOrUpdateTask(doc);
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
+            System.out.println("exception in tasks/createOrUpdate");
             e.printStackTrace();
         }
         return null;

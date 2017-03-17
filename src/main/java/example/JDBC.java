@@ -85,23 +85,59 @@ public class JDBC {
         getInstance().conn.createStatement().executeUpdate(sql);
     }
 
-    public static void updateTask(Document doc) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static void insertIntoTable(String tableName, Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        ArrayList<String> columns = new ArrayList<>();
+        ArrayList<String> values = new ArrayList<>();
+        NodeList children = doc.getFirstChild().getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node curr = children.item(i);
+            String text = curr.getTextContent().trim();
+            if (text != null && text.length() == 0) {
+                text = "NULL";
+            }
+            if (needToQuote(text)) {
+                text = "'" + text + "'";
+            }
+            values.add(text);
+            columns.add(curr.getNodeName());
+        }
+        String sql = "" +
+                "INSERT INTO " +
+                tableName +
+                " ("+ String.join(",", columns) + ") "+
+                "VALUES (" + String.join(",", values) + ");";
+        System.out.println(sql);
+        getInstance().conn.createStatement().executeUpdate(sql);
+
+    }
+
+    private static void updateTask(Document doc) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         //todo need to wrap stuff in a transaction
-        Node idNode = doc.getElementsByTagName("id").item(0);
-        String id = idNode.getTextContent();
+        Node idNode;
+        Node additionalInfoTextNode;
+        Node additionalInfoIdTextNode = null;
+        String id;
+        String additionalInfoText = "";
+        String additionalInfoId;
+
+        idNode = doc.getElementsByTagName("id").item(0);
+        id = idNode.getTextContent();
         idNode.getParentNode().removeChild(idNode);
 
-        Node additionalInfoTextNode = doc.getElementsByTagName("additionalInfoText").item(0);
-        String additionalInfo = additionalInfoTextNode.getTextContent();
-        additionalInfoTextNode.getParentNode().removeChild(additionalInfoTextNode);
+        additionalInfoTextNode = doc.getElementsByTagName("additionalInfoText").item(0);
+        if(additionalInfoTextNode != null){
+            additionalInfoText = additionalInfoTextNode.getTextContent();
+            additionalInfoTextNode.getParentNode().removeChild(additionalInfoTextNode);
+        }
 
-        Node additionalInfoIdTextNode = doc.getElementsByTagName("additionalInfoId").item(0);
-        String additionalInfoId = additionalInfoIdTextNode.getTextContent();
-        if(additionalInfoId.length() == 0 && additionalInfo.length() == 0){
+
+        additionalInfoIdTextNode = doc.getElementsByTagName("additionalInfoId").item(0);
+        additionalInfoId = additionalInfoIdTextNode.getTextContent();
+        if(additionalInfoId.length() == 0 && additionalInfoText.length() == 0){
             updateTable("tasks", doc, id);
             return;
         }else if(additionalInfoId.length() == 0){
-            String insertAdditionalInfo = "INSERT INTO additionalInfo (information) VALUES ('"+ additionalInfo + "')";
+            String insertAdditionalInfo = "INSERT INTO additionalInfo (information) VALUES ('"+ additionalInfoText + "')";
             System.out.println(insertAdditionalInfo);
             Statement stm = getInstance().conn.createStatement();
             stm.executeUpdate(insertAdditionalInfo, Statement.RETURN_GENERATED_KEYS);
@@ -114,7 +150,7 @@ public class JDBC {
                 }
             }
         }else{
-            String updateAdditionalInfo = "update additionalInfo set information='" + additionalInfo + "' where id=" + additionalInfoId;
+            String updateAdditionalInfo = "update additionalInfo set information='" + additionalInfoText + "' where id=" + additionalInfoId;
             System.out.println(updateAdditionalInfo);
             System.out.println(updateAdditionalInfo);
             getInstance().conn.createStatement().executeUpdate(updateAdditionalInfo);
@@ -123,15 +159,38 @@ public class JDBC {
         updateTable("tasks", doc, id);
     }
 
-    public Document getTask(String taskId) throws SQLException, ParserConfigurationException {
+    private static void createTask(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        Node additionalInfoTextNode;
+        String additionalInfoText = "";
+
+        additionalInfoTextNode = doc.getElementsByTagName("additionalInfoText").item(0);
+        if(additionalInfoTextNode != null){
+            additionalInfoText = additionalInfoTextNode.getTextContent();
+            additionalInfoTextNode.getParentNode().removeChild(additionalInfoTextNode);
+        }
+
+        if(additionalInfoText.length() != 0){
+            //has additional info, add additionalInfoIdNode
+
+        }
+        insertIntoTable("tasks", doc);
+
+    }
+
+    public static void createOrUpdateTask(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        if(doc.getElementsByTagName("id").getLength() == 1){
+            updateTask(doc);
+        }else{
+            createTask(doc);
+        }
+    }
+
+    public static Document getTaskMetadata() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+        Connection conn = getInstance().conn;
         Statement stmt;
         ResultSet rs;
         String _sql;
 
-        stmt = conn.createStatement();
-        _sql = "select * from tasks where id = " + taskId;
-        rs = stmt.executeQuery(_sql);
-        Document tasksDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task", "tasks");
 
         stmt = conn.createStatement();
         _sql = "select * from taskTypes";
@@ -158,7 +217,24 @@ public class JDBC {
         rs = stmt.executeQuery(_sql);
         Document usersDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user", "users");
 
-        Document[] docs = {tasksDoc, taskTypesDoc, productsDoc, environmentsDoc, additionalInfoDoc, usersDoc};
+        Document[] docs = {taskTypesDoc, productsDoc, environmentsDoc, additionalInfoDoc, usersDoc};
+        return Utils.mergeDocs(docs);
+
+    }
+
+    public static Document getTask(String taskId) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Statement stmt;
+        ResultSet rs;
+        String _sql;
+        Connection conn = getInstance().conn;
+
+        stmt = conn.createStatement();
+        _sql = "select * from tasks where id = " + taskId;
+        rs = stmt.executeQuery(_sql);
+        Document tasksDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task", "tasks");
+
+        Document metadata = getTaskMetadata();
+        Document[] docs = {tasksDoc, metadata};
         return Utils.mergeDocs(docs);
 
     }
