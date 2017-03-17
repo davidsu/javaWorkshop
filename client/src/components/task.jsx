@@ -79,7 +79,7 @@ class task extends React.Component {
                     <div className="col-md-12 ">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <h2 className="panel-title" style={{textDecoration: 'underline', color:'#555'}}>TASK</h2>
+                                <h2 className="panel-title"><span style={{textDecoration: 'underline', color:'#555'}}>TASK</span> {this.state.id ? ': id = ' + this.state.id : ''}</h2>
 
                                 <div className="pull-right">
                                     <button type="button" className="close table-filter-btn" onClick={this.close}>x
@@ -120,7 +120,7 @@ class task extends React.Component {
                                             <label className="col-sm-12 control-label">Additional Info</label>
                                             <div className="col-sm-12">
                                             <textarea className="col-sm-12 form-control custom-control"
-                                                      rows="6"
+                                                      rows="12"
                                                       style={{resize:'none'}}
                                                       value={this.state.additionalInfo}
                                                       onChange={this.additionalInfoChanged}
