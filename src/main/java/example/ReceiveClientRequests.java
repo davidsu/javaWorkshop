@@ -35,6 +35,7 @@ public class ReceiveClientRequests {
         try {
             return new FileInputStream(file);
         } catch (FileNotFoundException e) {
+            //todo send 404
             System.out.println("exception");
             e.printStackTrace();
         }
