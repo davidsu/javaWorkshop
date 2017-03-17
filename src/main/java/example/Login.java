@@ -21,7 +21,7 @@ public class Login {
         System.out.println("password: " + password);
         if(authenticate(user, password)){
             //todo store token + user to manage sessions
-            String token = SessionIdentifierGenerator.nextSessionId();
+            String token = SessionHandler.nextSessionId();
             return Response.ok(token).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();

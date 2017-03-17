@@ -16,6 +16,7 @@ public class JAX_RS_Entry {
 
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
         ResourceConfig config = new ResourceConfig(ReceiveClientRequests.class, Users.class, Tasks.class, Login.class);
+        SessionHandler.init();
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
 //        Task task = new Task(1, 2, 2, 1, 3, "11/03/2017", null, "New", true, true, false,"just a test");
 //        try {
