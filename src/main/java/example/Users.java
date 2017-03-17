@@ -31,8 +31,7 @@ public class Users {
     @POST
     @Path("/createOrUpdate")
     @Consumes("application/xml")
-    public void createUser(String incomingXML){
-        //todo make this createOrUpdate instead of createOnly
+    public void createOrUpdate(String incomingXML){
         new Thread(() -> {
             try{
                 Document doc = Utils.createDocumentFromString(incomingXML);

@@ -52,7 +52,7 @@ public class Tasks {
     @POST
     @Path("/createOrUpdate")
     @Consumes("application/xml")
-    public String updateTask(String incomingXML){
+    public String createOrUpdate(String incomingXML){
         try {
             Document doc = Utils.createDocumentFromString(incomingXML);
             JDBC.createOrUpdateTask(doc);
