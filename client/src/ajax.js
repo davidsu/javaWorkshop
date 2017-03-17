@@ -1,4 +1,10 @@
 import _ from 'lodash'
+
+$.ajaxSetup({
+    beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'testuser');
+    }
+});
 function jsonToXml(jsonObj){
     var xmlDoc = document.implementation.createDocument(null, "user");
     _.forEach(jsonObj, (val, key) => {
@@ -103,6 +109,11 @@ function getUsers(callback) {
 
 function login(user, password, onSuccess, onFail) {
     const jqxhr = $.get(`login?user=${user}&password=${password}`, (data, status) => {
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', data);
+            }
+        });
         onSuccess(data)
     })
     jqxhr.fail(onFail)
