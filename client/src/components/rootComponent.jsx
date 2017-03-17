@@ -30,13 +30,7 @@ class rootComponent extends React.Component {
             case /task:.*/.test(window.activeMenu):
                 return <Task {...window.store.task}></Task>
             default:
-                return (
-                    <div className="container row">
-                        <h1>Hello World Html</h1>
-                        <button id="getUsers" onClick={this.getUsers}>getUsers</button>
-                        <div id="response"></div>
-                    </div>
-                );
+                return null;
         }
     }
 

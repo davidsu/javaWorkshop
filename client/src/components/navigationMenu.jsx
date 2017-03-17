@@ -36,9 +36,6 @@ class navigationMenu extends React.Component {
                             <li className={activeMenu === 'tasks' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('tasks')}>Request List</a>
                             </li>
-                            <li className={activeMenu === 'admin' ? 'active' : ''}>
-                                <a onClick={()=>this.setActiveMenu('admin')}>Admin</a>
-                            </li>
                             <li className={activeMenu === 'users' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('users')}>Users</a>
                             </li>
