@@ -46,7 +46,7 @@ public class Users {
     @Path("/create")
     @Consumes("application/xml")
     public void createUser(String incomingXML){
-        //todo add this user to the database
+        //todo make this createOrUpdate instead of createOnly
         new Thread(() -> {
             try{
                 System.out.println("/users/create");
