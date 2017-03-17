@@ -8,6 +8,8 @@ import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 //todo need to implement proper logging capabilities. see http://www.vogella.com/tutorials/Logging/article.html
+//todo need to implement loginStuff and userValidation for every request
+
 public class JAX_RS_Entry {
 
     public static void main(String[] args) {
