@@ -31,9 +31,15 @@ CREATE TABLE environments(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE additionalInfo(
+CREATE TABLE priority(
     id int NOT NULL AUTO_INCREMENT,
-    information TEXT,
+    priorityName VARCHAR(50),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE status(
+    id int NOT NULL AUTO_INCREMENT,
+    statusName VARCHAR(50),
     PRIMARY KEY (id)
 );
 
@@ -44,14 +50,14 @@ CREATE TABLE tasks(
     productId int,
     envId int,
     requesterId int,
-    priority int,
+    priorityId int,
     open_date DATE NOT NULL,
     exec_date DATE,
-    status VARCHAR(20),
+    statusId int,
     qaGO bool,
     rollBack bool,
     urgent bool,
-    additionalInfoId int,
+    additionalInfo TEXT,
     assigneeId int,
     resolved_by_Id int,
     -- you can't delete a user from the database without first assigning its tasks to some other user
@@ -61,7 +67,8 @@ CREATE TABLE tasks(
     FOREIGN KEY (taskTypeId) REFERENCES taskTypes(id) ON DELETE RESTRICT,
     FOREIGN KEY (productId) REFERENCES products(id) ON DELETE RESTRICT,
     FOREIGN KEY (envId) REFERENCES environments(id) ON DELETE RESTRICT,
-    FOREIGN KEY (additionalInfoId) REFERENCES additionalInfo(id) ON DELETE RESTRICT,
+    FOREIGN KEY (priorityId) REFERENCES priority(id) ON DELETE RESTRICT,
+    FOREIGN KEY (statusId) REFERENCES status(id) ON DELETE RESTRICT,
     PRIMARY KEY (id)
 );
 
@@ -83,6 +90,16 @@ INSERT INTO environments (envName) VALUES ('Beta');
 INSERT INTO environments (envName) VALUES ('UAT');
 INSERT INTO environments (envName) VALUES ('Production');
 
+INSERT INTO status (statusName) VALUES ('New');
+INSERT INTO status (statusName) VALUES ('In Progress');
+INSERT INTO status (statusName) VALUES ('In QA Progress');
+INSERT INTO status (statusName) VALUES ('Done');
+INSERT INTO status (statusName) VALUES ('Fail');
+
+INSERT INTO priority (priorityName) VALUES ('High');
+INSERT INTO priority (priorityName) VALUES ('Medium');
+INSERT INTO priority (priorityName) VALUES ('Low');
+INSERT INTO priority (priorityName) VALUES ('Irrelevant');
 
 DROP PROCEDURE IF EXISTS `addTask`;
 DELIMITER $$
@@ -92,29 +109,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addTask`
     IN productId int,
     IN envId int,
     IN requesterId int,
-    IN priority int,
+    IN priorityId int,
     IN open_date DATE,
-    IN status VARCHAR(20),
+    IN statusId int,
     IN qaGO bool,
     IN rollBack bool,
     IN urgent bool,
-    IN additionalInfoText TEXT
+    IN additionalInfo TEXT
 )
 BEGIN
-     DECLARE additionalInfoId int DEFAULT NULL;
-     IF (additionalInfoText IS NOT NULL) THEN
-         BEGIN
-            INSERT INTO additionalInfo (information) VALUES (additionalInfoText);
-            SET additionalInfoId = LAST_INSERT_ID();
-         END;
-     END IF;
-     INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priority,open_date,exec_date,status,qaGO,rollBack,urgent,additionalInfoId,assigneeId,resolved_by_Id)
-     VALUE (taskTypeId,productId,envId,requesterId,priority,open_date,NULL,status,qaGO,rollBack,urgent,additionalInfoId,NULL,NULL);
+     INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)
+     VALUE (taskTypeId,productId,envId,requesterId,priorityId,open_date,NULL,statusId,qaGO,rollBack,urgent,additionalInfo,NULL,NULL);
 END;
 $$
 
 
-INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priority,open_date,exec_date,status,qaGO,rollBack,urgent,additionalInfoId,assigneeId,resolved_by_Id)
-VALUE (1, 1, 3, 2, 1, '2017-03-11', NULL, 'New', 1, 1, 0, NULL, NULL, NULL);
+INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)
+VALUE (1, 1, 3, 2, 1, '2017-03-11', NULL, 1, 1, 1, 0, NULL, NULL, NULL);
 
-CALL addTask (1, 2, 3, 1, 2, '2017-03-11','New', 1, 1, 0,'this is a test' );
+CALL addTask (1, 2, 3, 1, 2, '2017-03-11',1, 1, 1, 0,'this is a test' );

@@ -26,6 +26,7 @@ function xmlToJsonArray(data, elementName){
 
 function getTasks(callback){
     $.get('tasks', (data, status) => {
+        console.log(window.prettyHtml(data));
         window.store.tasks = xmlToJsonArray(data, 'task')
         callback();
     })
@@ -39,8 +40,9 @@ function getTaskMetadata(callback){
             taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
             products: xmlToJsonArray(data, 'product'),
             environments: xmlToJsonArray(data, 'environment'),
-            additionalInfos: xmlToJsonArray(data, 'additionalInfo'),
-            users: xmlToJsonArray(data, 'user')
+            users: xmlToJsonArray(data, 'user'),
+            priority: xmlToJsonArray(data, 'priority'),
+            status: xmlToJsonArray(data, 'status')
         }
         callback()
     })
@@ -48,26 +50,28 @@ function getTaskMetadata(callback){
 
 function getTask(taskId, callback){
     $.get('tasks/' + taskId, (data, status) => {
+        console.log(window.prettyHtml(data))
         const usersArray = xmlToJsonArray(data, 'user')
         window.store.task = {
             task: xmlToJsonArray(data, 'task')[0],
             taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
             products: xmlToJsonArray(data, 'product'),
             environments: xmlToJsonArray(data, 'environment'),
-            additionalInfos: xmlToJsonArray(data, 'additionalInfo'),
-            users: xmlToJsonArray(data, 'user')
+            users: xmlToJsonArray(data, 'user'),
+            priority: xmlToJsonArray(data, 'priority'),
+            status: xmlToJsonArray(data, 'status')
         }
         callback()
     })
 }
-function updateTask(taskObj, callback){
+function createOrUpdateTask(taskObj, callback){
     const updateObj = _.reduce(taskObj, (acc, val, key) =>{
-        if(val !== window.store.task.task[key]){
+        if(val !== window.store.task.task[key] || (key === 'id' && val)){
             acc[key] = val;
         }
         return acc;
     }, {})
-    console.log(jsonToXml(updateObj));
+    console.log(prettyHtml(jsonToXml(updateObj)));
     $.ajax({
         type: 'POST',
         url: 'tasks/createOrUpdate',
@@ -78,11 +82,11 @@ function updateTask(taskObj, callback){
     });
 }
 
-function createUser(user, callback){
+function createOrUpdateUser(user, callback){
     console.log(jsonToXml(user));
     $.ajax({
         type: 'POST',
-        url: 'users/create',
+        url: 'users/createOrUpdate',
         data: jsonToXml(user),
         success: callback,
         contentType: "application/xml",
@@ -102,11 +106,11 @@ function updateUser() {
 }
 
 module.exports = {
-    createUser,
+    createOrUpdateUser,
     getTask,
     getTaskMetadata,
     getTasks,
     getUsers,
-    updateTask,
+    createOrUpdateTask,
     updateUser
 }

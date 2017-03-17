@@ -20,26 +20,19 @@ class user extends React.Component{
     }
 
     submitClicked() {
-        if(isEmptyUser()){
-            ajax.createUser(_.reduce(this.state.user, (acc, val, key)=>{
-                const elem = document.getElementById('user'+key);
-                acc[key] = elem.value;
-                return acc;
-            }, {}), () => {
-                setTimeout(() => {
-                    ajax.getUsers(() => {
-                        window.activeMenu = 'users';
-                        rootComponent.forceUpdate();
-                    })
-                }, 200)
+        ajax.createOrUpdateUser(_.reduce(this.state.user, (acc, val, key)=>{
+            const elem = document.getElementById('user'+key);
+            acc[key] = elem.value;
+            return acc;
+        }, {}), () => {
+            setTimeout(() => {
+                ajax.getUsers(() => {
+                    window.activeMenu = 'users';
+                    rootComponent.forceUpdate();
+                })
+            }, 200)
 
-            });
-        } else {
-            ajax.updateUser();
-            window.activeMenu = 'users';
-            rootComponent.forceUpdate();
-        }
-
+        });
     }
 
     componentDidMount() {

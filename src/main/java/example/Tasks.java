@@ -10,10 +10,11 @@ import javax.ws.rs.*;
 @Path("/tasks")
 public class Tasks {
     //todo return proper errors to client when failing
+    //todo which columns must be 'not null' in tasks table?
     @GET
     public String getTasks() {
         try {
-            Document doc = JDBC.getInstance().getTasks();
+            Document doc = JDBC.getTasks();
             return Utils.DocumentToString(doc);
         } catch (Exception e) {
             System.out.println("exception in getTasks");

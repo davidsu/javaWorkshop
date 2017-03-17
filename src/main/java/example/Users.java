@@ -14,11 +14,12 @@ import javax.ws.rs.Path;
 @Path("/users")
 public class Users {
     //todo return proper errors to client when failing
+    //todo shouldn't type be enum?
     @GET
     public String getUsers() {
         System.out.println("this is the new getUsers");
         try {
-            Document doc = JDBC.getInstance().getUsers();
+            Document doc = JDBC.getUsers();
             return Utils.DocumentToString(doc);
         } catch (Exception e) {
             System.out.println("exception in getUsers");
@@ -27,32 +28,15 @@ public class Users {
         return null;
     }
 
-//    @GET
-//    public void getUsers(@Suspended final AsyncResponse asyncResponse) {
-//        new Thread(() -> {
-//            System.out.println("this is the new getUsers");
-//            try {
-//                Document doc = JDBC.getInstance().getUsers();
-//                asyncResponse.resume(JDBC.toString(doc));
-//            } catch (Exception e) {
-//                System.out.println("exception in getUsers");
-//                e.printStackTrace();
-//                asyncResponse.resume(null);
-//            }
-//        }).start();
-//    }
-
     @POST
-    @Path("/create")
+    @Path("/createOrUpdate")
     @Consumes("application/xml")
     public void createUser(String incomingXML){
         //todo make this createOrUpdate instead of createOnly
         new Thread(() -> {
             try{
-                System.out.println("/users/create");
-                System.out.println(incomingXML);
                 Document doc = Utils.createDocumentFromString(incomingXML);
-                JDBC.getInstance().addUser(doc);
+                JDBC.createOrUpdateUser(doc);
             }catch(Exception e){}
         }).start();
 

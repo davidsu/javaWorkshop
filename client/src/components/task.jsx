@@ -24,21 +24,20 @@ class task extends React.Component {
         console.log(props)
         this.state = {
             id: props.task.id,//used
-            taskTypeId: props.task.taskTypeId,//used
-            productId: props.task.productId,//used
-            envId: props.task.envId,//used
-            requesterId: props.task.requesterId,//used
-            priority: props.task.priority,
+            taskTypeId: props.task.taskTypeId || undefined,//used
+            productId: props.task.productId || undefined,//used
+            envId: props.task.envId || undefined,//used
+            requesterId: props.task.requesterId || undefined,//used
+            priorityId: props.task.priorityId || undefined,//used
             open_date: props.task.open_date || getTodayDateFormatted(),//used
             exec_date: props.task.exec_date,
-            status: props.task.status,//used
+            statusId: props.task.statusId || undefined,//used
             qaGO: !!props.task.qaGO,//used
             rollBack: !!props.task.rollBack,//used
             urgent: !!props.task.urgent,//used
-            additionalInfoId: props.task.additionalInfoId,//used
-            assigneeId: props.task.assigneeId,
-            resolved_by_Id: props.task.resolved_by_Id,
-            additionalInfoText: _.get(_.find(props.additionalInfos, {id: this.props.task.additionalInfoId}), 'information')//used
+            assigneeId: props.task.assigneeId || undefined,
+            resolved_by_Id: props.task.resolved_by_Id || undefined,
+            additionalInfo: props.task.additionalInfo//used
         }
         this.submitClicked = this.submitClicked.bind(this)
         this.isEmptyTask = _.isEmpty(this.props.task)
@@ -46,13 +45,15 @@ class task extends React.Component {
         this.productChange = e => this.setState({productId: e.target.value})
         this.environmentChange = e => this.setState({envId: e.target.value})
         this.requesterChange = e => this.setState({requesterId: e.target.value})
-        this.priorityChange = e => this.setState({priority: e.target.value})
-        this.statusChange = e => this.setState({status: e.target.value})
+        this.assigneeChange = e => this.setState({assigneeId: e.target.value})
+        this.resolvedByChange = e => this.setState({resolved_by_Id: e.target.value})
+        this.priorityChange = e => this.setState({priorityId: e.target.value})
+        this.statusChange = e => this.setState({statusId: e.target.value})
         this.executionDateChange = e => this.setState({exec_date: e.target.value})
         this.qaGoChanged = e => this.setState({qaGO: !this.state.qaGO})
         this.rollBackChanged = e => this.setState({rollBack: !this.state.rollBack})
         this.urgentChanged = e => this.setState({urgent: !this.state.urgent})
-        this.additionalInfoTextChanged = e => {console.log(e.target.value); this.setState({additionalInfoText: e.target.value})}
+        this.additionalInfoChanged = e => {console.log(e.target.value); this.setState({additionalInfo: e.target.value})}
     }
 
     close() {
@@ -61,8 +62,11 @@ class task extends React.Component {
     }
 
     submitClicked(){
-        ajax.updateTask(this.state, () => {
-            console.log('task updated');
+        ajax.createOrUpdateTask(this.state, () => {
+            ajax.getTasks(() => {
+                window.activeMenu = 'tasks'
+                window.rootComponent.forceUpdate()
+            })
         })
     }
 
@@ -91,24 +95,26 @@ class task extends React.Component {
                                                 onChange={this.typeChange}
                                                 optionsArr={this.props.taskTypes}
                                                 optionKey='taskType'/>
-                                            <DropDown
-                                                label='Product'
+                                            <DropDown label='Product'
                                                 value={this.state.productId}
                                                 onChange={this.productChange}
                                                 optionsArr={this.props.products}
                                                 optionKey='productName'/>
-                                            <DropDown
-                                                label='Environment'
+                                            <DropDown label='Environment'
                                                 value={this.state.envId}
                                                 onChange={this.environmentChange}
                                                 optionsArr={this.props.environments}
                                                 optionKey='envName'/>
-                                            <DropDown
-                                                label='Requester'
+                                            <DropDown label='Requester'
                                                 value={this.state.requesterId}
                                                 onChange={this.requesterChange}
                                                 optionsArr={this.props.users}
                                                 optionKey='full_name'/>
+                                            <DropDown label='Assignee'
+                                                      value={this.state.assigneeId}
+                                                      onChange={this.assigneeChange}
+                                                      optionsArr={this.props.users}
+                                                      optionKey='full_name'/>
 
 
                                             <label className="col-sm-12 control-label">Additional Info</label>
@@ -116,8 +122,8 @@ class task extends React.Component {
                                             <textarea className="col-sm-12 form-control custom-control"
                                                       rows="6"
                                                       style={{resize:'none'}}
-                                                      value={this.state.additionalInfoText}
-                                                      onChange={this.additionalInfoTextChanged}
+                                                      value={this.state.additionalInfo}
+                                                      onChange={this.additionalInfoChanged}
                                                 ></textarea>
                                                 </div>
 
@@ -137,17 +143,22 @@ class task extends React.Component {
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
-                                            <label className="col-sm-4 control-label">Priority</label>
-                                            <div className="col-sm-8">
-                                                <input className="form-control" value={this.state.priority} onChange={this.priorityChange}></input>
-                                            </div>
-                                            <div className="col-sm-12" style={{height: '10px'}}></div>
+                                            <DropDown label='Priority'
+                                                      value={this.state.priorityId}
+                                                      onChange={this.priorityChange}
+                                                      optionsArr={this.props.priority}
+                                                      optionKey='priorityName'/>
+                                            <DropDown label='Status'
+                                                      value={this.state.statusId}
+                                                      onChange={this.statusChange}
+                                                      optionsArr={this.props.status}
+                                                      optionKey='statusName'/>
+                                            <DropDown label='Resolved By'
+                                                      value={this.state.resolved_by_Id}
+                                                      onChange={this.resolvedByChange}
+                                                      optionsArr={this.props.users}
+                                                      optionKey='full_name'/>
 
-                                            <label className="col-sm-4 control-label">Status</label>
-                                            <div className="col-sm-8">
-                                                <input className="form-control" value={this.state.status} onChange={this.statusChange}></input>
-                                            </div>
-                                            <div className="col-sm-12" style={{height: '10px'}}></div>
 
                                             <div className="col-sm-12" style={{height: '20px'}}></div>
                                             <CheckBox checked={this.state.qaGO} onChange={this.qaGoChanged} label='QA GO'/>
