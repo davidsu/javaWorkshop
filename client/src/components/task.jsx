@@ -2,7 +2,21 @@ import React from 'react'
 import DropDown from './dropDown.jsx'
 import CheckBox from './checkbox.jsx'
 import ajax from '../ajax.js'
-function isEmptyTask(){return false;}
+import _ from 'lodash'
+
+function getTodayDateFormatted(){
+    const d = new Date(Date.now());
+    const year = d.getFullYear()
+    let month = d.getMonth()+1
+    let day = d.getDate()
+    if(month<10) {
+        month = '0'+ month
+    }
+    if(day < 10) {
+        day = '0' + day
+    }
+    return `${year}-${month}-${day}`
+}
 
 class task extends React.Component {
     constructor(props) {
@@ -15,7 +29,7 @@ class task extends React.Component {
             envId: props.task.envId,//used
             requesterId: props.task.requesterId,//used
             priority: props.task.priority,
-            open_date: props.task.open_date,//used
+            open_date: props.task.open_date || getTodayDateFormatted(),//used
             exec_date: props.task.exec_date,
             status: props.task.status,//used
             qaGO: !!props.task.qaGO,//used
@@ -27,6 +41,7 @@ class task extends React.Component {
             additionalInfoText: _.get(_.find(props.additionalInfos, {id: this.props.task.additionalInfoId}), 'information')//used
         }
         this.submitClicked = this.submitClicked.bind(this)
+        this.isEmptyTask = _.isEmpty(this.props.task)
         this.typeChange = e => this.setState({taskTypeId: e.target.value})
         this.productChange = e => this.setState({productId: e.target.value})
         this.environmentChange = e => this.setState({envId: e.target.value})
@@ -44,11 +59,14 @@ class task extends React.Component {
         window.activeMenu = 'tasks'
         window.rootComponent.forceUpdate()
     }
+
     submitClicked(){
         ajax.updateTask(this.state, () => {
             console.log('task updated');
         })
     }
+
+
 
     render() {
         return (
@@ -142,7 +160,7 @@ class task extends React.Component {
                                                 <div className="col-sm-4 col-sm-offset-8" style={{paddingTop:'15px'}}>
                                                     <input className="btn btn-lg btn-success btn-block"
                                                            onClick={this.submitClicked}
-                                                           value={isEmptyTask() ? 'Add Task' : 'Update'} readOnly={true}/>
+                                                           value={this.isEmptyTask ? 'Add Task' : 'Update'} readOnly={true}/>
                                                 </div>
                                             </div>
                                         </div>

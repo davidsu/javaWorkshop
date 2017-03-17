@@ -14,7 +14,11 @@ const columns = [
 class tasks extends React.Component {
 
     addTask() {
-        console.log('add task clicked' )
+        console.log('addTaskClicked: ');
+        ajax.getTaskMetadata(()=>{
+            window.activeMenu = 'task:'
+            rootComponent.forceUpdate();
+        })
     }
 
     tableRowClicked(task){

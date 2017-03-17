@@ -31,8 +31,23 @@ function getTasks(callback){
     })
 }
 
+function getTaskMetadata(callback){
+    $.get('tasks/newTaskMetadata', (data, status) => {
+        const usersArray = xmlToJsonArray(data, 'user')
+        window.store.task = {
+            task: {},
+            taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
+            products: xmlToJsonArray(data, 'product'),
+            environments: xmlToJsonArray(data, 'environment'),
+            additionalInfos: xmlToJsonArray(data, 'additionalInfo'),
+            users: xmlToJsonArray(data, 'user')
+        }
+        callback()
+    })
+}
+
 function getTask(taskId, callback){
-    $.get('tasks/'+taskId, (data, status) => {
+    $.get('tasks/' + taskId, (data, status) => {
         const usersArray = xmlToJsonArray(data, 'user')
         window.store.task = {
             task: xmlToJsonArray(data, 'task')[0],
@@ -46,11 +61,17 @@ function getTask(taskId, callback){
     })
 }
 function updateTask(taskObj, callback){
-    console.log(jsonToXml(taskObj));
+    const updateObj = _.reduce(taskObj, (acc, val, key) =>{
+        if(val !== window.store.task.task[key]){
+            acc[key] = val;
+        }
+        return acc;
+    }, {})
+    console.log(jsonToXml(updateObj));
     $.ajax({
         type: 'POST',
         url: 'tasks/createOrUpdate',
-        data: jsonToXml(taskObj),
+        data: jsonToXml(updateObj),
         success: callback,
         contentType: "application/xml",
         dataType: 'json'
@@ -83,6 +104,7 @@ function updateUser() {
 module.exports = {
     createUser,
     getTask,
+    getTaskMetadata,
     getTasks,
     getUsers,
     updateTask,
