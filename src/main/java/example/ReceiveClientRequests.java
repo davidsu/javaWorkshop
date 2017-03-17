@@ -1,7 +1,5 @@
 package example;
 
-import org.w3c.dom.Document;
-
 import java.io.*;
 import java.net.URL;
 
