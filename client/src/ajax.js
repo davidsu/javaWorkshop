@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 $.ajaxSetup({
     beforeSend: function(xhr) {
-        xhr.setRequestHeader('Authorization', 'testuser');
+        xhr.setRequestHeader('Authorization', 'Bearer testuser');
     }
 });
 function jsonToXml(jsonObj){
@@ -111,7 +111,7 @@ function login(user, password, onSuccess, onFail) {
     const jqxhr = $.get(`login?user=${user}&password=${password}`, (data, status) => {
         $.ajaxSetup({
             beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', data);
+                xhr.setRequestHeader('Authorization', 'Bearer ' + data);
             }
         });
         onSuccess(data)

@@ -12,6 +12,7 @@ public class Tasks {
     //todo return proper errors to client when failing
     //todo which columns must be 'not null' in tasks table?
     @GET
+    @Secured
     public String getTasks() {
         try {
             Document doc = JDBC.getTasks();
@@ -24,6 +25,7 @@ public class Tasks {
     }
 
     @GET
+    @Secured
     @Path("/newTaskMetadata")
     public String getNewTaskMetadata(@PathParam("id") String id){
         try {
@@ -37,6 +39,7 @@ public class Tasks {
     }
 
     @GET
+    @Secured
     @Path("/{id : [0-9]+}")
     public String getTaskById(@PathParam("id") String id){
         try {
@@ -50,6 +53,7 @@ public class Tasks {
     }
 
     @POST
+    @Secured
     @Path("/createOrUpdate")
     @Consumes("application/xml")
     public String createOrUpdate(String incomingXML){

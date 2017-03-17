@@ -20,8 +20,9 @@ public class Login {
         System.out.println("user: " + user);
         System.out.println("password: " + password);
         if(authenticate(user, password)){
-            //todo store token + user to manage sessions
             String token = SessionHandler.nextSessionId();
+            //todo we need to verify real user and pass the correct user type to this addActiveUser
+            SessionHandler.addActiveUser(token, "fixMe", "admin");
             return Response.ok(token).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
