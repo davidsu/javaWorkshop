@@ -7,10 +7,6 @@ import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-/**
- * example for an embedded http server with scala and jetty. TODO: see how to
- * define a basic root context, without introducing boilerplate
- */
 public class JAX_RS_Entry {
 
     public static void main(String[] args) {
