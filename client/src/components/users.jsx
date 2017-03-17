@@ -11,7 +11,7 @@ const columns = [
 ];
 class users extends React.Component {
     tableRowClicked(user) {
-        window.activeMenu = 'user:'
+        window.store.activeMenu = 'user:'
         window.store.user = user
         rootComponent.forceUpdate()
     }
@@ -21,7 +21,7 @@ class users extends React.Component {
             acc[val] = '';
             return acc;
         }, {})
-        window.activeMenu = 'user:'
+        window.store.activeMenu = 'user:'
         rootComponent.forceUpdate()
     }
 

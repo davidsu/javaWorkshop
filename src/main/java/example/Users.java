@@ -1,6 +1,5 @@
 package example;
 
-import org.glassfish.jersey.server.ManagedAsync;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.Consumes;

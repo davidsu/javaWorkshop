@@ -1,15 +1,20 @@
 import React from 'react'
-//<div>
-//    <h1>System Login</h1>
-//    <span style={{width: '200px'}}>User:</span>
-//    <input></input>
-//    <br/>
-//    <span style={{width: '200px'}}>Password:</span>
-//    <input></input>
-//</div>
+import ajax from '../ajax.js'
 class systemLogin extends React.Component {
+    constructor(){
+        super()
+        this.state = {}
+        this.onUserChange = e => this.setState({user: e.target.value})
+        this.onPasswordChange = e => this.setState({password: e.target.value})
+        this.submitClicked = this.submitClicked.bind(this)
+    }
     submitClicked() {
-        alert(`email: ${$('#emailInput').val()}\npassword: ${$('#passwordInput').val()}`);
+        ajax.login(this.state.user, this.state.password, token => {
+            console.log(token)
+            window.store.token = token
+            window.store.activeMenu = 'tasks';
+            rootComponent.forceUpdate()
+        })
     }
     render() {
         return (
@@ -25,7 +30,7 @@ class systemLogin extends React.Component {
                                     <fieldset>
                                         <div className="form-group">
                                             <input className="form-control" placeholder="E-mail" name="email"
-                                                   type="text" id="emailInput"/>
+                                                   type="text" id="emailInput" value={this.state.user} onChange={e=>console.log(e.target.value)}/>
                                         </div>
 
                                         <div className="form-group">

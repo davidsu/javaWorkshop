@@ -57,14 +57,14 @@ class task extends React.Component {
     }
 
     close() {
-        window.activeMenu = 'tasks'
+        window.store.activeMenu = 'tasks'
         window.rootComponent.forceUpdate()
     }
 
     submitClicked(){
         ajax.createOrUpdateTask(this.state, () => {
             ajax.getTasks(() => {
-                window.activeMenu = 'tasks'
+                window.store.activeMenu = 'tasks'
                 window.rootComponent.forceUpdate()
             })
         })

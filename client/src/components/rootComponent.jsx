@@ -19,15 +19,15 @@ class rootComponent extends React.Component {
 
     activePage() {
         switch(true) {
-            case /login/.test(window.activeMenu):
+            case /login/.test(window.store.activeMenu):
                 return <SystemLogin></SystemLogin>
-            case /tasks/.test(window.activeMenu):
+            case /tasks/.test(window.store.activeMenu):
                 return <Tasks tasks={window.store.tasks}></Tasks>
-            case /users/.test(window.activeMenu):
+            case /users/.test(window.store.activeMenu):
                 return <Users users={window.store.users}></Users>
-            case /user:.*/.test(window.activeMenu):
+            case /user:.*/.test(window.store.activeMenu):
                 return <User user={window.store.user}></User>
-            case /task:.*/.test(window.activeMenu):
+            case /task:.*/.test(window.store.activeMenu):
                 return <Task {...window.store.task}></Task>
             default:
                 return null;

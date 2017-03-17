@@ -1,29 +1,29 @@
 import React from 'react'
 import ajax from '../ajax.js'
 
-window.activeMenu = '';
+window.store.activeMenu = '';
 class navigationMenu extends React.Component {
     constructor() {
         super();
-        this.setActiveMenu(window.activeMenu);
+        this.setActiveMenu(window.store.activeMenu);
     }
 
     setActiveMenu(activeMenu) {
         switch(activeMenu){
             case 'users':
                 ajax.getUsers(() => {
-                    window.activeMenu = activeMenu;
+                    window.store.activeMenu = activeMenu;
                     rootComponent.forceUpdate();
                 })
                 break;
             case 'tasks':
                 ajax.getTasks(() => {
-                    window.activeMenu = activeMenu;
+                    window.store.activeMenu = activeMenu;
                     rootComponent.forceUpdate();
                 })
                 break;
             default:
-                window.activeMenu = activeMenu;
+                window.store.activeMenu = activeMenu;
                 rootComponent.forceUpdate();
         }
     }
@@ -33,13 +33,13 @@ class navigationMenu extends React.Component {
                 <div className="container">
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
-                            <li className={activeMenu === 'tasks' ? 'active' : ''}>
+                            <li className={window.store.activeMenu === 'tasks' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('tasks')}>Request List</a>
                             </li>
-                            <li className={activeMenu === 'users' ? 'active' : ''}>
+                            <li className={window.store.activeMenu === 'users' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('users')}>Users</a>
                             </li>
-                            <li className={activeMenu === 'login' ? 'active' : ''}>
+                            <li className={window.store.activeMenu === 'login' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('login')}>Login</a>
                             </li>
                         </ul>

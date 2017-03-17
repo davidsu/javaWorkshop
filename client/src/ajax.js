@@ -101,8 +101,11 @@ function getUsers(callback) {
     })
 }
 
-function updateUser() {
-
+function login(user, password, callback) {
+    $.get(`login?user=${user}&password=${password}`, (data, status) => {
+        console.log(data)
+        callback()
+    })
 }
 
 module.exports = {
@@ -112,5 +115,5 @@ module.exports = {
     getTasks,
     getUsers,
     createOrUpdateTask,
-    updateUser
+    login
 }

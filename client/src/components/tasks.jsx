@@ -16,7 +16,7 @@ class tasks extends React.Component {
     addTask() {
         console.log('addTaskClicked: ');
         ajax.getTaskMetadata(()=>{
-            window.activeMenu = 'task:'
+            window.store.activeMenu = 'task:'
             rootComponent.forceUpdate();
         })
     }
@@ -24,7 +24,7 @@ class tasks extends React.Component {
     tableRowClicked(task){
         window.store.task = task;
         ajax.getTask(task.id, () => {
-            window.activeMenu = 'task:'
+            window.store.activeMenu = 'task:'
             rootComponent.forceUpdate();
         })
         console.log('tableRowClicked: ', task);

@@ -15,7 +15,7 @@ class user extends React.Component{
         this.submitClicked = this.submitClicked.bind(this);
     }
     close() {
-        window.activeMenu = 'users';
+        window.store.activeMenu = 'users';
         rootComponent.forceUpdate();
     }
 
@@ -27,7 +27,7 @@ class user extends React.Component{
         }, {}), () => {
             setTimeout(() => {
                 ajax.getUsers(() => {
-                    window.activeMenu = 'users';
+                    window.store.activeMenu = 'users';
                     rootComponent.forceUpdate();
                 })
             }, 200)
