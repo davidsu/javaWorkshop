@@ -386,7 +386,7 @@ public class JDBC {
             Document doc = jdbc.getFilteredTasks(null, null, "2017-03-10","2017-03-20", 1);
 
            //Document doc = jdbc.getUsers();
-            System.out.println(Utils.DocumentToString(doc));
+            System.out.println(Utils.DocumentToString(doc, true));
         } catch (Exception ex) {
             System.out.println("threw exception");
             System.out.println(ex);
