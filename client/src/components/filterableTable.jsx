@@ -10,7 +10,8 @@ class filterableTable extends React.Component{
                 acc[val] = '';
                 return acc;
             }, {}),
-            sort: ''
+            sort: '',
+            ascending: true
         }
         this.filterButtonClicked = this.filterButtonClicked.bind(this)
         this.filter = this.filter.bind(this)
@@ -38,7 +39,8 @@ class filterableTable extends React.Component{
 
     tableHeaderClicked(evt, key) {
         if (!this.state.isFiltering) {
-            this.setState({sort: key})
+            let ascending = (this.state.sort === key)? !this.state.ascending : true;
+            this.setState({sort: key, ascending: ascending})
         }
     }
 
@@ -83,7 +85,20 @@ class filterableTable extends React.Component{
                     if(!sortKey){
                         return arr
                     }
-                    return arr.sort((a,b) => self.alphabetical(a[sortKey], b[sortKey]))
+                    return arr.sort((a,b) => {
+                        if(sortKey.toLowerCase() === 'id'){
+                            if(this.state.ascending){
+                                return Number(a[sortKey]) - Number(b[sortKey])
+                            }
+                            return Number(b[sortKey]) - Number(a[sortKey])
+
+                        }
+                        if(this.state.ascending){
+                            return self.alphabetical(a[sortKey], b[sortKey])
+                        }
+                        return self.alphabetical(b[sortKey], a[sortKey])
+
+                    })
                 })
                 .map(item => (
                     <tr key={item.id} onClick={() => self.props.onTableRowClicked(item)}>
