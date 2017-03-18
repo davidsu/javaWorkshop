@@ -7,24 +7,86 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.*;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class JDBC {
     //todo need to implement something to avoid sql injection
     private Connection conn;
-
+    private static final int pageSize = 2;
     private static JDBC instance = null;
+
+    private static HashMap<String, Integer> environmentsDict = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> productsDict = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> prioritiesDict = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> statusesDict = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> taskTypesDict = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> usersDict = new HashMap<String, Integer>();
 
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
         conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
+
     }
 
     private static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         if (instance == null) {
             instance = new JDBC();
+            try {
+                init();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
         }
         return instance;
+    }
+
+    private static void init() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException
+    {
+        Connection conn = getInstance().conn;
+        ResultSet rs;
+        String _sql;
+        Statement stmt = conn.createStatement();
+
+        stmt = conn.createStatement();
+        _sql = "select * from environments";
+        rs = stmt.executeQuery(_sql);
+        resultSetToDictionary(rs, environmentsDict);
+        stmt = conn.createStatement();
+        _sql = "select * from priority";
+        rs = stmt.executeQuery(_sql);
+        resultSetToDictionary(rs, prioritiesDict);
+        stmt = conn.createStatement();
+        _sql = "select * from status";
+        rs = stmt.executeQuery(_sql);
+        resultSetToDictionary(rs, statusesDict);
+        stmt = conn.createStatement();
+        _sql = "select * from taskTypes";
+        rs = stmt.executeQuery(_sql);
+        resultSetToDictionary(rs, taskTypesDict);
+    }
+
+    private static void resultSetToDictionary(ResultSet rs, HashMap<String, Integer> dict, int keyIndex, int valIndex ) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        while(rs.next())
+        {
+            String key = rs.getString(keyIndex);
+            Integer value = rs.getInt(valIndex);
+            dict.put(key, value);
+        }
+    }
+
+    private static void resultSetToDictionary(ResultSet rs, HashMap<String, Integer> dict) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        while(rs.next())
+        {
+            String key = rs.getString(2);
+            Integer value = rs.getInt(1);
+            dict.put(key, value);
+        }
     }
 
     public static Document getUsers() throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -194,6 +256,61 @@ public class JDBC {
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
     }
 
+    public static Document getFilteredTasks(String status, String type, String startDate, String endDate, int page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Statement stmt;
+        ResultSet rs;
+
+        stmt = getInstance().conn.createStatement();
+        String filter = buildTaskFilter(status, type, startDate, endDate);
+        String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from Tasks %3s",pageSize, page, filter);
+        rs = stmt.executeQuery(_sql);
+        Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
+        String pageFilter = String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
+        _sql = "select * from Tasks " + filter + pageFilter;
+        rs = stmt.executeQuery(_sql);
+        Document resDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
+        Document[] docs = {pageDoc, resDoc};
+        return Utils.mergeDocs(docs);
+    }
+
+    private static String buildTaskFilter(String status, String type, String startDate, String endDate)
+    {
+        StringBuilder sb = new StringBuilder("");
+        if (status != null || type != null || (startDate != null && endDate != null))
+        {
+            sb.append("where ");
+            if (status != null)
+            {
+                sb.append(String.format("statusId = %1s and ", statusesDict.get(status)));
+            }
+            if (type != null)
+            {
+                sb.append(String.format("taskTypeId = %1s and ", taskTypesDict.get(type)));
+            }
+            if (startDate != null && endDate != null)
+            {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date startD = new Date();
+                Date endD = new Date();
+                try {
+                    startD = formatter.parse(startDate);
+                    endD = formatter.parse(endDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
+                {
+                    String start = formatter.format(startD);
+                    String end = formatter.format(endD);
+                    sb.append(String.format("exec_date >= '%1s' and exec_date < '%2s' and ", start, end));
+                }
+            }
+            sb.setLength(sb.length() - 4); //remove the last "and "
+        }
+        return sb.toString();
+    }
+
+
     /*
     SP Parameters:
         IN taskTypeId int,
@@ -223,7 +340,9 @@ public class JDBC {
     public static void main(String[] args) {
         try {
             JDBC jdbc = new JDBC();
-            Document doc = jdbc.getUsers();
+            Document doc = jdbc.getFilteredTasks(null, null, "2017-03-10","2017-03-20", 1);
+
+           //Document doc = jdbc.getUsers();
             System.out.println(Utils.DocumentToString(doc));
         } catch (Exception ex) {
             System.out.println("threw exception");

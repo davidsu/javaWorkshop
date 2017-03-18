@@ -3,7 +3,7 @@ package example;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
-
+import java.util.Date;
 /**
  * Created by davidsu on 13/03/2017.
  */
@@ -24,6 +24,22 @@ public class Tasks {
         return null;
     }
 
+    @GET
+    @Secured
+    @Path("/filteredTasks")
+    public String getFilteredTasks(@PathParam("status") String status, @PathParam("type") String type,
+                                   @PathParam("startDate") String startDate, @PathParam("endDate") String endDate, @PathParam("page") int page) {
+        try {
+            Document doc = JDBC.getFilteredTasks(status, type, startDate, endDate, page);
+            return Utils.DocumentToString(doc);
+        } catch (Exception e) {
+            System.out.println("exception in getTasks");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //todo - why do we use id in this method?
     @GET
     @Secured
     @Path("/newTaskMetadata")
