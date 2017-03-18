@@ -20,7 +20,7 @@ public class Users {
     @GET
     @Secured
     @RolesAllowed("admin")
-    public Response getUsers(@Context SecurityContext securityContext) {
+    public Response getUsers() {
         try {
             Document doc = JDBC.getUsers();
             return Response.ok(Utils.DocumentToString(doc)).build();
@@ -38,14 +38,11 @@ public class Users {
     @RolesAllowed("admin")
     //todo return proper errors to client when failing
     public void createOrUpdate(String incomingXML) {
-        new Thread(() -> {
             try {
                 Document doc = Utils.createDocumentFromString(incomingXML);
                 JDBC.createOrUpdateUser(doc);
             } catch (Exception e) {
             }
-        }).start();
-
     }
 
     @GET
