@@ -30,7 +30,6 @@ public class ReceiveClientRequests {
             File file = new File(url.getPath());
             return Response.ok(new FileInputStream(file)).build();
         } catch (Exception e) {
-            //todo send 404
             System.out.println("exception");
             e.printStackTrace();
             return Response.status(Response.Status.NOT_FOUND).build();
