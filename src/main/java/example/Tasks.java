@@ -11,37 +11,37 @@ import java.util.Date;
 public class Tasks {
     //todo return proper errors to client when failing
     //todo which columns must be 'not null' in tasks table?
-    @GET
-    @Secured
-    public String getTasks(@QueryParam("status") String status,
-                           @QueryParam("type") String type,
-                           @QueryParam("exec_date") String exec_date,
-                           @QueryParam("page") Integer page) {
-        System.out.println("status = " + status);
-        System.out.println("type = " + type);
-        System.out.println("exec_date = " + exec_date);
-        System.out.println("page = " + page);
-        try {
-            Document doc = JDBC.getTasks(page);
-            return Utils.DocumentToString(doc, true);
-        } catch (Exception e) {
-            System.out.println("exception in getTasks");
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @GET
+//    @Secured
+//    public String getTasks(@QueryParam("status") String status,
+//                           @QueryParam("type") String type,
+//                           @QueryParam("exec_date") String exec_date,
+//                           @QueryParam("page") Integer page) {
+//        System.out.println("status = " + status);
+//        System.out.println("type = " + type);
+//        System.out.println("exec_date = " + exec_date);
+//        System.out.println("page = " + page);
+//        try {
+//            Document doc = JDBC.getTasks(page);
+//            return Utils.DocumentToString(doc, true);
+//        } catch (Exception e) {
+//            System.out.println("exception in getTasks");
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @GET
     @Secured
-    @Path("/filteredTasks")
+    //@Path("/filteredTasks")
     public String getFilteredTasks(@QueryParam("status") String status,
                                    @QueryParam("type") String type,
                                    @QueryParam("startDate") String startDate,
                                    @QueryParam("endDate") String endDate,
-                                   @QueryParam("page") int page) {
+                                   @QueryParam("page") Integer page) {
         try {
             Document doc = JDBC.getFilteredTasks(status, type, startDate, endDate, page);
-            return Utils.DocumentToString(doc);
+            return Utils.DocumentToString(doc, true);
         } catch (Exception e) {
             System.out.println("exception in getTasks");
             e.printStackTrace();

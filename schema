@@ -128,6 +128,15 @@ END;
 $$
 
 
+CREATE OR REPLACE VIEW v_Tasks AS
+SELECT t.id, open_date, statusName as status, exec_date, taskType
+FROM tasks t
+JOIN taskTypes tt on t.taskTypeId = tt.id
+JOIN status s on t.statusId = s.id ORDER BY id;
+
+
+
+
 INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)
 VALUE (1, 1, 3, 2, 1, '2017-03-11', '2017-03-11', 1, 1, 1, 0, NULL, NULL, NULL);
 

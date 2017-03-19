@@ -298,17 +298,18 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    public static Document getFilteredTasks(String status, String type, String startDate, String endDate, int page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static Document getFilteredTasks(String status, String type, String startDate, String endDate, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
 
         stmt = getInstance().conn.createStatement();
+        page = ( page == null ? 1 : page );
         String filter = buildTaskFilter(status, type, startDate, endDate);
         String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from Tasks %3s",pageSize, page, filter);
         rs = stmt.executeQuery(_sql);
         Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
         String pageFilter = String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
-        _sql = "select * from Tasks " + filter + pageFilter;
+        _sql = "select * from v_Tasks " + filter + pageFilter;
         rs = stmt.executeQuery(_sql);
         Document resDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
         Document[] docs = {pageDoc, resDoc};
