@@ -298,14 +298,14 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    public static Document getFilteredTasks(String status, String type, String startDate, String endDate, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static Document getFilteredTasks(String status, String type, String openDate, String execDate, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
 
         stmt = getInstance().conn.createStatement();
         page = ( page == null ? 1 : page );
-        String filter = buildTaskFilter(status, type, startDate, endDate);
-        String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from Tasks %3s",pageSize, page, filter);
+        String filter = buildTaskFilter(status, type, openDate, execDate);
+        String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from v_Tasks %3s",pageSize, page, filter);
         rs = stmt.executeQuery(_sql);
         Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
         String pageFilter = String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
@@ -316,43 +316,83 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    private static String buildTaskFilter(String status, String type, String startDate, String endDate)
+    private static String buildTaskFilter(String status, String type, String openDate, String execDate)
     {
         StringBuilder sb = new StringBuilder("");
-        if (status != null || type != null || (startDate != null && endDate != null))
+        if (status != null || type != null || openDate != null || execDate != null)
         {
             sb.append("where ");
             if (status != null)
             {
-                sb.append(String.format("statusId = %1s and ", statusesDict.get(status)));
+                sb.append(buildFilter(status, "status"));
+                //sb.append(String.format("statusId = %1s and ", statusesDict.get(status)));
             }
             if (type != null)
             {
-                sb.append(String.format("taskTypeId = %1s and ", taskTypesDict.get(type)));
+                sb.append(buildFilter(type, "taskType"));
+                //sb.append(String.format("taskTypeId = %1s and ", taskTypesDict.get(type)));
             }
-            if (startDate != null && endDate != null)
+            if (openDate != null && checkDates(openDate))
             {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Date startD = new Date();
-                Date endD = new Date();
-                try {
-                    startD = formatter.parse(startDate);
-                    endD = formatter.parse(endDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
-                {
-                    String start = formatter.format(startD);
-                    String end = formatter.format(endD);
-                    sb.append(String.format("exec_date >= '%1s' and exec_date < '%2s' and ", start, end));
-                }
+                sb.append(buildDatesFilter(openDate, "open_date"));
             }
+            if (execDate != null && checkDates(execDate))
+            {
+                sb.append(buildDatesFilter(execDate, "exec_date"));
+            }
+
             sb.setLength(sb.length() - 4); //remove the last "and "
         }
         return sb.toString();
     }
 
+    private static boolean checkDates(String dates)
+    {
+        String[] datesArr = dates.split(",");
+        if (datesArr.length != 2) return false;
+        if (!dateValid(datesArr[0]) || !dateValid(datesArr[1])) return false;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startD = new Date();
+        Date endD = new Date();
+        try {
+            startD = formatter.parse(datesArr[0]);
+            endD = formatter.parse(datesArr[1]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean dateValid(String date)
+    {
+        if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return true;
+        }
+        return false;
+    }
+
+    //builds a filter for none date column with multiple values separated by *
+    private static String buildFilter(String values, String columnName)
+    {
+        String[] valuesArr = values.split("\\*");
+        for (int i=0; i < valuesArr.length; i++)
+        {
+            valuesArr[i] = columnName + " like '%" + valuesArr[i] + "%' ";
+        }
+        return String.join(" OR ", valuesArr) + " and ";
+    }
+
+    //build a filter for dates
+    private static String buildDatesFilter(String dates, String dateColumn)
+    {
+        String[] datesArr = dates.split(",");
+        String filter = dateColumn + " >= '" + datesArr[0] + "' and " + dateColumn + " < '" + datesArr[1] + "' and ";
+        return filter;
+    }
 
     /*
     SP Parameters:
