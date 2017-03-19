@@ -13,10 +13,17 @@ public class Tasks {
     //todo which columns must be 'not null' in tasks table?
     @GET
     @Secured
-    public String getTasks() {
+    public String getTasks(@QueryParam("status") String status,
+                           @QueryParam("type") String type,
+                           @QueryParam("exec_date") String exec_date,
+                           @QueryParam("page") Integer page) {
+        System.out.println("status = " + status);
+        System.out.println("type = " + type);
+        System.out.println("exec_date = " + exec_date);
+        System.out.println("page = " + page);
         try {
-            Document doc = JDBC.getTasks();
-            return Utils.DocumentToString(doc);
+            Document doc = JDBC.getTasks(page);
+            return Utils.DocumentToString(doc, true);
         } catch (Exception e) {
             System.out.println("exception in getTasks");
             e.printStackTrace();
@@ -27,8 +34,11 @@ public class Tasks {
     @GET
     @Secured
     @Path("/filteredTasks")
-    public String getFilteredTasks(@PathParam("status") String status, @PathParam("type") String type,
-                                   @PathParam("startDate") String startDate, @PathParam("endDate") String endDate, @PathParam("page") int page) {
+    public String getFilteredTasks(@QueryParam("status") String status,
+                                   @QueryParam("type") String type,
+                                   @QueryParam("startDate") String startDate,
+                                   @QueryParam("endDate") String endDate,
+                                   @QueryParam("page") int page) {
         try {
             Document doc = JDBC.getFilteredTasks(status, type, startDate, endDate, page);
             return Utils.DocumentToString(doc);

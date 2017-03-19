@@ -16,7 +16,7 @@ import java.util.Date;
 public class JDBC {
     //todo need to implement something to avoid sql injection
     private Connection conn;
-    private static final int pageSize = 2;
+    private static final int pageSize = 20;
     private static JDBC instance = null;
 
     private static HashMap<String, Integer> environmentsDict = new HashMap<String, Integer>();
@@ -272,18 +272,30 @@ public class JDBC {
 
     }
 
-    public static Document getTasks() throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static Document getTasks(Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
+        String _sql;
 
         stmt = getInstance().conn.createStatement();
-        String _sql = "" +
+        page = ( page == null ? 1 : page );
+
+        _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from Tasks ",pageSize, page);
+        rs = stmt.executeQuery(_sql);
+        Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
+
+
+        _sql = "" +
                 "select t.id, open_date, statusName as status, exec_date, taskType " +
                 "from tasks t " +
                 "join taskTypes tt on t.taskTypeId = tt.id " +
-                "join status s on t.statusId = s.id";
+                "join status s on t.statusId = s.id order by id" +
+                String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
         rs = stmt.executeQuery(_sql);
-        return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
+        Document tasksDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
+        Document[] docs = {pageDoc, tasksDoc};
+
+        return Utils.mergeDocs(docs);
     }
 
     public static Document getFilteredTasks(String status, String type, String startDate, String endDate, int page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
