@@ -5,6 +5,9 @@ import Tasks from './tasks.jsx'
 import Task from './task.jsx'
 import Users from './users.jsx'
 import User from './user.jsx'
+import ajax from '../ajax.js'
+
+
 class rootComponent extends React.Component {
 
     componentWillMount(){
@@ -17,6 +20,12 @@ class rootComponent extends React.Component {
         })
     }
 
+    refreshTasks(){
+        ajax.getTasks(() => {
+            window.store.activeMenu = 'tasks'
+            window.rootComponent.forceUpdate()
+        }, window.store.tasksMetaData.Page, window.store.tasksFilter)
+    }
     activePage() {
         switch(true) {
             case /login/.test(window.store.activeMenu):
@@ -24,7 +33,7 @@ class rootComponent extends React.Component {
             case /tasks/.test(window.store.activeMenu):
                 return <Tasks tasks={window.store.tasks} metaData={window.store.tasksMetaData}></Tasks>
             case /task:.*/.test(window.store.activeMenu):
-                return <Task {...window.store.task}></Task>
+                return <Task {...window.store.task} onClose={this.refreshTasks}></Task>
             case /users/.test(window.store.activeMenu):
                 return <Users users={window.store.users}></Users>
             case /user:.*/.test(window.store.activeMenu):

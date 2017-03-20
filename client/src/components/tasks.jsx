@@ -20,7 +20,10 @@ class tasks extends React.Component {
 
     filterChanged(evt, filters){
         if(evt.key === 'Enter'){
-            ajax.getTasks(() => rootComponent.forceUpdate(), this.props.metaData.Page, filters);
+            ajax.getTasks(() => {
+                rootComponent.forceUpdate();
+                window.store.tasksFilter = filters
+            }, this.props.metaData.Page, filters);
         }
     }
 
