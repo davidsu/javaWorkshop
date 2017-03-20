@@ -30,10 +30,32 @@ function xmlToJsonArray(data, elementName){
     return result;
 }
 
-function getTasks(callback){
-    $.get('tasks', (data, status) => {
+function xmlToJson(data, elementName){
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(data, 'text/xml');
+    const element = xmlDoc.getElementsByTagName(elementName)[0];
+    const result = _.reduce(element.children, (acc, child) => {
+        acc[child.tagName] = child.textContent
+        return acc
+    }, {})
+    return result;
+}
+
+function getTasks(callback, page = 1, filters = {}){
+    let filter = '&'
+    _.forEach(filters, (val, key) => {
+        if(val){
+            filter = filter + key + '=' + val + '&'
+        }
+    })
+    $.get('tasks?page='+page+filter, (data, status) => {
         console.log(window.prettyHtml(data));
         window.store.tasks = xmlToJsonArray(data, 'task')
+        const metaData = xmlToJson(data, 'PageInfo')
+        _.forEach(metaData, (val, key) => {
+            metaData[key] = Number(val)
+        })
+        window.store.tasksMetaData = metaData
         callback();
     })
 }
@@ -50,6 +72,7 @@ function getTaskMetadata(callback){
             priority: xmlToJsonArray(data, 'priority'),
             status: xmlToJsonArray(data, 'status')
         }
+        console.log(window.prettyHtml(data));
         callback()
     })
 }
@@ -103,6 +126,7 @@ function createOrUpdateUser(user, callback){
 function getUsers(callback) {
     $.get('users', (data, status) => {
         window.store.users = xmlToJsonArray(data, 'user')
+        console.log(window.prettyHtml(data));
         callback();
     })
 }

@@ -35,10 +35,13 @@ public class Tasks {
     @Secured
     //@Path("/filteredTasks")
     public String getFilteredTasks(@QueryParam("status") String status,
-                                   @QueryParam("type") String type,
+                                   @QueryParam("taskType") String type,
                                    @QueryParam("openDate") String openDate,
                                    @QueryParam("execDate") String execDate,
                                    @QueryParam("page") Integer page) {
+        System.out.println("status = " + status);
+        System.out.println("type = " + type);
+        System.out.println("page = " + page);
         try {
             Document doc = JDBC.getFilteredTasks(status, type, openDate, execDate, page);
             return Utils.DocumentToString(doc, true);

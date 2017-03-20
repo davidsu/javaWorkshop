@@ -22,15 +22,15 @@ class rootComponent extends React.Component {
             case /login/.test(window.store.activeMenu):
                 return <SystemLogin></SystemLogin>
             case /tasks/.test(window.store.activeMenu):
-                return <Tasks tasks={window.store.tasks}></Tasks>
+                return <Tasks tasks={window.store.tasks} metaData={window.store.tasksMetaData}></Tasks>
+            case /task:.*/.test(window.store.activeMenu):
+                return <Task {...window.store.task}></Task>
             case /users/.test(window.store.activeMenu):
                 return <Users users={window.store.users}></Users>
             case /user:.*/.test(window.store.activeMenu):
                 return <User user={window.store.user}></User>
-            case /task:.*/.test(window.store.activeMenu):
-                return <Task {...window.store.task}></Task>
             default:
-                return null;
+                return <SystemLogin></SystemLogin>;
         }
     }
 

@@ -22,6 +22,7 @@ class filterableTable extends React.Component{
     filter(evt, val) {
         const filters = this.state.filters;
         filters[val] = evt.nativeEvent.srcElement.value;
+        this.props.filterChanged(evt, filters);
         this.setState({filters})
     }
 
@@ -77,7 +78,7 @@ class filterableTable extends React.Component{
             <tbody>
             {_(self.props.items)
                 .filter(item => {
-                    return _.every(item, (value = '', key = '0') => {
+                    return !this.props.clientSideFilter || _.every(item, (value = '', key = '0') => {
                         return !self.state.filters[key] || value.indexOf(self.state.filters[key]) > -1})
                 })
                 .thru(arr => {
@@ -143,10 +144,17 @@ class filterableTable extends React.Component{
 filterableTable.propTypes = {
     addItemDisplayName: React.PropTypes.string,
     columns: React.PropTypes.array,
+    clientSideFilter: React.PropTypes.bool,
+    filterChanged: React.PropTypes.func,
     items: React.PropTypes.array,
     onAddItem: React.PropTypes.func,
     onTableRowClicked: React.PropTypes.func,
     panelTitle: React.PropTypes.string
+}
+
+filterableTable.defaultProps = {
+    clientSideFilter: true,
+    filterChanged: _.noop
 }
 
 module.exports = filterableTable
