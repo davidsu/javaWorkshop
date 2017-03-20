@@ -10,19 +10,21 @@ const columns = [
     'password'
 ];
 class users extends React.Component {
+    constructor(){
+        super()
+        this.tableRowClicked = this.tableRowClicked.bind(this)
+        this.addUser = this.addUser.bind(this)
+    }
     tableRowClicked(user) {
-        window.store.activeMenu = 'user:'
-        window.store.user = user
-        rootComponent.forceUpdate()
+        this.props.setCurrentUser(user)
     }
 
     addUser() {
-        window.store.user = _.reduce(columns, (acc, val) => {
+        const user = _.reduce(columns, (acc, val) => {
             acc[val] = '';
             return acc;
         }, {})
-        window.store.activeMenu = 'user:'
-        rootComponent.forceUpdate()
+        this.props.setCurrentUser(user)
     }
 
     render() {

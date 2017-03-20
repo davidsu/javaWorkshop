@@ -9,11 +9,11 @@ class systemLogin extends React.Component {
         this.submitClicked = this.submitClicked.bind(this)
     }
     submitClicked() {
+        const self = this;
         ajax.login(this.state.user, this.state.password, token => {
             console.log(token)
-            window.store.token = token
-            window.store.activeMenu = 'tasks';
-            rootComponent.forceUpdate()
+            window.token = token
+            self.props.onDone()
         }, (jqXHR, textStatus, errorThrown) => {
             alert(`server returned with ${jqXHR.status}: ${errorThrown}`)
         })

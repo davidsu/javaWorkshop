@@ -11,28 +11,29 @@ const columns = [
     'status',
     'exec_date'
 ];
+//todo click on paginagion retain filter
+//todo return from edit task retain filter
 class tasks extends React.Component {
     constructor(){
         super()
         this.paginationClicked = this.paginationClicked.bind(this)
         this.filterChanged = this.filterChanged.bind(this)
+        this.tableRowClicked = this.tableRowClicked.bind(this)
     }
 
     filterChanged(evt, filters){
+        const setTasksFilter = this.props.setTasksFilter
         if(evt.key === 'Enter'){
             ajax.getTasks(() => {
                 rootComponent.forceUpdate();
-                window.store.tasksFilter = filters
+                setTasksFilter(filters)
             }, this.props.metaData.Page, filters);
         }
     }
 
     addTask() {
         console.log('addTaskClicked: ');
-        ajax.getTaskMetadata(()=>{
-            window.store.activeMenu = 'task:'
-            rootComponent.forceUpdate();
-        })
+        ajax.getTaskMetadata(this.props.onAddingTask)
     }
 
     paginationClicked(e){
@@ -42,11 +43,7 @@ class tasks extends React.Component {
     }
 
     tableRowClicked(task){
-        window.store.task = task;
-        ajax.getTask(task.id, () => {
-            window.store.activeMenu = 'task:'
-            rootComponent.forceUpdate();
-        })
+        this.props.setCurrentTask(task);
         console.log('tableRowClicked: ', task);
     }
 
@@ -66,7 +63,7 @@ class tasks extends React.Component {
         return (
             <div className="container">
                 <FilterableTable
-                    onAddItem={this.addTask}
+                    onAddItem={this.props.onAddingTask}
                     addItemDisplayName='Add Task'
                     columns={columns}
                     panelTitle='tasks'

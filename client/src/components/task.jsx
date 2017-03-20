@@ -56,11 +56,6 @@ class task extends React.Component {
         this.additionalInfoChanged = e => {console.log(e.target.value); this.setState({additionalInfo: e.target.value})}
     }
 
-    close() {
-        window.store.activeMenu = 'tasks'
-        window.rootComponent.forceUpdate()
-    }
-
     submitClicked(){
         ajax.createOrUpdateTask(this.state, this.props.onClose)
     }
@@ -77,7 +72,7 @@ class task extends React.Component {
                                 <h2 className="panel-title"><span style={{textDecoration: 'underline', color:'#555'}}>TASK</span> {this.state.id ? ': id = ' + this.state.id : ''}</h2>
 
                                 <div className="pull-right">
-                                    <button type="button" className="close table-filter-btn" onClick={this.close}>x
+                                    <button type="button" className="close table-filter-btn" onClick={this.props.onClose}>x
                                     </button>
                                 </div>
                             </div>

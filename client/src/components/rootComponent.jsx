@@ -6,47 +6,92 @@ import Task from './task.jsx'
 import Users from './users.jsx'
 import User from './user.jsx'
 import ajax from '../ajax.js'
+import store from '../store.js'
 
 
+function wishToAddTask(){
+    ajax.getTaskMetadata(()=>{
+        store.setActiveMenu('task:')
+        window.rootComponent.forceUpdate();
+    })
+}
 class rootComponent extends React.Component {
 
+    constructor(){
+        super()
+        this.goToTasks = this.goToTasks.bind(this)
+        this.setActiveMenuAndRefresh = this.setActiveMenuAndRefresh.bind(this)
+        this.setCurrentUser = this.setCurrentUser.bind(this)
+        this.refreshUsers = this.refreshUsers.bind(this)
+    }
     componentWillMount(){
         window.rootComponent = this;
     }
 
-    getUsers() {
-        $.get('users', (data, status) => {
-            $('#response').html(_.escape(data).replace(/\n/gm, '<br>'))
+    refreshUsers(){
+        ajax.getUsers(() => {
+            this.gotToUsers()
         })
     }
 
     refreshTasks(){
         ajax.getTasks(() => {
-            window.store.activeMenu = 'tasks'
+            store.setActiveMenu('tasks')
             window.rootComponent.forceUpdate()
-        }, window.store.tasksMetaData.Page, window.store.tasksFilter)
+        }, store.getTasksMetadata().Page, store.getTasksFilter)
     }
+    goToTasks(){
+        store.setActiveMenu('tasks');
+        window.rootComponent.forceUpdate()
+    }
+    gotToUsers(){
+        store.setActiveMenu('users');
+        window.rootComponent.forceUpdate()
+    }
+
+    setActiveMenuAndRefresh(activeMenu){
+        store.setActiveMenu(activeMenu)
+        window.rootComponent.forceUpdate()
+    }
+
+    setCurrentUser(user){
+        store.setCurrentUser(user)
+        this.setActiveMenuAndRefresh('user:')
+    }
+    setCurrentTask(task){
+        store.setCurrentTask(task)
+        ajax.getTask(task.id, () => {
+            store.setActiveMenu('task:')
+            window.rootComponent.forceUpdate();
+        })
+    }
+
     activePage() {
         switch(true) {
-            case /login/.test(window.store.activeMenu):
-                return <SystemLogin></SystemLogin>
-            case /tasks/.test(window.store.activeMenu):
-                return <Tasks tasks={window.store.tasks} metaData={window.store.tasksMetaData}></Tasks>
-            case /task:.*/.test(window.store.activeMenu):
-                return <Task {...window.store.task} onClose={this.refreshTasks}></Task>
-            case /users/.test(window.store.activeMenu):
-                return <Users users={window.store.users}></Users>
-            case /user:.*/.test(window.store.activeMenu):
-                return <User user={window.store.user}></User>
+            case /login/.test(store.getActiveMenu()):
+                return <SystemLogin onDone={this.goToTasks}></SystemLogin>
+            case /tasks/.test(store.getActiveMenu()):
+                return <Tasks tasks={store.getTasks()}
+                              metaData={store.getTasksMetadata()}
+                              setTasksFilter={store.setTasksFilter}
+                              setCurrentTask={this.setCurrentTask}
+                              onAddingTask={wishToAddTask}></Tasks>
+            case /task:.*/.test(store.getActiveMenu()):
+                return <Task {...store.getCurrentTask()} onClose={this.refreshTasks}></Task>
+            case /users/.test(store.getActiveMenu()):
+                return <Users users={store.getUsers()}
+                              setCurrentUser={this.setCurrentUser}></Users>
+            case /user:.*/.test(store.getActiveMenu()):
+                return <User user={store.getCurrentUser()} onClose={this.refreshUsers} changeUser={this.refreshUsers}></User>
             default:
-                return <SystemLogin></SystemLogin>;
+                return <SystemLogin onDone={this.goToTasks}></SystemLogin>;
         }
     }
 
     render() {
         return (
             <div>
-                <NavigationMenu></NavigationMenu>
+                <NavigationMenu activeMenu={store.getActiveMenu()} setActiveMenu={this.setActiveMenuAndRefresh}></NavigationMenu>
                 {this.activePage()}
             </div>
         )

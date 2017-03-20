@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import store from './store.js'
 
 $.ajaxSetup({
     beforeSend: function(xhr) {
@@ -50,12 +51,12 @@ function getTasks(callback, page = 1, filters = {}){
     })
     $.get('tasks?page='+page+filter, (data, status) => {
         console.log(window.prettyHtml(data));
-        window.store.tasks = xmlToJsonArray(data, 'task')
+        store.setTasks(xmlToJsonArray(data, 'task'))
         const metaData = xmlToJson(data, 'PageInfo')
         _.forEach(metaData, (val, key) => {
             metaData[key] = Number(val)
         })
-        window.store.tasksMetaData = metaData
+        store.setTasksMetadata(metaData)
         callback();
     })
 }
@@ -63,7 +64,7 @@ function getTasks(callback, page = 1, filters = {}){
 function getTaskMetadata(callback){
     $.get('tasks/newTaskMetadata', (data, status) => {
         const usersArray = xmlToJsonArray(data, 'user')
-        window.store.task = {
+        store.setCurrentTask({
             task: {},
             taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
             products: xmlToJsonArray(data, 'product'),
@@ -71,7 +72,7 @@ function getTaskMetadata(callback){
             users: xmlToJsonArray(data, 'user'),
             priority: xmlToJsonArray(data, 'priority'),
             status: xmlToJsonArray(data, 'status')
-        }
+        })
         console.log(window.prettyHtml(data));
         callback()
     })
@@ -81,7 +82,7 @@ function getTask(taskId, callback){
     $.get('tasks/' + taskId, (data, status) => {
         console.log(window.prettyHtml(data))
         const usersArray = xmlToJsonArray(data, 'user')
-        window.store.task = {
+        store.setCurrentTask({
             task: xmlToJsonArray(data, 'task')[0],
             taskTypes: xmlToJsonArray(data, 'taskTypeEntry'),
             products: xmlToJsonArray(data, 'product'),
@@ -89,13 +90,13 @@ function getTask(taskId, callback){
             users: xmlToJsonArray(data, 'user'),
             priority: xmlToJsonArray(data, 'priority'),
             status: xmlToJsonArray(data, 'status')
-        }
+        })
         callback()
     })
 }
 function createOrUpdateTask(taskObj, callback){
     const updateObj = _.reduce(taskObj, (acc, val, key) =>{
-        if(val !== window.store.task.task[key] || (key === 'id' && val)){
+        if(val !== store.getCurrentTask()[key] || (key === 'id' && val)){
             acc[key] = val;
         }
         return acc;
@@ -125,7 +126,7 @@ function createOrUpdateUser(user, callback){
 
 function getUsers(callback) {
     $.get('users', (data, status) => {
-        window.store.users = xmlToJsonArray(data, 'user')
+        store.setUsers(xmlToJsonArray(data, 'user'))
         console.log(window.prettyHtml(data));
         callback();
     })
