@@ -36,8 +36,8 @@ public class Tasks {
     //@Path("/filteredTasks")
     public String getFilteredTasks(@QueryParam("status") String status,
                                    @QueryParam("taskType") String type,
-                                   @QueryParam("openDate") String openDate,
-                                   @QueryParam("execDate") String execDate,
+                                   @QueryParam("open_date") String openDate,
+                                   @QueryParam("exec_date") String execDate,
                                    @QueryParam("page") Integer page) {
         System.out.println("status = " + status);
         System.out.println("type = " + type);
