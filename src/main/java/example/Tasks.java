@@ -34,7 +34,8 @@ public class Tasks {
     @GET
     @Secured
     //@Path("/filteredTasks")
-    public String getFilteredTasks(@QueryParam("status") String status,
+    public String getFilteredTasks(@QueryParam("id") String id,
+                                   @QueryParam("status") String status,
                                    @QueryParam("taskType") String type,
                                    @QueryParam("open_date") String openDate,
                                    @QueryParam("exec_date") String execDate,
@@ -43,7 +44,7 @@ public class Tasks {
         System.out.println("type = " + type);
         System.out.println("page = " + page);
         try {
-            Document doc = JDBC.getFilteredTasks(status, type, openDate, execDate, page);
+            Document doc = JDBC.getFilteredTasks(id, status, type, openDate, execDate, page);
             return Utils.DocumentToString(doc, true);
         } catch (Exception e) {
             System.out.println("exception in getTasks");
