@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -317,44 +318,21 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    private static String buildTaskFilter(String id, String status, String type, String openDate, String execDate)
-    {
-        StringBuilder sb = new StringBuilder("");
+    private static String buildTaskFilter(String id, String status, String type, String openDate, String execDate) {
         ArrayList<String> filterArr = new ArrayList<>();
-            //sb.append("where ");
-            if (id != null && checkIds(id))
-            {
-                filterArr.add(buildIdFilter(id));
-                //sb.append(buildIdFilter(id));
-            }
-            if (status != null)
-            {
-                filterArr.add(buildFilter(status, "status"));
-                //sb.append(buildFilter(status, "status"));
-            }
-            if (type != null)
-            {
-                filterArr.add(buildFilter(type, "taskType"));
-                //sb.append(buildFilter(type, "taskType"));
-            }
-            if (openDate != null && checkDates(openDate))
-            {
-                filterArr.add(buildDatesFilter(openDate, "open_date"));
-                //sb.append(buildDatesFilter(openDate, "open_date"));
-            }
-            if (execDate != null && checkDates(execDate))
-            {
-                filterArr.add(buildDatesFilter(execDate, "exec_date"));
-                //sb.append(buildDatesFilter(execDate, "exec_date"));
-            }
-
-            //sb.setLength(sb.length() - 4); //remove the last "and "
+        filterArr.add(buildIdFilter(id));
+        filterArr.add(buildFilter(status, "status"));
+        filterArr.add(buildFilter(type, "taskType"));
+        filterArr.add(buildDatesFilter(openDate, "open_date"));
+        filterArr.add(buildDatesFilter(execDate, "exec_date"));
+        filterArr.removeAll(Collections.singleton(null));
         String filter = String.join(" and ", filterArr);
         return filter.length() > 0 ? " where " + filter : "";
     }
 
     private static String buildIdFilter(String ids)
     {
+        if(ids == null || !checkIds(ids)) return null;
         String[] idsArr = ids.split(",");
         String retVal = "";
         if (idsArr.length == 1)
@@ -427,6 +405,7 @@ public class JDBC {
     //builds a filter for none date column with multiple values separated by *
     private static String buildFilter(String values, String columnName)
     {
+        if(values == null) return null;
         String[] valuesArr = values.split("\\*");
         for (int i=0; i < valuesArr.length; i++)
         {
@@ -438,6 +417,7 @@ public class JDBC {
     //build a filter for dates
     private static String buildDatesFilter(String dates, String dateColumn)
     {
+        if(dates == null || !checkDates(dates)) return null;
         String[] datesArr = dates.split(",");
         String filter = "";
         if (datesArr.length == 1)
