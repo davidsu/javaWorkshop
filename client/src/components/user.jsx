@@ -2,21 +2,16 @@ import React from 'react'
 import _ from 'lodash'
 import ajax from '../ajax.js'
 
-function isEmptyUser(){
-    return _.every(window.store.user, val=>!val);
-}
 class user extends React.Component{
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
+        this.isEmptyUser = () => _.every(props.user, val=>!val);
         this.state = {
-            user: isEmptyUser() ? _.omit(window.store.user, ['id']) : window.store.user
+            user: this.isEmptyUser() ? _.omit(props.user, ['id']) : props.user
         }
         this.submitClicked = this.submitClicked.bind(this);
-    }
-    close() {
-        window.store.activeMenu = 'users';
-        rootComponent.forceUpdate();
+        this.close = this.props.onClose
     }
 
     submitClicked() {
@@ -27,8 +22,7 @@ class user extends React.Component{
         }, {}), () => {
             setTimeout(() => {
                 ajax.getUsers(() => {
-                    window.store.activeMenu = 'users';
-                    rootComponent.forceUpdate();
+                    this.props.onClose()
                 })
             }, 200)
 
@@ -51,7 +45,7 @@ class user extends React.Component{
                             <div className="panel-heading">
                                 <h3 className="panel-title">User</h3>
                                 <div className="pull-right">
-                                    <button type="button" className="close table-filter-btn" onClick={this.close}>x</button>
+                                    <button type="button" className="close table-filter-btn" onClick={this.props.onClose}>x</button>
                                 </div>
                             </div>
                             <div className="panel-body">
@@ -67,7 +61,7 @@ class user extends React.Component{
                                         })}
                                         <br/>
                                         <input className="btn btn-lg btn-success btn-block" onClick={this.submitClicked}
-                                               value={isEmptyUser() ? 'Add User' : 'Update'} readOnly={true}/>
+                                               value={this.isEmptyUser() ? 'Add User' : 'Update'} readOnly={true}/>
                                     </fieldset>
                                 </form>
                             </div>
