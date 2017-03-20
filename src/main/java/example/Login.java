@@ -5,24 +5,39 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import java.sql.SQLException;
 
 /**
  * Created by davidsu on 17/03/2017.
  */
 @Path("/login")
 public class Login {
-    private boolean authenticate(String user, String password){
+    private ActiveUser authenticate(String user, String password)
+    {
+        int userType;
+        ActiveUser aUser = null;
+        try
+        {
+            userType = JDBC.getUserType(user,password);
+            aUser = (userType != 0) ? new ActiveUser(user, userType): null;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         //todo see that value exist in dataBase
-        return true;
+        return aUser;
     }
     @GET
     public Response login(@QueryParam("user") String user, @QueryParam("password") String password){
         System.out.println("user: " + user);
         System.out.println("password: " + password);
-        if(authenticate(user, password)){
+        ActiveUser aUser =  authenticate(user, password);
+        if(aUser != null){
             String token = SessionHandler.nextSessionId();
             //todo we need to verify real user and pass the correct user type to this addActiveUser
-            SessionHandler.addActiveUser(token, "fixMe", "admin");
+            SessionHandler.addActiveUser(token, aUser);
             return Response.ok(token).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();

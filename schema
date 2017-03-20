@@ -6,7 +6,7 @@ use java_workshop;
 CREATE TABLE users(
     id int NOT NULL AUTO_INCREMENT,
     full_name VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL,
+    type int NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     UNIQUE(email),
@@ -43,6 +43,13 @@ CREATE TABLE status(
     PRIMARY KEY (id)
 );
 
+CREATE TABLE userTypes(
+    id int NOT NULL AUTO_INCREMENT,
+    userType VARCHAR(50),
+    PRIMARY KEY (id)
+);
+
+
 
 CREATE TABLE tasks(
     id int NOT NULL AUTO_INCREMENT,
@@ -73,15 +80,19 @@ CREATE TABLE tasks(
 );
 
 -- populate some basic data
-INSERT INTO users (full_name,type,email,password) VALUES ('David Susskind', 'admin', 'dchamud@gmail.com', 'bla');
-INSERT INTO users (full_name,type,email,password) VALUES ('Barak Obama', 'admin', 'barakobama@gmail.com',  'bla');
-INSERT INTO users (full_name,type,email,password) VALUES ('Luiz Inacio', 'admin', 'luizinacio@gmail.com', 'bla');
-INSERT INTO users (full_name,type,email,password) VALUES ('Alon Dangaur', 'admin', 'alondx2@gmail.com', 'bla');
-INSERT INTO users (full_name,type,email,password) VALUES ('Gabriel abu', 'admin', 'benjaminnetanyahu@gmail.com', '123');
-INSERT INTO users (full_name,type,email,password) VALUES ('Ido kaka', 'admin', 'idokaka@gmail.com', '234');
-INSERT INTO users (full_name,type,email,password) VALUES ('Blu ash', 'admin', 'bluash@gmail.com', '098');
-INSERT INTO users (full_name,type,email,password) VALUES ('Arthur L', 'admin', 'arthurl@gmail.com', 'asdf');
-INSERT INTO users (full_name,type,email,password) VALUES ('Katman Du', 'admin', 'katmandu@gmail.com', 'Katman Du');
+INSERT INTO userTypes (userType) VALUES ('Admin');
+INSERT INTO userTypes (userType) VALUES ('Requester');
+INSERT INTO userTypes (userType) VALUES ('Executor');
+
+INSERT INTO users (full_name,type,email,password) VALUES ('David Susskind', 1, 'dchamud@gmail.com', 'bla');
+INSERT INTO users (full_name,type,email,password) VALUES ('Barak Obama', 2, 'barakobama@gmail.com',  'bla');
+INSERT INTO users (full_name,type,email,password) VALUES ('Luiz Inacio', 2, 'luizinacio@gmail.com', 'bla');
+INSERT INTO users (full_name,type,email,password) VALUES ('Alon Dangaur', 1, 'alondx2@gmail.com', 'bla');
+INSERT INTO users (full_name,type,email,password) VALUES ('Gabriel abu', 3, 'benjaminnetanyahu@gmail.com', '123');
+INSERT INTO users (full_name,type,email,password) VALUES ('Ido kaka', 3, 'idokaka@gmail.com', '234');
+INSERT INTO users (full_name,type,email,password) VALUES ('Blu ash', 2, 'bluash@gmail.com', '098');
+INSERT INTO users (full_name,type,email,password) VALUES ('Arthur L', 2, 'arthurl@gmail.com', 'asdf');
+INSERT INTO users (full_name,type,email,password) VALUES ('Katman Du', 1, 'katmandu@gmail.com', 'Katman Du');
 
 
 INSERT INTO products (productName) VALUES ('WebApp1');
@@ -134,7 +145,11 @@ FROM tasks t
 JOIN taskTypes tt on t.taskTypeId = tt.id
 JOIN status s on t.statusId = s.id ORDER BY id;
 
-
+CREATE OR REPLACE VIEW v_Users AS
+SELECT u.id,full_name,ut.userType,email,password
+FROM users u
+JOIN userTypes ut on u.type = ut.id
+ORDER BY u.id;
 
 
 INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)

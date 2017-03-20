@@ -91,12 +91,41 @@ public class JDBC {
         }
     }
 
+    public static int getUserType(String user, String password) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
+    {
+        Statement stmt;
+        ResultSet rs;
+        stmt = getInstance().conn.createStatement();
+        rs = stmt.executeQuery(String.format("SELECT * FROM users where email = '%1s' and password = '%2s'", user, password));
+        return (!rs.next()) ? 0 : rs.getInt("type");
+    }
+
     public static Document getUsers() throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
         stmt = getInstance().conn.createStatement();
-        rs = stmt.executeQuery("SELECT * FROM users");
+        rs = stmt.executeQuery("SELECT * FROM v_Users");
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user");
+    }
+
+    public static Document getUser(String userId) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
+    {
+        Statement stmt;
+        ResultSet rs;
+        String _sql;
+        Connection conn = getInstance().conn;
+
+        stmt = conn.createStatement();
+        _sql = "select * from users where id = " + userId;
+        rs = stmt.executeQuery(_sql);
+        Document userDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task", "tasks");
+
+        stmt = conn.createStatement();
+        _sql = "select * from userTypes";
+        rs = stmt.executeQuery(_sql);
+        Document userTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "userType", "userTypes");
+        Document[] docs = {userDoc, userTypesDoc};
+        return Utils.mergeDocs(docs);
     }
 
     private static boolean needToQuote(String str) {

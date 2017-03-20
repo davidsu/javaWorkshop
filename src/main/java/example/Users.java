@@ -1,7 +1,7 @@
 package example;
 
 import org.w3c.dom.Document;
-
+import javax.ws.rs.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -23,7 +23,7 @@ public class Users {
     public Response getUsers() {
         try {
             Document doc = JDBC.getUsers();
-            return Response.ok(Utils.DocumentToString(doc)).build();
+            return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
             System.out.println("exception in getUsers");
             e.printStackTrace();
@@ -43,6 +43,20 @@ public class Users {
                 JDBC.createOrUpdateUser(doc);
             } catch (Exception e) {
             }
+    }
+
+    @GET
+    @Secured
+    @Path("/{id : [0-9]+}")
+    public String getUserById(@PathParam("id") String id){
+        try {
+            Document doc = JDBC.getUser(id);
+            return Utils.DocumentToString(doc, true);
+        } catch (Exception e) {
+            System.out.println("exception in getUsers");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GET

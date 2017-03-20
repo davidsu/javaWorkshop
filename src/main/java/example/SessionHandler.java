@@ -29,11 +29,11 @@ public class SessionHandler implements ContainerRequestFilter {
         //todo kick a thread that will periodically remove expired users from activeUsers
         //I guess we will need some write lock for thread safety on this hashMap but need to ask google
         //about hashMaps and multithreading
-        activeUsers.put("testuser", new ActiveUser("dummy@email", true));
+        activeUsers.put("testuser", new ActiveUser("dummy@email", 1));
     }
 
-    public static void addActiveUser(String token, String email, String type){
-        activeUsers.put(token, new ActiveUser(email, type.equals("admin")));
+    public static void addActiveUser(String token, ActiveUser user){
+        activeUsers.put(token, user);
     }
 
     public static String nextSessionId() {

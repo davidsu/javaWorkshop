@@ -9,14 +9,15 @@ public class ActiveUser {
     private boolean _isAdmin;
     private Calendar expirationDate;
     private String email;
-    public ActiveUser(String email, boolean isAdmin){
+    private int type;
+    public ActiveUser(String email, int type){
         this.email = email;
         this.refreshExpirationDate();
-        this._isAdmin = isAdmin;
+        this.type = type;
 
     }
     public boolean isAdmin(){
-        return _isAdmin;
+        return type == 1;
     }
     public boolean isExpired(){
         if(this.email.equals("dummy@email"))
