@@ -39,7 +39,7 @@ class tasks extends React.Component {
     paginationClicked(e){
         const page = e.target.textContent;
         const self = this
-        ajax.getTasks(() => rootComponent.forceUpdate(), page);
+        ajax.getTasks(() => rootComponent.forceUpdate(), page, this.props.filter);
     }
 
     tableRowClicked(task){
@@ -70,7 +70,8 @@ class tasks extends React.Component {
                     onTableRowClicked={this.tableRowClicked}
                     items={this.props.tasks}
                     clientSideFilter={false}
-                    filterChanged={this.filterChanged}>
+                    filterChanged={this.filterChanged}
+                    filters={this.props.filter}>
                 </FilterableTable>
                 <nav>
                     <ul className="pagination">

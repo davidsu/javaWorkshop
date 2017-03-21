@@ -7,14 +7,8 @@ import Users from './users.jsx'
 import User from './user.jsx'
 import ajax from '../ajax.js'
 import store from '../store.js'
+import taskController from '../controllers/taskController.js'
 
-
-function wishToAddTask(){
-    ajax.getTaskMetadata(()=>{
-        store.setActiveMenu('task:')
-        window.rootComponent.forceUpdate();
-    })
-}
 class rootComponent extends React.Component {
 
     constructor(){
@@ -58,26 +52,21 @@ class rootComponent extends React.Component {
         store.setCurrentUser(user)
         this.setActiveMenuAndRefresh('user:')
     }
-    setCurrentTask(task){
-        store.setCurrentTask(task)
-        ajax.getTask(task.id, () => {
-            store.setActiveMenu('task:')
-            window.rootComponent.forceUpdate();
-        })
-    }
 
     activePage() {
         switch(true) {
             case /login/.test(store.getActiveMenu()):
                 return <SystemLogin onDone={this.goToTasks}></SystemLogin>
             case /tasks/.test(store.getActiveMenu()):
-                return <Tasks tasks={store.getTasks()}
-                              metaData={store.getTasksMetadata()}
-                              setTasksFilter={store.setTasksFilter}
-                              setCurrentTask={this.setCurrentTask}
-                              onAddingTask={wishToAddTask}></Tasks>
+                return <Tasks tasks={taskController.getTasks()}
+                              metaData={taskController.getTasksMetadata()}
+                              setTasksFilter={taskController.setTasksFilter}
+                              filter={taskController.getActiveFilter()}
+                              setCurrentTask={taskController.setCurrentTask}
+                              onAddingTask={taskController.addNewTask}></Tasks>
             case /task:.*/.test(store.getActiveMenu()):
-                return <Task {...store.getCurrentTask()} onClose={this.refreshTasks}></Task>
+                //todo find what logic lives in task and put it in task controller, pass as prop
+                return <Task {...store.getCurrentTask()} onClose={taskController.goToTasks}></Task>
             case /users/.test(store.getActiveMenu()):
                 return <Users users={store.getUsers()}
                               setCurrentUser={this.setCurrentUser}></Users>

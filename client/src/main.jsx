@@ -2,12 +2,19 @@ import RootComponent from './components/rootComponent.jsx'
 import ReactDom from 'react-dom'
 import React from 'react'
 import ajax from './ajax'
-ajax.getTasks(()=>{
+import taskController from './controllers/taskController.js'
+taskController.goToTasks(() => {
     ReactDOM.render(
-      <RootComponent></RootComponent>,
-      $('#root')[0]
+        <RootComponent></RootComponent>,
+        $('#root')[0]
     )
 })
+//ajax.getTasks(()=>{
+//    ReactDOM.render(
+//      <RootComponent></RootComponent>,
+//      $('#root')[0]
+//    )
+//})
 
 
 

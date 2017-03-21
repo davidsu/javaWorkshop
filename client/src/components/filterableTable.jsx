@@ -7,7 +7,7 @@ class filterableTable extends React.Component{
         this.state = {
             isFiltering: false,
             filters: _.reduce(this.props.columns, (acc, val)=> {
-                acc[val] = '';
+                acc[val] = _.get(props.filter, val, '');
                 return acc;
             }, {}),
             sort: '',
