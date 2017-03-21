@@ -31,11 +31,6 @@ class tasks extends React.Component {
         }
     }
 
-    addTask() {
-        console.log('addTaskClicked: ');
-        ajax.getTaskMetadata(this.props.onAddingTask)
-    }
-
     paginationClicked(e){
         const page = e.target.textContent;
         const self = this

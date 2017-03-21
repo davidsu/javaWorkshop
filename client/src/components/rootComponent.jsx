@@ -58,6 +58,7 @@ class rootComponent extends React.Component {
             case /login/.test(store.getActiveMenu()):
                 return <SystemLogin onDone={this.goToTasks}></SystemLogin>
             case /tasks/.test(store.getActiveMenu()):
+                //todo there should be no ajax call in Tasks
                 return <Tasks tasks={taskController.getTasks()}
                               metaData={taskController.getTasksMetadata()}
                               setTasksFilter={taskController.setTasksFilter}
