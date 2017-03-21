@@ -25,6 +25,7 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
         lodash: '_',
+        moment: 'moment'
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json']
