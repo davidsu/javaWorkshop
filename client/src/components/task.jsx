@@ -4,6 +4,8 @@ import CheckBox from './checkbox.jsx'
 import ajax from '../ajax.js'
 import _ from 'lodash'
 
+import DatePicker from 'react-datepicker';
+
 function getTodayDateFormatted(){
     const d = new Date(Date.now());
     const year = d.getFullYear()
@@ -49,7 +51,7 @@ class task extends React.Component {
         this.resolvedByChange = e => this.setState({resolved_by_Id: e.target.value})
         this.priorityChange = e => this.setState({priorityId: e.target.value})
         this.statusChange = e => this.setState({statusId: e.target.value})
-        this.executionDateChange = e => this.setState({exec_date: e.target.value})
+        this.executionDateChange = e => e && this.setState({exec_date: e.format('YYYY-MM-DD')})
         this.qaGoChanged = e => this.setState({qaGO: !this.state.qaGO})
         this.rollBackChanged = e => this.setState({rollBack: !this.state.rollBack})
         this.urgentChanged = e => this.setState({urgent: !this.state.urgent})
@@ -129,7 +131,10 @@ class task extends React.Component {
 
                                             <label className="col-sm-4 control-label">Execution Date</label>
                                             <div className="col-sm-8">
-                                                <input className="form-control" value={this.state.exec_date} onChange={this.executionDateChange}></input>
+                                                <DatePicker
+                                                    className="form-control col-sm-12"
+                                                    selected={moment(this.state.exec_date)}
+                                                    onChange={this.executionDateChange} />
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
