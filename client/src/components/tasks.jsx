@@ -22,24 +22,21 @@ class tasks extends React.Component {
     }
 
     filterChanged(evt, filters){
-        const setTasksFilter = this.props.setTasksFilter
+        this.props.setTasksFilter(filters)
         if(evt.key === 'Enter'){
-            ajax.getTasks(() => {
-                rootComponent.forceUpdate();
-                setTasksFilter(filters)
-            }, this.props.metaData.Page, filters);
+            this.props.refreshTasks()
         }
     }
 
     paginationClicked(e){
         const page = e.target.textContent;
-        const self = this
-        ajax.getTasks(() => rootComponent.forceUpdate(), page, this.props.filter);
+        //const self = this
+        this.props.refreshTasks(_.noop, page)
+        //ajax.getTasks(() => rootComponent.forceUpdate(), page, this.props.filter);
     }
 
     tableRowClicked(task){
         this.props.setCurrentTask(task);
-        console.log('tableRowClicked: ', task);
     }
 
     getPagination(){

@@ -56,6 +56,7 @@ class task extends React.Component {
         this.rollBackChanged = e => this.setState({rollBack: !this.state.rollBack})
         this.urgentChanged = e => this.setState({urgent: !this.state.urgent})
         this.additionalInfoChanged = e => {console.log(e.target.value); this.setState({additionalInfo: e.target.value})}
+        this.onClose = () => props.onClose()
     }
 
     submitClicked(){
@@ -74,7 +75,7 @@ class task extends React.Component {
                                 <h2 className="panel-title"><span style={{textDecoration: 'underline', color:'#555'}}>TASK</span> {this.state.id ? ': id = ' + this.state.id : ''}</h2>
 
                                 <div className="pull-right">
-                                    <button type="button" className="close table-filter-btn" onClick={this.props.onClose}>x
+                                    <button type="button" className="close table-filter-btn" onClick={this.onClose}>x
                                     </button>
                                 </div>
                             </div>

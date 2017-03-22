@@ -16,12 +16,12 @@ function addNewTask(){
     })
 }
 
-function goToTasks(onSucess = _.noop){
+function goToTasks(onSucess = _.noop, page = null){
     ajax.getTasks(() => {
         store.setActiveMenu('tasks')
         window.rootComponent && window.rootComponent.forceUpdate()
         onSucess()
-    }, _.get(store.getTasksMetadata(), 'Page'), store.getTasksFilter())
+    }, _.get(page || store.getTasksMetadata(), 'Page'), store.getTasksFilter())
 }
 
 function getTasks(){
