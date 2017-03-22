@@ -5,3 +5,4 @@ target/
 client/node_modules/
 client/target/
 src/main/resources/
+client/src/tmp.html

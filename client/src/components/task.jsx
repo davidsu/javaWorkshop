@@ -6,20 +6,7 @@ import _ from 'lodash'
 
 import DatePicker from 'react-datepicker';
 
-function getTodayDateFormatted(){
-    const d = new Date(Date.now());
-    const year = d.getFullYear()
-    let month = d.getMonth()+1
-    let day = d.getDate()
-    if(month<10) {
-        month = '0'+ month
-    }
-    if(day < 10) {
-        day = '0' + day
-    }
-    return `${year}-${month}-${day}`
-}
-
+//todo validation before server requests
 class task extends React.Component {
     constructor(props) {
         super(props)
@@ -30,7 +17,7 @@ class task extends React.Component {
             envId: props.task.envId || undefined,//used
             requesterId: props.task.requesterId || undefined,//used
             priorityId: props.task.priorityId || undefined,//used
-            open_date: props.task.open_date || getTodayDateFormatted(),//used
+            open_date: props.task.open_date || moment().format('YYYY-MM-DD'),//used
             exec_date: props.task.exec_date,
             statusId: props.task.statusId || undefined,//used
             qaGO: !!props.task.qaGO,//used
@@ -59,7 +46,7 @@ class task extends React.Component {
     }
 
     submitClicked(){
-        ajax.createOrUpdateTask(this.state, this.props.onClose)
+        this.props.createOrUpdate(this.state, this.props.onClose)
     }
 
     render() {

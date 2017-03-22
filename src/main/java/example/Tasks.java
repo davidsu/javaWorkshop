@@ -3,6 +3,7 @@ package example;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.Date;
 /**
  * Created by davidsu on 13/03/2017.
@@ -86,14 +87,15 @@ public class Tasks {
     @Secured
     @Path("/createOrUpdate")
     @Consumes("application/xml")
-    public String createOrUpdate(String incomingXML){
+    public Response createOrUpdate(String incomingXML){
         try {
             Document doc = Utils.createDocumentFromString(incomingXML);
             JDBC.createOrUpdateTask(doc);
+            return Response.ok().build();
         } catch (Exception e) {
-            System.out.println("exception in tasks/createOrUpdate");
+            System.out.println("exception in getUsers");
             e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 }

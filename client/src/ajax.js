@@ -90,7 +90,7 @@ function getTask(taskId, callback){
         callback()
     })
 }
-function createOrUpdateTask(taskObj, callback){
+function createOrUpdateTask(taskObj, success, fail){
     const updateObj = _.reduce(taskObj, (acc, val, key) =>{
         if(val !== store.getCurrentTask()[key] || (key === 'id' && val)){
             acc[key] = val;
@@ -101,7 +101,8 @@ function createOrUpdateTask(taskObj, callback){
         type: 'POST',
         url: 'tasks/createOrUpdate',
         data: jsonToXml(updateObj),
-        success: callback,
+        success: success,
+        error: fail,
         contentType: "application/xml",
         dataType: 'json'
     });

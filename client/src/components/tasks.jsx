@@ -1,7 +1,6 @@
 import React from 'react'
 import _ from 'lodash'
 import FilterableTable from './filterableTable.jsx'
-import ajax from '../ajax.js'
 
 //see example here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
 const columns = [

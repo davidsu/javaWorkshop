@@ -2,6 +2,7 @@ import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
 import Tasks from './tasks.jsx'
+import Oops from './oops.jsx'
 import Task from './task.jsx'
 import Users from './users.jsx'
 import User from './user.jsx'
@@ -58,7 +59,6 @@ class rootComponent extends React.Component {
             case /login/.test(store.getActiveMenu()):
                 return <SystemLogin onDone={this.goToTasks}></SystemLogin>
             case /tasks/.test(store.getActiveMenu()):
-                //todo there should be no ajax call in Tasks
                 return <Tasks tasks={taskController.getTasks()}
                               metaData={taskController.getTasksMetadata()}
                               setTasksFilter={taskController.setTasksFilter}
@@ -68,12 +68,16 @@ class rootComponent extends React.Component {
                               refreshTasks={taskController.goToTasks}></Tasks>
             case /task:.*/.test(store.getActiveMenu()):
                 //todo find what logic lives in task and put it in task controller, pass as prop
-                return <Task {...store.getCurrentTask()} onClose={taskController.goToTasks}></Task>
+                return <Task {...store.getCurrentTask()}
+                    onClose={taskController.goToTasks}
+                    createOrUpdate={taskController.createOrUpdateTask}></Task>
             case /users/.test(store.getActiveMenu()):
                 return <Users users={store.getUsers()}
                               setCurrentUser={this.setCurrentUser}></Users>
             case /user:.*/.test(store.getActiveMenu()):
                 return <User user={store.getCurrentUser()} onClose={this.refreshUsers} changeUser={this.refreshUsers}></User>
+            case /oops/.test(store.getActiveMenu()):
+                return <Oops></Oops>
             default:
                 return <SystemLogin onDone={this.goToTasks}></SystemLogin>;
         }

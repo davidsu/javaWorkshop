@@ -33,10 +33,19 @@ const setTasksFilter = (filter) => {
     store.setTasksFilter(filter)
 }
 
+function createOrUpdateTask(task, success){
+    ajax.createOrUpdateTask(task, success, function(){
+        console.log(arguments)
+        store.setActiveMenu('oops')
+        window.rootComponent.forceUpdate()
+    })
+}
+
 const getActiveFilter = store.getTasksFilter
 
 module.exports = {
     addNewTask,
+    createOrUpdateTask,
     getActiveFilter,
     getTasks,
     goToTasks,
