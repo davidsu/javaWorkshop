@@ -179,6 +179,7 @@
   background-color: transparent; }
 
 .react-datepicker__input-container {
+  width: 100%;
   position: relative;
   display: inline-block; }
 

@@ -11,8 +11,6 @@ const columns = [
     'status',
     'exec_date'
 ];
-//todo click on paginagion retain filter
-//todo return from edit task retain filter
 class tasks extends React.Component {
     constructor(){
         super()
@@ -30,9 +28,7 @@ class tasks extends React.Component {
 
     paginationClicked(e){
         const page = e.target.textContent;
-        //const self = this
         this.props.refreshTasks(_.noop, page)
-        //ajax.getTasks(() => rootComponent.forceUpdate(), page, this.props.filter);
     }
 
     tableRowClicked(task){

@@ -15,7 +15,6 @@ function jsonToXml(jsonObj){
     })
     var serializer = new XMLSerializer();
     var xmlString = serializer.serializeToString(xmlDoc);
-    console.log(xmlDoc)
     return xmlString;
 }
 
@@ -50,7 +49,6 @@ function getTasks(callback, page = 1, filters = {}){
         }
     })
     $.get('tasks?page='+page+filter, (data, status) => {
-        console.log(window.prettyHtml(data));
         store.setTasks(xmlToJsonArray(data, 'task'))
         const metaData = xmlToJson(data, 'PageInfo')
         _.forEach(metaData, (val, key) => {
@@ -73,14 +71,12 @@ function getTaskMetadata(callback){
             priority: xmlToJsonArray(data, 'priority'),
             status: xmlToJsonArray(data, 'status')
         })
-        console.log(window.prettyHtml(data));
         callback()
     })
 }
 
 function getTask(taskId, callback){
     $.get('tasks/' + taskId, (data, status) => {
-        console.log(window.prettyHtml(data))
         const usersArray = xmlToJsonArray(data, 'user')
         store.setCurrentTask({
             task: xmlToJsonArray(data, 'task')[0],
@@ -101,7 +97,6 @@ function createOrUpdateTask(taskObj, callback){
         }
         return acc;
     }, {})
-    console.log(prettyHtml(jsonToXml(updateObj)));
     $.ajax({
         type: 'POST',
         url: 'tasks/createOrUpdate',
@@ -113,7 +108,6 @@ function createOrUpdateTask(taskObj, callback){
 }
 
 function createOrUpdateUser(user, callback){
-    console.log(jsonToXml(user));
     $.ajax({
         type: 'POST',
         url: 'users/createOrUpdate',
@@ -127,7 +121,6 @@ function createOrUpdateUser(user, callback){
 function getUsers(callback) {
     $.get('users', (data, status) => {
         store.setUsers(xmlToJsonArray(data, 'user'))
-        console.log(window.prettyHtml(data));
         callback();
     })
 }

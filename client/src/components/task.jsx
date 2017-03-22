@@ -23,7 +23,6 @@ function getTodayDateFormatted(){
 class task extends React.Component {
     constructor(props) {
         super(props)
-        console.log(props)
         this.state = {
             id: props.task.id,//used
             taskTypeId: props.task.taskTypeId || undefined,//used
@@ -62,8 +61,6 @@ class task extends React.Component {
     submitClicked(){
         ajax.createOrUpdateTask(this.state, this.props.onClose)
     }
-
-
 
     render() {
         return (
@@ -133,6 +130,7 @@ class task extends React.Component {
                                             <label className="col-sm-4 control-label">Execution Date</label>
                                             <div className="col-sm-8">
                                                 <DatePicker
+                                                    dateFormat="YYYY-MM-DD"
                                                     className="form-control col-sm-12"
                                                     selected={moment(this.state.exec_date)}
                                                     onChange={this.executionDateChange} />

@@ -11,7 +11,6 @@ class systemLogin extends React.Component {
     submitClicked() {
         const self = this;
         ajax.login(this.state.user, this.state.password, token => {
-            console.log(token)
             window.token = token
             self.props.onDone()
         }, (jqXHR, textStatus, errorThrown) => {
