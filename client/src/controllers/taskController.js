@@ -34,8 +34,9 @@ const setTasksFilter = (filter) => {
 }
 
 function createOrUpdateTask(task, success){
-    ajax.createOrUpdateTask(task, success, function(){
+    ajax.createOrUpdateTask(task, success, function(err){
         console.log(arguments)
+        store.setOops(err)
         store.setActiveMenu('oops')
         window.rootComponent.forceUpdate()
     })

@@ -40,6 +40,8 @@ const getUsersFilter = () =>  store.users.filter;
 const setCurrentUser = (user) => store.users.currentUser = user
 const getCurrentUser = () =>  store.users.currentUser
 
+const setOops = ({status, statusText}) => store.oops = {status, statusText}
+const getOops = () => store.oops
 const retVal = {
     setActiveMenu,
     getActiveMenu,
@@ -58,7 +60,9 @@ const retVal = {
     setUsersFilter,
     getUsersFilter,
     setCurrentUser,
-    getCurrentUser
+    getCurrentUser,
+    setOops,
+    getOops 
 }
 window.store = store
 window.Store = retVal

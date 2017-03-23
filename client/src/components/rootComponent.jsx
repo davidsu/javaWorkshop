@@ -77,7 +77,7 @@ class rootComponent extends React.Component {
             case /user:.*/.test(store.getActiveMenu()):
                 return <User user={store.getCurrentUser()} onClose={this.refreshUsers} changeUser={this.refreshUsers}></User>
             case /oops/.test(store.getActiveMenu()):
-                return <Oops></Oops>
+                return <Oops status={store.getOops().status} statusText={store.getOops().statusText}></Oops>
             default:
                 return <SystemLogin onDone={this.goToTasks}></SystemLogin>;
         }

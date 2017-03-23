@@ -1,5 +1,6 @@
 import React from 'react'
-import ajax from '../ajax.js'
+import userController from '../controllers/userController.js'
+import taskController from '../controllers/taskController'
 
 class navigationMenu extends React.Component {
     constructor(props) {
@@ -12,14 +13,10 @@ class navigationMenu extends React.Component {
         const self = this
         switch(activeMenu){
             case 'users':
-                ajax.getUsers(() => {
-                    self.props.setActiveMenu(activeMenu)
-                })
+                userController.getUsers()
                 break;
             case 'tasks':
-                ajax.getTasks(() => {
-                    self.props.setActiveMenu(activeMenu)
-                })
+                taskController.goToTasks()
                 break;
             default:
                 self.props.setActiveMenu(activeMenu)
