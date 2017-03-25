@@ -10,6 +10,7 @@ public class ActiveUser {
     private Calendar expirationDate;
     private String email;
     private int type;
+    private static Integer sessionTime = 2;
     public ActiveUser(String email, int type){
         this.email = email;
         this.refreshExpirationDate();
@@ -26,6 +27,6 @@ public class ActiveUser {
     }
     public void refreshExpirationDate(){
         this.expirationDate = Calendar.getInstance();
-        expirationDate.set(Calendar.MINUTE, expirationDate.get(Calendar.MINUTE) + 15);
+        expirationDate.set(Calendar.MINUTE, expirationDate.get(Calendar.MINUTE) + sessionTime);
     }
 }

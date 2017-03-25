@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @Secured
 @Provider
@@ -24,21 +26,44 @@ public class SessionHandler implements ContainerRequestFilter {
 
     private static HashMap<String, ActiveUser> activeUsers = new HashMap<>();
     private static SecureRandom random = new SecureRandom();
+    private static Object locker = new Object();
 
     public static void init(){
         //todo kick a thread that will periodically remove expired users from activeUsers
         //I guess we will need some write lock for thread safety on this hashMap but need to ask google
         //about hashMaps and multithreading
+        Thread t = new ActiveUserChecker();
+        t.start();
         activeUsers.put("testuser", new ActiveUser("dummy@email", 1));
+        activeUsers.put("testuser1", new ActiveUser("a@b.com", 2));
     }
 
     public static void addActiveUser(String token, ActiveUser user){
-        activeUsers.put(token, user);
+        synchronized (locker)
+        {
+            activeUsers.put(token, user);
+        }
     }
 
     public static String nextSessionId() {
         //todo certify that return value isn't present in "activeUsers"
         return new BigInteger(130, random).toString(32);
+    }
+
+    public static void removeExpiredUsers()
+    {
+        Iterator<Map.Entry<String,ActiveUser>> iter = activeUsers.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,ActiveUser> entry = iter.next();
+            ActiveUser user = entry.getValue();
+            if(user.isExpired())
+            {
+                synchronized (locker)
+                {
+                    iter.remove();
+                }
+            }
+        }
     }
 
     private ActiveUser getActiveUserForToken(String token){
