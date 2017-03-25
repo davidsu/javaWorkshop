@@ -1,4 +1,5 @@
 package example;
+import java.io.IOException;
 import java.net.URI;
 
 import javax.ws.rs.core.UriBuilder;
@@ -9,12 +10,21 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 //todo need to implement proper logging capabilities. see http://www.vogella.com/tutorials/Logging/article.html
-
+import java.util.logging.Logger;
 public class JAX_RS_Entry {
 
     public static void main(String[] args) {
 
-        URI baseUri = UriBuilder.fromUri("http://localhost/").port(9998).build();
+        try {
+            LogHandler.setup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Logger logger = Logger.getLogger("javaWorkshop");
+        String uri = "http://localhost/";
+        int port = 9998;
+        URI baseUri = UriBuilder.fromUri(uri).port(port).build();
+        logger.info(String.format("Server URL is - %1s port: %2s", uri, port));
         ResourceConfig config =
                 new ResourceConfig(
                         ReceiveClientRequests.class,
@@ -34,6 +44,7 @@ public class JAX_RS_Entry {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        logger.info("***** Server status is UP *****");
         System.out.println("Server running");
         System.out.println("Visit: http://localhost:9998");
     }

@@ -29,11 +29,8 @@ public class SessionHandler implements ContainerRequestFilter {
     private static Object locker = new Object();
 
     public static void init(){
-        //todo kick a thread that will periodically remove expired users from activeUsers
-        //I guess we will need some write lock for thread safety on this hashMap but need to ask google
-        //about hashMaps and multithreading
-        Thread t = new ActiveUserChecker();
-        t.start();
+        Thread userChecker = new ActiveUserChecker();
+        userChecker.start();
         activeUsers.put("testuser", new ActiveUser("dummy@email", 1));
         activeUsers.put("testuser1", new ActiveUser("a@b.com", 2));
     }
