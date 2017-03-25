@@ -40,9 +40,7 @@ class rootComponent extends React.Component {
     }
 
     setCurrentUser(user){
-        userController.getUser(user)    
-        // store.setCurrentUser(user)
-        // this.setActiveMenuAndRefresh('user:')
+        userController.getUser(user)
     }
 
     activePage() {
@@ -68,9 +66,7 @@ class rootComponent extends React.Component {
                               onAddingUser={userController.addNewUser}></Users>
             case /user:.*/.test(store.getActiveMenu()):
                 return <User user={store.getCurrentUser().user} 
-                              userTypes={store.getCurrentUser().userTypes}
-                              onClose={this.refreshUsers} 
-                              createOrUpdate={userController.createOrUpdate}></User>
+                              userTypes={store.getCurrentUser().userTypes}></User>
             case /oops/.test(store.getActiveMenu()):
                 return <Oops status={store.getOops().status} statusText={store.getOops().statusText}></Oops>
             default:

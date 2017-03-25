@@ -1,7 +1,7 @@
 const userFields = [
     'id',
     'full_name',
-    'userType',
+    'type',
     'email',
     'password'
 ];

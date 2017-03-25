@@ -2,6 +2,7 @@ import React from 'react'
 import DropDown from './dropDown.jsx'
 import _ from 'lodash'
 import ajax from '../ajax.js'
+import userController from '../controllers/userController.js'
 
 class user extends React.Component{
 
@@ -12,7 +13,7 @@ class user extends React.Component{
             user: this.isEmptyUser() ? _.omit(props.user, ['id']) : props.user
         }
         this.submitClicked = this.submitClicked.bind(this);
-        this.close = this.props.onClose
+        this.close = () => userController.goToUsers()
         this.userTypeChange = this.userTypeChange.bind(this)
     }
 
@@ -22,13 +23,13 @@ class user extends React.Component{
             if(elem) acc[key] = elem.value;
             return acc;
         }, {}) 
-        user.type = this.state.user.userType
-        this.props.createOrUpdate(user)
+        user.type = this.state.user.type
+        userController.createOrUpdate(user)
     }
 
     userTypeChange(e){
         const user = this.state.user
-        user.userType = e.target.value
+        user.type = e.target.value
         this.setState({user})
     }
 
@@ -48,7 +49,7 @@ class user extends React.Component{
                             <div className="panel-heading">
                                 <h3 className="panel-title">User</h3>
                                 <div className="pull-right">
-                                    <button type="button" className="close table-filter-btn" onClick={this.props.onClose}>x</button>
+                                    <button type="button" className="close table-filter-btn" onClick={this.close}>x</button>
                                 </div>
                             </div>
                             <div className="panel-body">
@@ -56,7 +57,7 @@ class user extends React.Component{
                                     <fieldset>
                                         {_.map(this.state.user, (val, key) => {
                                             const disabled={disabled: key === 'id'}
-                                            if(key === 'userType'){
+                                            if(key === 'type'){
                                                 return (
                                                     <div className="form-group" key={'user'+key}>
                                                         <DropDown label={key}

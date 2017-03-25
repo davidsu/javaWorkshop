@@ -2,6 +2,7 @@ import store from '../store.js'
 import ajax from '../ajax.js'
 import _ from 'lodash'
 import consts from '../consts'
+
 const getUsers = (callback = _.noop) => {
     ajax.getUsers(() => {
         store.setActiveMenu('users')
@@ -26,16 +27,18 @@ const addNewUser = () => ajax.getUserMetadata((usersMetadata) => {
         acc[val] = '';
         return acc;
     }, {})
-    user.userType = undefined
+    user.type = undefined
     store.setCurrentUser(_.assign({}, {user}, usersMetadata))
     store.setActiveMenu('user:')
     window.rootComponent.forceUpdate();
 })
-const setCurrentUser = store.setCurrentUser
+const getCurrentUser = store.getCurrentUser
 
 module.exports = {
     getUsers,
+    goToUsers: getUsers,
     addNewUser,
     getUser,
-    createOrUpdate 
+    createOrUpdate,
+    getCurrentUser
 }

@@ -1,6 +1,7 @@
 .idea
 *.iml
 *.log
+*.lck
 target/
 client/node_modules/
 client/target/

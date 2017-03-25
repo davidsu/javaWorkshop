@@ -117,9 +117,8 @@ public class JDBC {
         Connection conn = getInstance().conn;
 
         stmt = conn.createStatement();
-        _sql = "select users.id, full_name, userType, email, password from " +
-                "users JOIN " +
-                "userTypes where users.id = " + userId;
+        _sql = "select id, full_name, type, email, password from " +
+                "users where id = " + userId;
         rs = stmt.executeQuery(_sql);
         Document userDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user", "users");
 

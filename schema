@@ -146,7 +146,7 @@ JOIN taskTypes tt on t.taskTypeId = tt.id
 JOIN status s on t.statusId = s.id ORDER BY id;
 
 CREATE OR REPLACE VIEW v_Users AS
-SELECT u.id,full_name,ut.userType,email,password
+SELECT u.id,full_name,ut.userType as type,email,password
 FROM users u
 JOIN userTypes ut on u.type = ut.id
 ORDER BY u.id;
