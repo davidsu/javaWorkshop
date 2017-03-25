@@ -329,13 +329,12 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    public static Document getFilteredTasks(String id, String status, String type, String openDate, String execDate, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static Document getFilteredTasks(String filter, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
 
         stmt = getInstance().conn.createStatement();
         page = ( page == null ? 1 : page );
-        String filter = buildTaskFilter(id, status, type, openDate, execDate);
         String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from v_Tasks %3s",pageSize, page, filter);
         rs = stmt.executeQuery(_sql);
         Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
@@ -345,119 +344,6 @@ public class JDBC {
         Document resDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
         Document[] docs = {pageDoc, resDoc};
         return Utils.mergeDocs(docs);
-    }
-
-    private static String buildTaskFilter(String id, String status, String type, String openDate, String execDate) {
-        ArrayList<String> filterArr = new ArrayList<>();
-        filterArr.add(buildIdFilter(id));
-        filterArr.add(buildFilter(status, "status"));
-        filterArr.add(buildFilter(type, "taskType"));
-        filterArr.add(buildDatesFilter(openDate, "open_date"));
-        filterArr.add(buildDatesFilter(execDate, "exec_date"));
-        filterArr.removeAll(Collections.singleton(null));
-        String filter = String.join(" and ", filterArr);
-        return filter.length() > 0 ? " where " + filter : "";
-    }
-
-    private static String buildIdFilter(String ids)
-    {
-        if(ids == null || !checkIds(ids)) return null;
-        String[] idsArr = ids.split(",");
-        String retVal = "";
-        if (idsArr.length == 1)
-        {
-            retVal = "id = " + idsArr[0];
-        }
-        if (idsArr.length == 2)
-        {
-            retVal = "id >=" + idsArr[0] + " and id <=" + idsArr[1];
-        }
-        return retVal;
-    }
-
-    private static boolean checkIds(String ids)
-    {
-        String[] idsArr = ids.split(",");
-        if (idsArr.length == 1 && idValid(idsArr[0]))
-        {
-            return true;
-        }
-        if (idsArr.length == 2 && idValid(idsArr[0]) && idValid(idsArr[1]))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean idValid(String id)
-    {
-        if (id.matches("\\d+")) {
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean checkDates(String dates)
-    {
-        String[] datesArr = dates.split(",");
-        if (datesArr.length == 1 && dateValid(datesArr[0]))
-        {
-            return true;
-        }
-        if (datesArr.length == 2 && dateValid(datesArr[0]) && dateValid(datesArr[1]))
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date startD = new Date();
-            Date endD = new Date();
-            try {
-                startD = formatter.parse(datesArr[0]);
-                endD = formatter.parse(datesArr[1]);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean dateValid(String date)
-    {
-        if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            return true;
-        }
-        return false;
-    }
-
-    //builds a filter for none date column with multiple values separated by *
-    private static String buildFilter(String values, String columnName)
-    {
-        if(values == null) return null;
-        String[] valuesArr = values.split("\\*");
-        for (int i=0; i < valuesArr.length; i++)
-        {
-            valuesArr[i] = columnName + " like '%" + valuesArr[i] + "%' ";
-        }
-        return String.join(" OR ", valuesArr);
-    }
-
-    //build a filter for dates
-    private static String buildDatesFilter(String dates, String dateColumn)
-    {
-        if(dates == null || !checkDates(dates)) return null;
-        String[] datesArr = dates.split(",");
-        String filter = "";
-        if (datesArr.length == 1)
-        {
-            filter = dateColumn + "= '" +  datesArr[0] + "' ";
-        }
-        if (datesArr.length == 2)
-        {
-            filter = dateColumn + " >= '" + datesArr[0] + "' and " + dateColumn + " < '" + datesArr[1] + "' ";
-        }
-        return filter;
     }
 
     /*
@@ -502,10 +388,10 @@ public class JDBC {
                 add("555");
             }};
             String vv = jdbc.buildProtectedInsertCommand("xxx",cols,vals);
-            Document doc = jdbc.getFilteredTasks(null, null, null, "2017-03-10","2017-03-20", 1);
+            //Document doc = jdbc.getFilteredTasks(null, null, null, "2017-03-10","2017-03-20", 1);
 
            //Document doc = jdbc.getUsers();
-            System.out.println(Utils.DocumentToString(doc, true));
+            //System.out.println(Utils.DocumentToString(doc, true));
         } catch (Exception ex) {
             System.out.println("threw exception");
             System.out.println(ex);
