@@ -25,6 +25,12 @@ public class ActiveUser {
             return false;
         return Calendar.getInstance().compareTo(expirationDate) > 0;
     }
+
+    public int getType()
+    {
+        return type;
+    }
+
     public void refreshExpirationDate(){
         this.expirationDate = Calendar.getInstance();
         expirationDate.set(Calendar.MINUTE, expirationDate.get(Calendar.MINUTE) + sessionTime);

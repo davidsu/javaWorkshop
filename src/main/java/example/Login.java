@@ -7,6 +7,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 public class Login {
 
     private static Logger logger = Logger.getLogger("javaWorkshop");
+    private static HashMap<Integer, String> userTypesDict = new HashMap<Integer, String>();
     private ActiveUser authenticate(String user, String password)
     {
         int userType;
@@ -35,9 +37,17 @@ public class Login {
     public Response login(@QueryParam("user") String user, @QueryParam("password") String password){
         System.out.println("user: " + user);
         System.out.println("password: " + password);
+        if(userTypesDict.isEmpty())
+        {
+            try {
+                JDBC.StaticTableToDict("UserTypes", userTypesDict, 1, 2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         ActiveUser aUser =  authenticate(user, password);
         if(aUser != null){
-            String token = SessionHandler.nextSessionId();
+            String token = userTypesDict.get(aUser.getType()) + "_" + SessionHandler.nextSessionId();
             //todo we need to verify real user and pass the correct user type to this addActiveUser
             SessionHandler.addActiveUser(token, aUser);
             logger.info(String.format("User - %1s has logged in", user));

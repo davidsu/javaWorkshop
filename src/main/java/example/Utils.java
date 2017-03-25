@@ -18,10 +18,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -211,7 +213,7 @@ public class Utils {
         return String.join(" OR ", valuesArr);
     }
 
-    //build a filter for dates
+    //builds a filter for dates
     public static String buildDatesFilter(String dates, String dateColumn)
     {
         if(dates == null || !checkDates(dates)) return null;
@@ -226,6 +228,17 @@ public class Utils {
             filter = dateColumn + " >= '" + datesArr[0] + "' and " + dateColumn + " < '" + datesArr[1] + "' ";
         }
         return filter;
+    }
+
+    //adds keys and values to a dictionary from a results set based on the indexes of the key and value columns (from the DB)
+    public static  <K,V> void resultSetToDictionary(ResultSet rs, HashMap<K, V> dict, int keyIndex, int valIndex ) throws SQLException {
+        ResultSetMetaData md = rs.getMetaData();
+        while(rs.next())
+        {
+            K key = (K) rs.getObject(keyIndex);
+            V value =(V) rs.getObject(valIndex);
+            dict.put(key, value);
+        }
     }
 
 }
