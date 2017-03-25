@@ -50,14 +50,14 @@ public class SessionHandler implements ContainerRequestFilter {
     public static void removeExpiredUsers()
     {
         Iterator<Map.Entry<String,ActiveUser>> iter = activeUsers.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<String,ActiveUser> entry = iter.next();
-            ActiveUser user = entry.getValue();
-            if(user.isExpired())
-            {
-                synchronized (locker)
-                {
+        synchronized (locker) {
+            while (iter.hasNext()) {
+                Map.Entry<String, ActiveUser> entry = iter.next();
+                ActiveUser user = entry.getValue();
+                if (user.isExpired()) {
+
                     iter.remove();
+
                 }
             }
         }
@@ -68,6 +68,7 @@ public class SessionHandler implements ContainerRequestFilter {
         if(user == null || user.isExpired()){
             return null;
         }
+        user.refreshExpirationDate();
         return user;
     }
 

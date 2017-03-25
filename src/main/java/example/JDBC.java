@@ -57,39 +57,28 @@ public class JDBC {
         stmt = conn.createStatement();
         _sql = "select * from environments";
         rs = stmt.executeQuery(_sql);
-        resultSetToDictionary(rs, environmentsDict);
+        Utils.resultSetToDictionary(rs, environmentsDict, 2, 1);
         stmt = conn.createStatement();
         _sql = "select * from priority";
         rs = stmt.executeQuery(_sql);
-        resultSetToDictionary(rs, prioritiesDict);
+        Utils.resultSetToDictionary(rs, prioritiesDict ,2, 1);
         stmt = conn.createStatement();
         _sql = "select * from status";
         rs = stmt.executeQuery(_sql);
-        resultSetToDictionary(rs, statusesDict);
+        Utils.resultSetToDictionary(rs, statusesDict,2, 1);
         stmt = conn.createStatement();
         _sql = "select * from taskTypes";
         rs = stmt.executeQuery(_sql);
-        resultSetToDictionary(rs, taskTypesDict);
+        Utils.resultSetToDictionary(rs, taskTypesDict,2,1);
     }
 
-    private static void resultSetToDictionary(ResultSet rs, HashMap<String, Integer> dict, int keyIndex, int valIndex ) throws SQLException {
-        ResultSetMetaData md = rs.getMetaData();
-        while(rs.next())
-        {
-            String key = rs.getString(keyIndex);
-            Integer value = rs.getInt(valIndex);
-            dict.put(key, value);
-        }
-    }
-
-    private static void resultSetToDictionary(ResultSet rs, HashMap<String, Integer> dict) throws SQLException {
-        ResultSetMetaData md = rs.getMetaData();
-        while(rs.next())
-        {
-            String key = rs.getString(2);
-            Integer value = rs.getInt(1);
-            dict.put(key, value);
-        }
+    public static <K,V> void StaticTableToDict(String tableName, HashMap<K,V> dict, int keyIndex, int valIndex ) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
+    {
+        Statement stmt;
+        ResultSet rs;
+        stmt = getInstance().conn.createStatement();
+        rs = stmt.executeQuery(String.format("SELECT * FROM %1s", tableName));
+        Utils.resultSetToDictionary(rs, dict, keyIndex, valIndex);
     }
 
     public static int getUserType(String user, String password) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
