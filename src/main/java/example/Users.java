@@ -37,33 +37,39 @@ public class Users {
     @Secured
     @RolesAllowed("admin")
     //todo return proper errors to client when failing
-    public void createOrUpdate(String incomingXML) {
+    public Response createOrUpdate(String incomingXML) {
             try {
                 Document doc = Utils.createDocumentFromString(incomingXML);
                 JDBC.createOrUpdateUser(doc);
+                return Response.ok().build();
             } catch (Exception e) {
+                //todo: if we knew which kind of exception we could give a friendly error message
+                e.printStackTrace();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .type("text/plain")
+                        .entity("//todo: if we knew which kind of exception we could give a friendly error message")
+                        .build();
             }
     }
 
     @GET
     @Secured
     @Path("/{id : [0-9]+}")
-    public String getUserById(@PathParam("id") String id){
+    public Response getUserById(@PathParam("id") String id){
         try {
             Document doc = JDBC.getUser(id);
-            return Utils.DocumentToString(doc, true);
+            return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
             System.out.println("exception in getUsers");
             e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 
     @GET
     @Path("/boo")
     public String boo() throws InterruptedException {
         Thread.sleep(3000);
-        System.out.println("this is the new getUsers");
         return "hey look at me :)\n";
     }
 }
