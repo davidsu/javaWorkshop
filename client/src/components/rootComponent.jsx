@@ -14,7 +14,6 @@ class rootComponent extends React.Component {
 
     constructor(){
         super()
-        this.goToTasks = this.goToTasks.bind(this)
         this.setActiveMenuAndRefresh = this.setActiveMenuAndRefresh.bind(this)
         this.setCurrentUser = this.setCurrentUser.bind(this)
         this.refreshUsers = () => userController.getUsers()
@@ -29,10 +28,6 @@ class rootComponent extends React.Component {
             window.rootComponent.forceUpdate()
         }, store.getTasksMetadata().Page, store.getTasksFilter)
     }
-    goToTasks(){
-        store.setActiveMenu('tasks');
-        window.rootComponent.forceUpdate()
-    }
 
     setActiveMenuAndRefresh(activeMenu){
         store.setActiveMenu(activeMenu)
@@ -46,7 +41,7 @@ class rootComponent extends React.Component {
     activePage() {
         switch(true) {
             case /login/.test(store.getActiveMenu()):
-                return <SystemLogin onDone={this.goToTasks}></SystemLogin>
+                return <SystemLogin onDone={taskController.goToTasks}></SystemLogin>
             case /tasks/.test(store.getActiveMenu()):
                 return <Tasks tasks={taskController.getTasks()}
                               metaData={taskController.getTasksMetadata()}
@@ -70,7 +65,7 @@ class rootComponent extends React.Component {
             case /oops/.test(store.getActiveMenu()):
                 return <Oops status={store.getOops().status} statusText={store.getOops().statusText}></Oops>
             default:
-                return <SystemLogin onDone={this.goToTasks}></SystemLogin>;
+                return <SystemLogin onDone={taskController.goToTasks}></SystemLogin>;
         }
     }
 
