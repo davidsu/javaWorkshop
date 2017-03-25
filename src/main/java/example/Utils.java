@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -123,6 +126,108 @@ public class Utils {
             throw new RuntimeException("Error converting to String", ex);
         }
     }
+
+    public static String buildIdFilter(String ids)
+    {
+        if(ids == null || !checkIds(ids)) return null;
+        String[] idsArr = ids.split(",");
+        String retVal = "";
+        if (idsArr.length == 1)
+        {
+            retVal = "id = " + idsArr[0];
+        }
+        if (idsArr.length == 2)
+        {
+            retVal = "id >=" + idsArr[0] + " and id <=" + idsArr[1];
+        }
+        return retVal;
+    }
+
+    private static boolean checkIds(String ids)
+    {
+        String[] idsArr = ids.split(",");
+        if (idsArr.length == 1 && idValid(idsArr[0]))
+        {
+            return true;
+        }
+        if (idsArr.length == 2 && idValid(idsArr[0]) && idValid(idsArr[1]))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean idValid(String id)
+    {
+        if (id.matches("\\d+")) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean checkDates(String dates)
+    {
+        String[] datesArr = dates.split(",");
+        if (datesArr.length == 1 && dateValid(datesArr[0]))
+        {
+            return true;
+        }
+        if (datesArr.length == 2 && dateValid(datesArr[0]) && dateValid(datesArr[1]))
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date startD = new Date();
+            Date endD = new Date();
+            try {
+                startD = formatter.parse(datesArr[0]);
+                endD = formatter.parse(datesArr[1]);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean dateValid(String date)
+    {
+        if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return true;
+        }
+        return false;
+    }
+
+    //builds a filter for none date column with multiple values separated by *
+    public static String buildFilter(String values, String columnName)
+    {
+        if(values == null) return null;
+        String[] valuesArr = values.split("\\*");
+        for (int i=0; i < valuesArr.length; i++)
+        {
+            valuesArr[i] = columnName + " like '%" + valuesArr[i] + "%' ";
+        }
+        return String.join(" OR ", valuesArr);
+    }
+
+    //build a filter for dates
+    public static String buildDatesFilter(String dates, String dateColumn)
+    {
+        if(dates == null || !checkDates(dates)) return null;
+        String[] datesArr = dates.split(",");
+        String filter = "";
+        if (datesArr.length == 1)
+        {
+            filter = dateColumn + "= '" +  datesArr[0] + "' ";
+        }
+        if (datesArr.length == 2)
+        {
+            filter = dateColumn + " >= '" + datesArr[0] + "' and " + dateColumn + " < '" + datesArr[1] + "' ";
+        }
+        return filter;
+    }
+
 }
 
 

@@ -7,12 +7,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-/**
- * Created by davidsu on 17/03/2017.
- */
+
+
 @Path("/login")
 public class Login {
+
+    private static Logger logger = Logger.getLogger("javaWorkshop");
     private ActiveUser authenticate(String user, String password)
     {
         int userType;
@@ -38,8 +40,10 @@ public class Login {
             String token = SessionHandler.nextSessionId();
             //todo we need to verify real user and pass the correct user type to this addActiveUser
             SessionHandler.addActiveUser(token, aUser);
+            logger.info(String.format("User - %1s has logged in", user));
             return Response.ok(token).build();
         } else {
+            logger.warning(String.format("User - %1s failed to login (unauthorized)", user));
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }

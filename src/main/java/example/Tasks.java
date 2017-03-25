@@ -4,6 +4,10 @@ import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 /**
  * Created by davidsu on 13/03/2017.
@@ -12,26 +16,6 @@ import java.util.Date;
 public class Tasks {
     //todo return proper errors to client when failing
     //todo which columns must be 'not null' in tasks table?
-//    @GET
-//    @Secured
-//    public String getTasks(@QueryParam("status") String status,
-//                           @QueryParam("type") String type,
-//                           @QueryParam("exec_date") String exec_date,
-//                           @QueryParam("page") Integer page) {
-//        System.out.println("status = " + status);
-//        System.out.println("type = " + type);
-//        System.out.println("exec_date = " + exec_date);
-//        System.out.println("page = " + page);
-//        try {
-//            Document doc = JDBC.getTasks(page);
-//            return Utils.DocumentToString(doc, true);
-//        } catch (Exception e) {
-//            System.out.println("exception in getTasks");
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @GET
     @Secured
     //@Path("/filteredTasks")
@@ -45,13 +29,26 @@ public class Tasks {
         System.out.println("type = " + type);
         System.out.println("page = " + page);
         try {
-            Document doc = JDBC.getFilteredTasks(id, status, type, openDate, execDate, page);
+            String filter = buildTaskFilter(id, status, type, openDate, execDate);
+            Document doc = JDBC.getFilteredTasks(filter, page);
             return Utils.DocumentToString(doc, true);
         } catch (Exception e) {
             System.out.println("exception in getTasks");
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String buildTaskFilter(String id, String status, String type, String openDate, String execDate) {
+        ArrayList<String> filterArr = new ArrayList<>();
+        filterArr.add(Utils.buildIdFilter(id));
+        filterArr.add(Utils.buildFilter(status, "status"));
+        filterArr.add(Utils.buildFilter(type, "taskType"));
+        filterArr.add(Utils.buildDatesFilter(openDate, "open_date"));
+        filterArr.add(Utils.buildDatesFilter(execDate, "exec_date"));
+        filterArr.removeAll(Collections.singleton(null));
+        String filter = String.join(" and ", filterArr);
+        return filter.length() > 0 ? " where " + filter : "";
     }
 
     //todo - why do we use id in this method?
