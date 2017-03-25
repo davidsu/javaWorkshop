@@ -55,7 +55,7 @@ public class Tasks {
     @GET
     @Secured
     @Path("/newTaskMetadata")
-    public String getNewTaskMetadata(@PathParam("id") String id){
+    public String getNewTaskMetadata(){
         try {
             Document doc = JDBC.getTaskMetadata();
             return Utils.DocumentToString(doc);

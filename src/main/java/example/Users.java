@@ -67,6 +67,20 @@ public class Users {
     }
 
     @GET
+    @Secured
+    @Path("/newUserMetadata")
+    public String getNewUserMetadata(@PathParam("id") String id){
+        try {
+            Document doc = JDBC.getUserMetadata();
+            return Utils.DocumentToString(doc);
+        } catch (Exception e) {
+            System.out.println("exception in getUsers");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GET
     @Path("/boo")
     public String boo() throws InterruptedException {
         Thread.sleep(3000);

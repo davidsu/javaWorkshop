@@ -31,12 +31,12 @@ class systemLogin extends React.Component {
                                     <fieldset>
                                         <div className="form-group">
                                             <input className="form-control" placeholder="E-mail" name="email"
-                                                   type="text" id="emailInput" value={this.state.user} onChange={e=>console.log(e.target.value)}/>
+                                                   type="text" id="emailInput" value={this.state.user} onChange={this.onUserChange}/>
                                         </div>
 
                                         <div className="form-group">
                                             <input className="form-control" placeholder="Password" name="password"
-                                                   type="password" id="passwordInput"/>
+                                                   type="password" id="passwordInput" value={this.state.password} onChange={this.onPasswordChange}/>
                                         </div>
                                         <br/>
                                         <br/>

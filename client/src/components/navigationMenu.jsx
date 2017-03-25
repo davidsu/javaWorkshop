@@ -10,7 +10,9 @@ class navigationMenu extends React.Component {
     }
 
     setActiveMenu(activeMenu) {
-        const self = this
+        if(this.props.activeMenu === activeMenu) {
+            return
+        }
         switch(activeMenu){
             case 'users':
                 userController.getUsers()
@@ -19,7 +21,7 @@ class navigationMenu extends React.Component {
                 taskController.goToTasks()
                 break;
             default:
-                self.props.setActiveMenu(activeMenu)
+                this.props.setActiveMenu(activeMenu)
         }
     }
     render() {

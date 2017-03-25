@@ -1,4 +1,5 @@
 import React from 'react'
+import DropDown from './dropDown.jsx'
 import _ from 'lodash'
 import ajax from '../ajax.js'
 
@@ -12,27 +13,29 @@ class user extends React.Component{
         }
         this.submitClicked = this.submitClicked.bind(this);
         this.close = this.props.onClose
+        this.userTypeChange = this.userTypeChange.bind(this)
     }
 
     submitClicked() {
-        ajax.createOrUpdateUser(_.reduce(this.state.user, (acc, val, key)=>{
+        const user = _.reduce(this.state.user, (acc, val, key)=>{
             const elem = document.getElementById('user'+key);
-            acc[key] = elem.value;
+            if(elem) acc[key] = elem.value;
             return acc;
-        }, {}), () => {
-            setTimeout(() => {
-                ajax.getUsers(() => {
-                    this.props.onClose()
-                })
-            }, 200)
+        }, {}) 
+        user.type = this.state.user.userType
+        this.props.createOrUpdate(user)
+    }
 
-        });
+    userTypeChange(e){
+        const user = this.state.user
+        user.userType = e.target.value
+        this.setState({user})
     }
 
     componentDidMount() {
         _.forEach(this.state.user, (val, key) => {
             const element = document.getElementById('user'+key);
-            element.value = val;
+            if(element) element.value = val;
         })
     }
 
@@ -40,7 +43,7 @@ class user extends React.Component{
         return (
             <div className="container">
                 <div className="row" style={{marginTop:40 + 'px'}}>
-                    <div className="col-md-4 col-md-offset-4 ">
+                    <div className="col-md-6 col-md-offset-3 ">
                         <div className="panel panel-default">
                             <div className="panel-heading">
                                 <h3 className="panel-title">User</h3>
@@ -52,10 +55,33 @@ class user extends React.Component{
                                 <form role="form">
                                     <fieldset>
                                         {_.map(this.state.user, (val, key) => {
+                                            const disabled={disabled: key === 'id'}
+                                            if(key === 'userType'){
+                                                return (
+                                                    <div className="form-group" key={'user'+key}>
+                                                        <DropDown label={key}
+                                                            value={val}
+                                                            onChange={this.userTypeChange}
+                                                            optionsArr={this.props.userTypes}
+                                                            optionKey='userType'/>
+                                                    </div>
+                                                )
+                                            }
                                             return (
-                                                <div className="form-group" key={'user'+key}>
-                                                    <input className="form-control" placeholder={key} name={key}
-                                                           type="text" id={'user'+key}/>
+                                                <div className="form-group" key={'user'+key} >
+                                                    <div className="col-sm-12" style={{padding:0}}>
+                                                        <label className="col-sm-4 control-label">{key}</label>
+                                                        <div className="col-sm-8">
+                                                            <input className="from-control col-sm-12"
+                                                                placeholder={key} 
+                                                                name={key}
+                                                                type="text"
+                                                                id={'user'+key}
+                                                                style={{borderRadius:'4px'}}
+                                                                {...disabled}/>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-sm-12" style={{height: '10px'}}></div>
                                                 </div>
                                                 )
                                         })}

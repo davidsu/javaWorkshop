@@ -21,7 +21,7 @@ function goToTasks(onSucess = _.noop, page = null){
         store.setActiveMenu('tasks')
         window.rootComponent && window.rootComponent.forceUpdate()
         onSucess()
-    }, _.get(page || store.getTasksMetadata(), 'Page'), store.getTasksFilter())
+    }, page || _.get(store.getTasksMetadata(), 'Page'), store.getTasksFilter())
 }
 
 function getTasks(){
@@ -34,12 +34,7 @@ const setTasksFilter = (filter) => {
 }
 
 function createOrUpdateTask(task, success){
-    ajax.createOrUpdateTask(task, success, function(err){
-        console.log(arguments)
-        store.setOops(err)
-        store.setActiveMenu('oops')
-        window.rootComponent.forceUpdate()
-    })
+    ajax.createOrUpdateTask(task, () => goToTasks())
 }
 
 const getActiveFilter = store.getTasksFilter

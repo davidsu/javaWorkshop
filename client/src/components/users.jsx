@@ -1,14 +1,9 @@
 import React from 'react'
 import _ from 'lodash'
 import FilterableTable from './filterableTable.jsx'
+import consts from '../consts'
 //see example here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
-const columns = [
-    'id',
-    'full_name',
-    'type',
-    'email',
-    'password'
-];
+const columns = consts.userFields;
 class users extends React.Component {
     constructor(){
         super()
@@ -20,11 +15,7 @@ class users extends React.Component {
     }
 
     addUser() {
-        const user = _.reduce(columns, (acc, val) => {
-            acc[val] = '';
-            return acc;
-        }, {})
-        this.props.setCurrentUser(user)
+        this.props.onAddingUser()
     }
 
     render() {

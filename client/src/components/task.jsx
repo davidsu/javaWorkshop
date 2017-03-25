@@ -46,7 +46,7 @@ class task extends React.Component {
     }
 
     submitClicked(){
-        this.props.createOrUpdate(this.state, this.props.onClose)
+        this.props.createOrUpdate(this.state)
     }
 
     render() {

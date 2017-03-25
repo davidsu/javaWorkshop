@@ -3,7 +3,10 @@ import ReactDom from 'react-dom'
 import React from 'react'
 import ajax from './ajax'
 import taskController from './controllers/taskController.js'
-taskController.goToTasks(() => {
+import userController from './controllers/userController.js'
+
+const init = userController.getUsers
+init(() => {
     ReactDOM.render(
         <RootComponent></RootComponent>,
         $('#root')[0]

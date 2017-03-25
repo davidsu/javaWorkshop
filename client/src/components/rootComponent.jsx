@@ -1,4 +1,3 @@
-import React from 'react'
 import NavigationMenu from './navigationMenu.jsx'
 import SystemLogin from './systemLogin.jsx'
 import Tasks from './tasks.jsx'
@@ -9,6 +8,7 @@ import User from './user.jsx'
 import ajax from '../ajax.js'
 import store from '../store.js'
 import taskController from '../controllers/taskController.js'
+import userController from '../controllers/userController'
 
 class rootComponent extends React.Component {
 
@@ -17,16 +17,10 @@ class rootComponent extends React.Component {
         this.goToTasks = this.goToTasks.bind(this)
         this.setActiveMenuAndRefresh = this.setActiveMenuAndRefresh.bind(this)
         this.setCurrentUser = this.setCurrentUser.bind(this)
-        this.refreshUsers = this.refreshUsers.bind(this)
+        this.refreshUsers = () => userController.getUsers()
     }
     componentWillMount(){
         window.rootComponent = this;
-    }
-
-    refreshUsers(){
-        ajax.getUsers(() => {
-            this.gotToUsers()
-        })
     }
 
     refreshTasks(){
@@ -39,10 +33,6 @@ class rootComponent extends React.Component {
         store.setActiveMenu('tasks');
         window.rootComponent.forceUpdate()
     }
-    gotToUsers(){
-        store.setActiveMenu('users');
-        window.rootComponent.forceUpdate()
-    }
 
     setActiveMenuAndRefresh(activeMenu){
         store.setActiveMenu(activeMenu)
@@ -50,8 +40,9 @@ class rootComponent extends React.Component {
     }
 
     setCurrentUser(user){
-        store.setCurrentUser(user)
-        this.setActiveMenuAndRefresh('user:')
+        userController.getUser(user)    
+        // store.setCurrentUser(user)
+        // this.setActiveMenuAndRefresh('user:')
     }
 
     activePage() {
@@ -73,9 +64,13 @@ class rootComponent extends React.Component {
                     createOrUpdate={taskController.createOrUpdateTask}></Task>
             case /users/.test(store.getActiveMenu()):
                 return <Users users={store.getUsers()}
-                              setCurrentUser={this.setCurrentUser}></Users>
+                              setCurrentUser={this.setCurrentUser}
+                              onAddingUser={userController.addNewUser}></Users>
             case /user:.*/.test(store.getActiveMenu()):
-                return <User user={store.getCurrentUser()} onClose={this.refreshUsers} changeUser={this.refreshUsers}></User>
+                return <User user={store.getCurrentUser().user} 
+                              userTypes={store.getCurrentUser().userTypes}
+                              onClose={this.refreshUsers} 
+                              createOrUpdate={userController.createOrUpdate}></User>
             case /oops/.test(store.getActiveMenu()):
                 return <Oops status={store.getOops().status} statusText={store.getOops().statusText}></Oops>
             default:
