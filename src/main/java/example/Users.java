@@ -43,8 +43,12 @@ public class Users {
                 JDBC.createOrUpdateUser(doc);
                 return Response.ok().build();
             } catch (Exception e) {
+                //todo: if we knew which kind of exception we could give a friendly error message
                 e.printStackTrace();
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .type("text/plain")
+                        .entity("//todo: if we knew which kind of exception we could give a friendly error message")
+                        .build();
             }
     }
 

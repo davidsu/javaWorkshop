@@ -118,12 +118,12 @@ public class JDBC {
         stmt = conn.createStatement();
         _sql = "select * from users where id = " + userId;
         rs = stmt.executeQuery(_sql);
-        Document userDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task", "tasks");
+        Document userDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user", "users");
 
         stmt = conn.createStatement();
         _sql = "select * from userTypes";
         rs = stmt.executeQuery(_sql);
-        Document userTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "userType", "userTypes");
+        Document userTypesDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "userTypeEntry", "userTypes");
         Document[] docs = {userDoc, userTypesDoc};
         return Utils.mergeDocs(docs);
     }
