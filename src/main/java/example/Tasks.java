@@ -4,27 +4,23 @@ import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javassist.bytecode.stackmap.TypeData.ClassName;
+
 /**
  * Created by davidsu on 13/03/2017.
  */
 @Path("/tasks")
 public class Tasks {
-    //todo return proper errors to client when failing
+    //todo return proper errors to client when failing - should we show the client a different screen if the filter is bad? currently we ignore invalid values in the filter.
 
 
     private static Logger logger = Logger.getLogger("javaWorkshop");
     @GET
     @Secured
     //@Path("/filteredTasks")
-    public String getFilteredTasks(@QueryParam("id") String id,
+    public Response getFilteredTasks(@QueryParam("id") String id,
                                    @QueryParam("status") String status,
                                    @QueryParam("taskType") String type,
                                    @QueryParam("open_date") String openDate,
@@ -35,16 +31,13 @@ public class Tasks {
         System.out.println("page = " + page);
         try {
             String filter = buildTaskFilter(id, status, type, openDate, execDate);
-            logger.info(String.format("Tasks were requested with filter: %1s and page %2s", filter, page));
+            logger.info(String.format("Tasks were requested with filter: '%1s' and page = %2s", filter, page));
             Document doc = JDBC.getFilteredTasks(filter, page);
-            return Utils.DocumentToString(doc, true);
+            return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
             logger.severe(String.format("Error in getFilteredTasks : %1s", e));
-            //logger.log(Level.SEVERE, e.toString(), e);
-            //System.out.println("exception in getTasks");
-            //e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 
     private String buildTaskFilter(String id, String status, String type, String openDate, String execDate) {
@@ -62,29 +55,36 @@ public class Tasks {
     @GET
     @Secured
     @Path("/newTaskMetadata")
-    public String getNewTaskMetadata(){
+    public Response getNewTaskMetadata(){
         try {
             Document doc = JDBC.getTaskMetadata();
-            return Utils.DocumentToString(doc);
+            logger.info("Handled request for Task Metadata");
+            return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
-            System.out.println("exception in getNewTaskMetadata");
-            e.printStackTrace();
+            logger.severe(String.format("Error in getNewTaskMetadata : %1s", e));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 
     @GET
     @Secured
     @Path("/{id : [0-9]+}")
-    public String getTaskById(@PathParam("id") String id){
+    public Response getTaskById(@PathParam("id") String id){
         try {
+            if(!Utils.isNumeric(id))
+            {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .type("text/plain")
+                        .entity("Invalid Task ID")
+                        .build();
+            }
             Document doc = JDBC.getTask(id);
-            return Utils.DocumentToString(doc);
+            logger.info(String.format("Returning details of task ID = %1s", id));
+            return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
-            System.out.println("exception in getTaskById");
-            e.printStackTrace();
+            logger.severe(String.format("Error in getTaskById : %1s", e));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return null;
     }
 
     @POST
@@ -97,8 +97,7 @@ public class Tasks {
             JDBC.createOrUpdateTask(doc);
             return Response.ok().build();
         } catch (Exception e) {
-            System.out.println("exception in Tasks createOrUpdate");
-            e.printStackTrace();
+            logger.severe(String.format("Error in createOrUpdate : %1s", e));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

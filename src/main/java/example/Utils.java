@@ -148,18 +148,18 @@ public class Utils {
     private static boolean checkIds(String ids)
     {
         String[] idsArr = ids.split(",");
-        if (idsArr.length == 1 && idValid(idsArr[0]))
+        if (idsArr.length == 1 && isNumeric(idsArr[0]))
         {
             return true;
         }
-        if (idsArr.length == 2 && idValid(idsArr[0]) && idValid(idsArr[1]))
+        if (idsArr.length == 2 && isNumeric(idsArr[0]) && isNumeric(idsArr[1]))
         {
             return true;
         }
         return false;
     }
 
-    private static boolean idValid(String id)
+    public static boolean isNumeric(String id)
     {
         if (id.matches("\\d+")) {
             return true;
@@ -193,7 +193,7 @@ public class Utils {
         return false;
     }
 
-    private static boolean dateValid(String date)
+    public static boolean dateValid(String date)
     {
         if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
             return true;

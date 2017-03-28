@@ -19,6 +19,7 @@ public class JAX_RS_Entry {
         try {
             LogHandler.setup();
         } catch (IOException e) {
+            System.out.println("Failed to create the log file!");
             e.printStackTrace();
         }
         Logger logger = Logger.getLogger("javaWorkshop");

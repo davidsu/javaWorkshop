@@ -21,8 +21,6 @@ public class LogHandler
         // get the global logger to configure it
         Logger logger = Logger.getLogger("javaWorkshop");
         logger.setLevel(Level.INFO);
-        //Path releaseFolder = Paths.get(release);
-        //Files.notExists()
         String logFullPath = getLogPath().toString() + "/javaWorkshopLog.txt";
         fileTxt = new FileHandler(logFullPath);
         // create a TXT formatter
@@ -43,6 +41,7 @@ public class LogHandler
             try {
                 Files.createDirectories(logFolder);
             } catch (IOException e) {
+                System.out.println("Failed to create log's folder");
                 e.printStackTrace();
             }
         }

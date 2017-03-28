@@ -68,6 +68,19 @@ public class SessionHandler implements ContainerRequestFilter {
         }
     }
 
+    public static boolean removeUser(String token)
+    {
+        if(activeUsers.containsKey(token))
+        {
+            synchronized (locker)
+            {
+                activeUsers.remove(token);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private ActiveUser getActiveUserForToken(String token){
         ActiveUser user = activeUsers.get(token);
         if(user == null || user.isExpired()){

@@ -8,3 +8,5 @@ client/target/
 src/main/resources/
 client/src/tmp.html
 javaWorkshopLog.txt
+logs/
+
