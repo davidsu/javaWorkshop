@@ -19,7 +19,7 @@ init(() => {
 //    )
 //})
 
-
+//todo add exec time to new tasks
 
 function prettyHtml(str = 'undefined') {
     var notIndented = str.replace(/</g, '\n<').replace(/([^\/]>)(.)/g, '$1\n$2').replace(/\u200b/g, '%u200B');

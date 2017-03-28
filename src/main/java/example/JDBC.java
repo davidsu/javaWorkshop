@@ -31,7 +31,7 @@ public class JDBC {
 
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false&allowMultiQueries=true", "root", "");
 
     }
 
@@ -178,6 +178,36 @@ public class JDBC {
 
     }
 
+    private static Integer insertIntoTableReturnID(String tableName, Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+        ArrayList<String> columns = new ArrayList<>();
+        ArrayList<String> values = new ArrayList<>();
+        NodeList children = doc.getFirstChild().getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node curr = children.item(i);
+            String text = curr.getTextContent().trim();
+            if (text != null && text.length() == 0) {
+                text = "NULL";
+            }
+            if (needToQuote(text)) {
+                text = "'" + text + "'";
+            }
+            values.add(text);
+            columns.add(curr.getNodeName());
+        }
+        String sql = "" +
+                "INSERT INTO " +
+                tableName +
+                " ("+ String.join(",", columns) + ") "+
+                "VALUES (" + String.join(",", values) + ");";
+        System.out.println(sql);
+        getInstance().conn.createStatement().executeUpdate(sql);
+        sql =  "Select LAST_INSERT_ID() as 'id';";
+        ResultSet rs = getInstance().conn.createStatement().executeQuery(sql);
+        return !rs.next() ? 0 : rs.getInt("id");
+
+    }
+
+
     //builds an insert command with sql injection protection - currently only checks for the free text "additionalInfo" column (in Tasks)
     private static String buildProtectedInsertCommand(String tableName, ArrayList<String> columns, ArrayList<String> values) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         String columnList = String.join(",", columns);
@@ -223,15 +253,28 @@ public class JDBC {
         if(doc.getElementsByTagName("id").getLength() == 1){
             updateTableFromDocument(doc, "tasks");
         }else{
-            insertIntoTable("tasks", doc);
+           insertIntoTable("tasks", doc);
         }
+    }
+
+
+    public static void deleteTask(String taskId) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException
+    {
+        Statement stmt;
+        ResultSet rs;
+        String _sql;
+        Connection conn = getInstance().conn;
+
+        stmt = conn.createStatement();
+        _sql = "delete from tasks where id = " + taskId;
+        stmt.executeUpdate(_sql);
     }
 
     public static void createOrUpdateUser(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         if(doc.getElementsByTagName("id").getLength() == 1){
             updateTableFromDocument(doc, "users");
         }else{
-            insertIntoTable("users", doc);
+           insertIntoTable("users", doc);
         }
     }
     public static Document getUserMetadata() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {

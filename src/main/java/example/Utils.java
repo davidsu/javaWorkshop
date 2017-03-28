@@ -131,7 +131,6 @@ public class Utils {
 
     public static String buildIdFilter(String ids)
     {
-        if(ids == null || !checkIds(ids)) return null;
         String[] idsArr = ids.split(",");
         String retVal = "";
         if (idsArr.length == 1)
@@ -145,16 +144,19 @@ public class Utils {
         return retVal;
     }
 
-    private static boolean checkIds(String ids)
+    public static boolean checkIds(String ids)
     {
-        String[] idsArr = ids.split(",");
-        if (idsArr.length == 1 && isNumeric(idsArr[0]))
+        if (ids != null)
         {
-            return true;
-        }
-        if (idsArr.length == 2 && isNumeric(idsArr[0]) && isNumeric(idsArr[1]))
-        {
-            return true;
+            String[] idsArr = ids.split(",");
+            if (idsArr.length == 1 && isNumeric(idsArr[0]))
+            {
+                return true;
+            }
+            if (idsArr.length == 2 && isNumeric(idsArr[0]) && isNumeric(idsArr[1]))
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -167,27 +169,30 @@ public class Utils {
         return false;
     }
 
-    private static boolean checkDates(String dates)
+    public static boolean checkDates(String dates)
     {
-        String[] datesArr = dates.split(",");
-        if (datesArr.length == 1 && dateValid(datesArr[0]))
+        if(dates != null)
         {
-            return true;
-        }
-        if (datesArr.length == 2 && dateValid(datesArr[0]) && dateValid(datesArr[1]))
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date startD = new Date();
-            Date endD = new Date();
-            try {
-                startD = formatter.parse(datesArr[0]);
-                endD = formatter.parse(datesArr[1]);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
+            String[] datesArr = dates.split(",");
+            if (datesArr.length == 1 && dateValid(datesArr[0]))
             {
                 return true;
+            }
+            if (datesArr.length == 2 && dateValid(datesArr[0]) && dateValid(datesArr[1]))
+            {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Date startD = new Date();
+                Date endD = new Date();
+                try {
+                    startD = formatter.parse(datesArr[0]);
+                    endD = formatter.parse(datesArr[1]);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (endD != null && startD != null && endD.compareTo(startD) > 0) //verify that the end date is after the start date
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -216,7 +221,6 @@ public class Utils {
     //builds a filter for dates
     public static String buildDatesFilter(String dates, String dateColumn)
     {
-        if(dates == null || !checkDates(dates)) return null;
         String[] datesArr = dates.split(",");
         String filter = "";
         if (datesArr.length == 1)
@@ -239,6 +243,18 @@ public class Utils {
             V value =(V) rs.getObject(valIndex);
             dict.put(key, value);
         }
+    }
+
+    public static String getElementValueFromDoc(Document doc, String elementName){
+        if(doc != null)
+        {
+            NodeList nodeList = doc.getElementsByTagName(elementName);
+            if (nodeList.getLength() > 0)
+            {
+                return nodeList.item(0).getChildNodes().item(0).getNodeValue();
+            }
+        }
+        return null;
     }
 
 }

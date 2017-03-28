@@ -38,12 +38,12 @@ public class Users {
     @Secured
     @RolesAllowed("admin")
     //todo return proper errors to client when failing
-    //todo can we get the user ID as another parameter?
     public Response createOrUpdate(String incomingXML) {
             try {
                 Document doc = Utils.createDocumentFromString(incomingXML);
                 JDBC.createOrUpdateUser(doc);
-                //doc.getElementsByTagName("id").item(0).getChildNodes().item(0).getNodeValue()
+                String email = Utils.getElementValueFromDoc(doc, "email");
+                logger.info(String.format("Updating/adding user = '%1s'", email));
                 return Response.ok().build();
             } catch (Exception e) {
                 //todo: if we knew which kind of exception we could give a friendly error message
@@ -79,15 +79,8 @@ public class Users {
     @GET
     @Secured
     @Path("/newUserMetadata")
-    public Response getNewUserMetadata(@PathParam("id") String id){
+    public Response getNewUserMetadata(){
         try {
-            if(!Utils.isNumeric(id))
-            {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .type("text/plain")
-                        .entity("Invalid user ID")
-                        .build();
-            }
             Document doc = JDBC.getUserMetadata();
             return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
@@ -99,16 +92,17 @@ public class Users {
 
     @GET
     @Secured
-    @Path("/removeUser")
-    public Response removeUser(@PathParam("token") String token)
+    @Path("/logoutUser")
+    public Response logoutUser(@PathParam("token") String token)
     {
+        logger.info(String.format("Logging out user (token: '%1s'", token));
         if(SessionHandler.removeUser(token))
         {
             return Response.ok().build();
         }
         return Response.status(Response.Status.BAD_REQUEST)
                 .type("text/plain")
-                .entity(String.format("Couldn't remove user's session (token: '%1s')", token))
+                .entity(String.format("Couldn't logout user's session (token: '%1s')", token))
                 .build();
     }
 
