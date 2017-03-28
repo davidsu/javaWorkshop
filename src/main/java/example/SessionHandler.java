@@ -42,9 +42,14 @@ public class SessionHandler implements ContainerRequestFilter {
         }
     }
 
-    public static String nextSessionId() {
-        //todo certify that return value isn't present in "activeUsers"
-        return new BigInteger(130, random).toString(32);
+    public static String generateToken(String userType) {
+        String sessionId = new BigInteger(130, random).toString(32);
+        String token = userType + "_" + sessionId;
+        if(activeUsers.containsKey(token))
+        {
+            generateToken(userType);
+        }
+        return token;
     }
 
     public static void removeExpiredUsers()

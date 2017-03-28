@@ -9,13 +9,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javassist.bytecode.stackmap.TypeData.ClassName;
 /**
  * Created by davidsu on 13/03/2017.
  */
 @Path("/tasks")
 public class Tasks {
     //todo return proper errors to client when failing
-    //todo which columns must be 'not null' in tasks table?
+
+
+    private static Logger logger = Logger.getLogger("javaWorkshop");
     @GET
     @Secured
     //@Path("/filteredTasks")
@@ -30,11 +35,14 @@ public class Tasks {
         System.out.println("page = " + page);
         try {
             String filter = buildTaskFilter(id, status, type, openDate, execDate);
+            logger.info(String.format("Tasks were requested with filter: %1s and page %2s", filter, page));
             Document doc = JDBC.getFilteredTasks(filter, page);
             return Utils.DocumentToString(doc, true);
         } catch (Exception e) {
-            System.out.println("exception in getTasks");
-            e.printStackTrace();
+            logger.severe(String.format("Error in getFilteredTasks : %1s", e));
+            //logger.log(Level.SEVERE, e.toString(), e);
+            //System.out.println("exception in getTasks");
+            //e.printStackTrace();
         }
         return null;
     }
@@ -51,7 +59,6 @@ public class Tasks {
         return filter.length() > 0 ? " where " + filter : "";
     }
 
-    //todo - why do we use id in this method?
     @GET
     @Secured
     @Path("/newTaskMetadata")
@@ -60,7 +67,7 @@ public class Tasks {
             Document doc = JDBC.getTaskMetadata();
             return Utils.DocumentToString(doc);
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
+            System.out.println("exception in getNewTaskMetadata");
             e.printStackTrace();
         }
         return null;
@@ -74,7 +81,7 @@ public class Tasks {
             Document doc = JDBC.getTask(id);
             return Utils.DocumentToString(doc);
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
+            System.out.println("exception in getTaskById");
             e.printStackTrace();
         }
         return null;
@@ -90,7 +97,7 @@ public class Tasks {
             JDBC.createOrUpdateTask(doc);
             return Response.ok().build();
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
+            System.out.println("exception in Tasks createOrUpdate");
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

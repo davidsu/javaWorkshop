@@ -25,6 +25,7 @@ public class JAX_RS_Entry {
         String uri = "http://localhost/";
         int port = 9998;
         URI baseUri = UriBuilder.fromUri(uri).port(port).build();
+        logger.info("*** Starting Web Server ***");
         logger.info(String.format("Server URL is - %1s port: %2s", uri, port));
         ResourceConfig config =
                 new ResourceConfig(

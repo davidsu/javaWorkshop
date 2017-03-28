@@ -5,8 +5,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.ParserConfigurationException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -30,7 +28,6 @@ public class Login {
         {
             e.printStackTrace();
         }
-        //todo see that value exist in dataBase
         return aUser;
     }
     @GET
@@ -47,8 +44,8 @@ public class Login {
         }
         ActiveUser aUser =  authenticate(user, password);
         if(aUser != null){
-            String token = userTypesDict.get(aUser.getType()) + "_" + SessionHandler.nextSessionId();
-            //todo we need to verify real user and pass the correct user type to this addActiveUser
+            String userType = userTypesDict.get(aUser.getType());
+            String token = SessionHandler.generateToken(userType);
             SessionHandler.addActiveUser(token, aUser);
             logger.info(String.format("User - %1s has logged in", user));
             return Response.ok(token).build();
