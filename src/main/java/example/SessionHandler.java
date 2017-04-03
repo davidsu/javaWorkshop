@@ -1,8 +1,5 @@
 package example;
 
-/**
- * Created by davidsu on 17/03/2017.
- */
 import javax.annotation.Priority;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
@@ -17,6 +14,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
+/*
+    Class for handling sessions
+ */
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)

@@ -1,7 +1,7 @@
 package example;
 
-/**
- * Created by Alon on 25/03/2017.
+/*
+    Checker for removing expired users from active sessions
  */
 public class ActiveUserChecker extends Thread
 {

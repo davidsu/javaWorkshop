@@ -3,8 +3,8 @@ package example;
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
-/**
- * Created by davidsu on 17/03/2017.
+/*
+    Security context for users
  */
 public class InternalSecurityContext implements SecurityContext {
     private ActiveUser user;

@@ -10,8 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
-/**
- * Created by davidsu on 06/03/2017.
+/*
+    Class for handling User requests
  */
 @Path("/users")
 public class Users {
@@ -46,12 +46,8 @@ public class Users {
                 logger.info(String.format("Updating/adding user = '%1s'", email));
                 return Response.ok().build();
             } catch (Exception e) {
-                //todo: if we knew which kind of exception we could give a friendly error message
-                e.printStackTrace();
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .type("text/plain")
-                        .entity("//todo: if we knew which kind of exception we could give a friendly error message")
-                        .build();
+                logger.severe(String.format("Error in createOrUpdate (user): %1s", e));
+                return Utils.generateError(e);
             }
     }
 
@@ -70,9 +66,8 @@ public class Users {
             Document doc = JDBC.getUser(id);
             return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.severe(String.format("Error in getUserById : %1s", e));
+            return Utils.generateError(e);
         }
     }
 
@@ -84,9 +79,8 @@ public class Users {
             Document doc = JDBC.getUserMetadata();
             return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
-            System.out.println("exception in getUsers");
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            logger.severe(String.format("Error in getNewUserMetadata : %1s", e));
+            return Utils.generateError(e);
         }
     }
 

@@ -16,7 +16,6 @@ import java.util.Date;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public class JDBC {
-    //todo need to implement something to avoid sql injection
     //todo move logic from this class to the specific classes (the relevant classes for the logic)
     //todo do we need the dictionaries? how do we pass info from static tables (id or value)?
     private Connection conn;

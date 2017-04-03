@@ -2,8 +2,8 @@ package example;
 
 import java.util.Calendar;
 
-/**
- * Created by davidsu on 17/03/2017.
+/*
+    Class for active user info
  */
 public class ActiveUser {
     private boolean _isAdmin;

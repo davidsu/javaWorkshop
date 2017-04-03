@@ -1,6 +1,7 @@
 package example;
 
 
+import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,6 +21,7 @@ import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,8 +30,8 @@ import java.util.HashMap;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- * Created by davidsu on 12/03/2017.
+/*
+    General Utils for the Server
  */
 public class Utils {
 
@@ -253,6 +255,33 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    //ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException
+    public static Response generateError(Exception e)
+    {
+        if (e instanceof SQLException)
+        {
+           if (((SQLException) e).getSQLState().startsWith("08"))
+           {
+               return Response.status(Response.Status.SERVICE_UNAVAILABLE)
+                       .type("text/plain")
+                       .entity("DB not available!")
+                       .build();
+           }
+           if (e instanceof SQLSyntaxErrorException)
+           {
+               return Response.status(Response.Status.BAD_REQUEST)
+                       .type("text/plain")
+                       .entity(String.format("Failure in querying the DB! Error: %1s", e.getMessage()))
+                       .build();
+           }
+
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .type("text/plain")
+                .entity(String.format("Unknown error. Error: %1s", e.getMessage()))
+                .build();
     }
 
 }

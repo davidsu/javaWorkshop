@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;
 
-/**
- * Created by davidsu on 13/03/2017.
+/*
+    Class for handling Task requests
  */
 @Path("/tasks")
 public class Tasks {
@@ -44,7 +44,7 @@ public class Tasks {
             return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
             logger.severe(String.format("Error in getFilteredTasks : %1s", e));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Utils.generateError(e);
         }
     }
 
@@ -70,7 +70,7 @@ public class Tasks {
             return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
             logger.severe(String.format("Error in getNewTaskMetadata : %1s", e));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Utils.generateError(e);
         }
     }
 
@@ -91,7 +91,7 @@ public class Tasks {
             return Response.ok(Utils.DocumentToString(doc)).build();
         } catch (Exception e) {
             logger.severe(String.format("Error in getTaskById : %1s", e));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Utils.generateError(e);
         }
     }
 
@@ -110,7 +110,7 @@ public class Tasks {
             return Response.ok().build();
         } catch (Exception e) {
             logger.severe(String.format("Error in createOrUpdate : %1s", e));
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Utils.generateError(e);
         }
     }
 
@@ -133,10 +133,11 @@ public class Tasks {
             return Response.ok().build();
         } catch (Exception e) {
             logger.severe(String.format("Failed to delete task id = %1s. Error: %2s", id, e.getMessage()));
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .type("text/plain")
-                    .entity(String.format("Couldn't delete task id = %1s", id))
-                    .build();
+            return Utils.generateError(e);
+//            return Response.status(Response.Status.BAD_REQUEST)
+//                    .type("text/plain")
+//                    .entity(String.format("Couldn't delete task id = %1s", id))
+//                    .build();
         }
     }
 }

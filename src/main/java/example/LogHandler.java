@@ -8,8 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Calendar;
-/**
- * Created by Alon on 25/03/2017.
+
+/*
+    Class for handling the log
  */
 public class LogHandler
 {

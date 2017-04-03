@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 
-
+/*
+    Class for handling login requests
+ */
 @Path("/login")
 public class Login {
 
