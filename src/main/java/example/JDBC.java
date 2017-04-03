@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class JDBC {
     //todo need to implement something to avoid sql injection
@@ -31,7 +32,7 @@ public class JDBC {
 
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false&allowMultiQueries=true", "root", "");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
 
     }
 
@@ -136,6 +137,7 @@ public class JDBC {
                 text = "NULL";
             }
             if (needToQuote(text)) {
+                text = StringEscapeUtils.escapeSql(text);
                 text = "'" + text + "'";
             }
             arralistresult.add(curr.getNodeName() + "=" + text);
@@ -163,6 +165,7 @@ public class JDBC {
                 text = "NULL";
             }
             if (needToQuote(text)) {
+                text = StringEscapeUtils.escapeSql(text);
                 text = "'" + text + "'";
             }
             values.add(text);

@@ -95,7 +95,7 @@ public class Tasks {
         }
     }
 
-    //todo when adding a new task, the exec time is missing! (fails to add it)
+    //todo when adding a new task, the exec time is missing! (fails to add it) + we have to inforce values on mandatory fields getting a lot of failures because of missing values
     @POST
     @Secured
     @Path("/createOrUpdate")
@@ -114,7 +114,7 @@ public class Tasks {
         }
     }
 
-    //todo should we do something to prevent multiple actions on the same task ? (relevant also on multiple updates)
+    //todo should we do something to prevent multiple actions on the same task ? (relevant also on multiple updates) - return proper error to indicate that the id doesn't exist
     @GET
     @Secured
     @Path("/deleteTask")
