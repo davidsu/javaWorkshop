@@ -39,7 +39,8 @@ public class Tasks {
                         .build();
             }
             String filter = buildTaskFilter(id, status, type, openDate, execDate);
-            logger.info(String.format("Tasks were requested with filter: '%1s' and page = %2s", filter, page));
+            String msg = filter == "" ? String.format("All tasks were requested with page = %1s", page) : String.format("Tasks were requested with filter: '%1s' and page = %2s", filter, page);
+            logger.info(msg);
             Document doc = JDBC.getFilteredTasks(filter, page);
             return Response.ok(Utils.DocumentToString(doc, true)).build();
         } catch (Exception e) {
