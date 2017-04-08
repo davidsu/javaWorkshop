@@ -103,8 +103,8 @@ public class Tasks {
     public Response createOrUpdate(String incomingXML){
         try {
             Document doc = Utils.createDocumentFromString(incomingXML);
-            JDBC.createOrUpdateTask(doc);
             String id = Utils.getElementValueFromDoc(doc, "id");
+            JDBC.createOrUpdateTask(doc);
             String msg = id != null ? String.format("Updating task ID = %1s", id) : "Adding a new task";
             logger.info(msg);
             return Response.ok().build();

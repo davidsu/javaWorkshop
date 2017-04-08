@@ -34,7 +34,7 @@ public class LogHandler
     private static Path getLogPath()
     {
         Integer year = Calendar.getInstance().get(Calendar.YEAR);
-        Integer month = Calendar.getInstance().get(Calendar.MONTH);
+        Integer month = Calendar.getInstance().get(Calendar.MONTH) + 1; //months are indexed from 0
         Integer day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         Path logFolder = Paths.get("./logs/" + year.toString() + "/" + month.toString() + "/" + day.toString());
         if(Files.notExists(logFolder))
