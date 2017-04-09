@@ -86,7 +86,7 @@ public class JDBC {
         Statement stmt;
         ResultSet rs;
         stmt = getInstance().conn.createStatement();
-        rs = stmt.executeQuery(String.format("SELECT * FROM users where email = '%1s' and password = '%2s'", user, password));
+        rs = stmt.executeQuery(String.format("SELECT * FROM users where email = '%1s' and password = '" + password + "'", user));
         return (!rs.next()) ? 0 : rs.getInt("type");
     }
 
@@ -228,7 +228,7 @@ public class JDBC {
         }
         //valuePlaceHolders.append("?");
         valuePlaceHolders.setLength(valuePlaceHolders.length() - 1);
-        String insert = String.format("INSERT INTO %1s(%2s) VALUES(%3s)",tableName, columnList, valuePlaceHolders.toString());
+        String insert = String.format("INSERT INTO %1s(%2s) VALUES(%3s)", tableName, columnList, valuePlaceHolders.toString());
         PreparedStatement ps = getInstance().conn.prepareStatement(insert);
         for(int i=0; i < values.size(); i++)
         {
