@@ -1,6 +1,7 @@
 import React from 'react'
 import userController from '../controllers/userController.js'
 import taskController from '../controllers/taskController'
+import store from '../store.js'
 
 class navigationMenu extends React.Component {
     constructor(props) {
@@ -26,6 +27,9 @@ class navigationMenu extends React.Component {
     }
     render() {
         //return null;
+        if (store.getUserType() !== 'Admin') {
+            return null;
+        }
         return (
             <nav className="navbar navbar-default navbar-static-top">
                 <div className="container">

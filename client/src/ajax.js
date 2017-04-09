@@ -158,6 +158,7 @@ function login(user, password, onSuccess, onFail = defaultOops) {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + data);
             }
         });
+        store.setUserType(data.split('_')[0])
         onSuccess(data)
     })
     jqxhr.fail(onFail)

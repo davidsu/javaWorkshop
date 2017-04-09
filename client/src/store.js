@@ -10,7 +10,8 @@ const store = {
         currentUser: null,
         metaData: null
     },
-    activeMenu: 'tasks'
+    activeMenu: 'login',
+    userType: null
 }
 
 const setTasks = (tasks) => store.tasks.tasks = tasks;
@@ -25,7 +26,9 @@ const getTasksFilter = () =>  store.tasks.filter;
 const setCurrentTask = (task) => store.tasks.currentTask = task
 const getCurrentTask = () =>  store.tasks.currentTask
 
-const setActiveMenu = (activeMenu) => store.activeMenu = activeMenu
+const setActiveMenu = (activeMenu) => {
+    store.activeMenu = activeMenu
+}
 const getActiveMenu = () => store.activeMenu
 
 const setUsers = (users) => store.users.users = users;
@@ -42,6 +45,9 @@ const getCurrentUser = () =>  store.users.currentUser
 
 const setOops = ({status, statusText}) => store.oops = {status, statusText}
 const getOops = () => store.oops
+
+const setUserType = userType => store.userType = userType
+const getUserType = () => store.userType
 const retVal = {
     setActiveMenu,
     getActiveMenu,
@@ -62,7 +68,9 @@ const retVal = {
     setCurrentUser,
     getCurrentUser,
     setOops,
-    getOops 
+    getOops,
+    setUserType,
+    getUserType
 }
 window.store = store
 window.Store = retVal

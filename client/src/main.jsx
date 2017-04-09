@@ -5,19 +5,13 @@ import ajax from './ajax'
 import taskController from './controllers/taskController.js'
 import userController from './controllers/userController.js'
 
-const init = userController.getUsers
-init(() => {
+// const init = userController.getUsers
+// init(() => {
     ReactDOM.render(
         <RootComponent></RootComponent>,
         $('#root')[0]
     )
-})
-//ajax.getTasks(()=>{
-//    ReactDOM.render(
-//      <RootComponent></RootComponent>,
-//      $('#root')[0]
-//    )
-//})
+// })
 
 //todo add exec time to new tasks
 
