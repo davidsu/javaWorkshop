@@ -8,7 +8,9 @@ class systemLogin extends React.Component {
         this.onPasswordChange = e => this.setState({password: e.target.value})
         this.submitClicked = this.submitClicked.bind(this)
     }
-    submitClicked() {
+    submitClicked(e) {
+        e.preventDefault()
+        e.stopPropagation()
         const self = this;
         ajax.login(this.state.user, this.state.password, token => {
             window.token = token
@@ -17,6 +19,10 @@ class systemLogin extends React.Component {
             alert(`server returned with ${jqXHR.status}: ${errorThrown}`)
         })
     }
+    componentDidMount(){
+        this.emailInput.focus(); 
+    }
+
     render() {
         return (
             <div className="container">
@@ -27,10 +33,10 @@ class systemLogin extends React.Component {
                                 <h3 className="panel-title">Please sign in</h3>
                             </div>
                             <div className="panel-body">
-                                <form role="form">
+                                <form role="form" onSubmit={this.submitClicked}>
                                     <fieldset>
                                         <div className="form-group">
-                                            <input className="form-control" placeholder="E-mail" name="email"
+                                            <input className="form-control" placeholder="E-mail" name="email" ref={(input) => { this.emailInput = input; }} 
                                                    type="text" id="emailInput" value={this.state.user} onChange={this.onUserChange}/>
                                         </div>
 
@@ -40,8 +46,8 @@ class systemLogin extends React.Component {
                                         </div>
                                         <br/>
                                         <br/>
-                                        <input className="btn btn-lg btn-success btn-block" onClick={this.submitClicked}
-                                               value="Login" readOnly={true}/>
+                                        <input className="btn btn-lg btn-success btn-block" type="submit"
+                                               value="Login" readOnly={true} />
                                     </fieldset>
                                 </form>
                             </div>
