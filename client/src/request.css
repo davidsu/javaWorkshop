@@ -31,4 +31,8 @@
     color:#999
 }
 
+.invalid{
+    border: 1px solid red
+}
+
 span.page_link { cursor: pointer; }

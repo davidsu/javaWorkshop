@@ -18,7 +18,7 @@ class task extends React.Component {
             requesterId: props.task.requesterId || undefined,//used
             priorityId: props.task.priorityId || undefined,//used
             open_date: props.task.open_date || moment().format('YYYY-MM-DD'),//used
-            exec_date: props.task.exec_date,
+            exec_date: props.task.exec_date|| moment().format('YYYY-MM-DD'),
             statusId: props.task.statusId || undefined,//used
             qaGO: !!props.task.qaGO,//used
             rollBack: !!props.task.rollBack,//used
@@ -45,8 +45,20 @@ class task extends React.Component {
         this.onClose = () => props.onClose()
     }
 
-    submitClicked(){
-        this.props.createOrUpdate(this.state)
+    
+     submitClicked(){
+        if (!_.every(['taskTypeId',
+                'productId',
+                'envId',
+                'requesterId',
+                'priorityId',
+                'open_date',
+                'exec_date',
+                'statusId'], key => this.state[key])) {
+            this.setState({className: 'invalid'})
+            return;
+        }
+        this.props.createOrUpdate(_.pickBy(this.state, (val, key) => key !== 'className'))
     }
 
     render() {
@@ -67,22 +79,23 @@ class task extends React.Component {
                                 <form role="form">
                                     <fieldset>
                                         <div className='col-sm-6'>
-                                            <DropDown label='Type'
+                                            <DropDown className={!this.state.taskTypeId && this.state.className}
+                                                isRequired={true} label='Type'
                                                 value={this.state.taskTypeId}
                                                 onChange={this.typeChange}
                                                 optionsArr={this.props.taskTypes}
                                                 optionKey='taskType'/>
-                                            <DropDown label='Product'
+                                            <DropDown className={!this.state.productId && this.state.className} isRequired={true} label='Product'
                                                 value={this.state.productId}
                                                 onChange={this.productChange}
                                                 optionsArr={this.props.products}
                                                 optionKey='productName'/>
-                                            <DropDown label='Environment'
+                                            <DropDown className={!this.state.envId && this.state.className} isRequired={true} label='Environment'
                                                 value={this.state.envId}
                                                 onChange={this.environmentChange}
                                                 optionsArr={this.props.environments}
                                                 optionKey='envName'/>
-                                            <DropDown label='Requester'
+                                            <DropDown className={!this.state.requesterId && this.state.className} isRequired={true} label='Requester'
                                                 value={this.state.requesterId}
                                                 onChange={this.requesterChange}
                                                 optionsArr={this.props.users}
@@ -93,7 +106,6 @@ class task extends React.Component {
                                                       optionsArr={this.props.users}
                                                       optionKey='full_name'/>
 
-
                                             <label className="col-sm-12 control-label">Additional Info</label>
                                             <div className="col-sm-12">
                                             <textarea className="col-sm-12 form-control custom-control"
@@ -103,8 +115,6 @@ class task extends React.Component {
                                                       onChange={this.additionalInfoChanged}
                                                 ></textarea>
                                                 </div>
-
-
                                         </div>
 
                                         <div className='col-sm-6'>
@@ -114,7 +124,7 @@ class task extends React.Component {
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
-                                            <label className="col-sm-4 control-label">Execution Date</label>
+                                            <label className="col-sm-4 control-label">Execution Date*</label>
                                             <div className="col-sm-8">
                                                 <DatePicker
                                                     dateFormat="YYYY-MM-DD"
@@ -124,12 +134,12 @@ class task extends React.Component {
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
-                                            <DropDown label='Priority'
+                                            <DropDown className={!this.state.priorityId && this.state.className} isRequired={true} label='Priority'
                                                       value={this.state.priorityId}
                                                       onChange={this.priorityChange}
                                                       optionsArr={this.props.priority}
                                                       optionKey='priorityName'/>
-                                            <DropDown label='Status'
+                                            <DropDown className={!this.state.statusId && this.state.className} isRequired={true} label='Status'
                                                       value={this.state.statusId}
                                                       onChange={this.statusChange}
                                                       optionsArr={this.props.status}
