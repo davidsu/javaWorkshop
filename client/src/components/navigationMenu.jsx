@@ -7,7 +7,6 @@ class navigationMenu extends React.Component {
     constructor(props) {
         super(props);
         this.setActiveMenu = this.setActiveMenu.bind(this)
-        //this.setActiveMenu(props.getActiveMenu);
     }
 
     setActiveMenu(activeMenu) {
@@ -26,7 +25,6 @@ class navigationMenu extends React.Component {
         }
     }
     render() {
-        //return null;
         if (store.getUserType() !== 'Admin') {
             return null;
         }
