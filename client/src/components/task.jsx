@@ -6,7 +6,6 @@ import _ from 'lodash'
 
 import DatePicker from 'react-datepicker';
 
-//todo validation before server requests
 class task extends React.Component {
     constructor(props) {
         super(props)

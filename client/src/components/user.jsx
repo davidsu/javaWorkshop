@@ -24,6 +24,10 @@ class user extends React.Component{
             return acc;
         }, {}) 
         user.type = this.state.user.type
+        if(!_.every(['full_name', 'type', 'email', 'password'], key => !!user[key])) {
+            this.setState({className: 'invalid'})
+            return;
+        }
         userController.createOrUpdate(user)
     }
 
@@ -60,7 +64,8 @@ class user extends React.Component{
                                             if(key === 'type'){
                                                 return (
                                                     <div className="form-group" key={'user'+key}>
-                                                        <DropDown label={key}
+                                                        <DropDown label={key+'*'}
+                                                            className={!this.state.user.type && this.state.className}
                                                             value={val}
                                                             onChange={this.userTypeChange}
                                                             optionsArr={this.props.userTypes}
@@ -71,9 +76,9 @@ class user extends React.Component{
                                             return (
                                                 <div className="form-group" key={'user'+key} >
                                                     <div className="col-sm-12" style={{padding:0}}>
-                                                        <label className="col-sm-4 control-label">{key}</label>
+                                                        <label className="col-sm-4 control-label">{key+'*'}</label>
                                                         <div className="col-sm-8">
-                                                            <input className="from-control col-sm-12"
+                                                            <input className={'from-control col-sm-12 ' + ( !_.get(document.getElementById('user'+key), 'value') && this.state.className)}
                                                                 placeholder={key} 
                                                                 name={key}
                                                                 type="text"
