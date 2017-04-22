@@ -39,9 +39,6 @@ class navigationMenu extends React.Component {
                             <li className={this.props.activeMenu === 'users' ? 'active' : ''}>
                                 <a onClick={()=>this.setActiveMenu('users')}>Users</a>
                             </li>
-                            <li className={this.props.activeMenu === 'login' ? 'active' : ''}>
-                                <a onClick={()=>this.setActiveMenu('login')}>Login</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
