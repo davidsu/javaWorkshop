@@ -54,7 +54,8 @@ class rootComponent extends React.Component {
                 //todo find what logic lives in task and put it in task controller, pass as prop
                 return <Task {...store.getCurrentTask()}
                     onClose={taskController.goToTasks}
-                    createOrUpdate={taskController.createOrUpdateTask}></Task>
+                    createOrUpdate={taskController.createOrUpdateTask}
+                    shouldEnableTaskEdit={/Admin|Requester/.test(store.getUserType())}></Task>
             case /users/.test(store.getActiveMenu()):
                 return <Users users={store.getUsers()}
                               setCurrentUser={this.setCurrentUser}

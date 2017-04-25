@@ -37,10 +37,10 @@ class task extends React.Component {
         this.priorityChange = e => this.setState({priorityId: e.target.value})
         this.statusChange = e => this.setState({statusId: e.target.value})
         this.executionDateChange = e => e && this.setState({exec_date: e.format('YYYY-MM-DD')})
-        this.qaGoChanged = e => this.setState({qaGO: !this.state.qaGO})
-        this.rollBackChanged = e => this.setState({rollBack: !this.state.rollBack})
-        this.urgentChanged = e => this.setState({urgent: !this.state.urgent})
-        this.additionalInfoChanged = e => {console.log(e.target.value); this.setState({additionalInfo: e.target.value})}
+        this.qaGoChanged = e => this.props.shouldEnableTaskEdit && this.setState({qaGO: !this.state.qaGO})
+        this.rollBackChanged = e => this.props.shouldEnableTaskEdit && this.setState({rollBack: !this.state.rollBack})
+        this.urgentChanged = e => this.props.shouldEnableTaskEdit && this.setState({urgent: !this.state.urgent})
+        this.additionalInfoChanged = e => {console.log(e.target.value); this.props.shouldEnableTaskEdit && this.setState({additionalInfo: e.target.value})}
         this.onClose = () => props.onClose()
     }
 
@@ -61,6 +61,18 @@ class task extends React.Component {
     }
 
     render() {
+        const disabled = this.props.shouldEnableTaskEdit? {} : {disabled: true}
+        let exec_date = (
+            <DatePicker
+                dateFormat="YYYY-MM-DD"
+                className="form-control col-sm-12"
+                selected={moment(this.state.exec_date)}
+                onChange={this.executionDateChange} />
+        )
+        if(disabled.disabled){
+            exec_date = <input className="form-control" disabled value={this.state.exec_date}/>
+        }
+
         return (
             <div className="container">
                 <div className="row" style={{marginTop:40 + 'px'}}>
@@ -79,31 +91,36 @@ class task extends React.Component {
                                     <fieldset>
                                         <div className='col-sm-6'>
                                             <DropDown className={!this.state.taskTypeId && this.state.className}
+                                                disabled={disabled}
                                                 isRequired={true} label='Type'
                                                 value={this.state.taskTypeId}
                                                 onChange={this.typeChange}
                                                 optionsArr={this.props.taskTypes}
                                                 optionKey='taskType'/>
                                             <DropDown className={!this.state.productId && this.state.className} isRequired={true} label='Product'
+                                                disabled={disabled}
                                                 value={this.state.productId}
                                                 onChange={this.productChange}
                                                 optionsArr={this.props.products}
                                                 optionKey='productName'/>
                                             <DropDown className={!this.state.envId && this.state.className} isRequired={true} label='Environment'
+                                                disabled={disabled}
                                                 value={this.state.envId}
                                                 onChange={this.environmentChange}
                                                 optionsArr={this.props.environments}
                                                 optionKey='envName'/>
                                             <DropDown className={!this.state.requesterId && this.state.className} isRequired={true} label='Requester'
+                                                disabled={disabled}
                                                 value={this.state.requesterId}
                                                 onChange={this.requesterChange}
                                                 optionsArr={this.props.users}
                                                 optionKey='full_name'/>
                                             <DropDown label='Assignee'
-                                                      value={this.state.assigneeId}
-                                                      onChange={this.assigneeChange}
-                                                      optionsArr={this.props.users}
-                                                      optionKey='full_name'/>
+                                                disabled={disabled}
+                                                value={this.state.assigneeId}
+                                                onChange={this.assigneeChange}
+                                                optionsArr={this.props.users}
+                                                optionKey='full_name'/>
 
                                             <label className="col-sm-12 control-label">Additional Info</label>
                                             <div className="col-sm-12">
@@ -125,29 +142,26 @@ class task extends React.Component {
 
                                             <label className="col-sm-4 control-label">Execution Date*</label>
                                             <div className="col-sm-8">
-                                                <DatePicker
-                                                    dateFormat="YYYY-MM-DD"
-                                                    className="form-control col-sm-12"
-                                                    selected={moment(this.state.exec_date)}
-                                                    onChange={this.executionDateChange} />
+                                                {exec_date}
                                             </div>
                                             <div className="col-sm-12" style={{height: '10px'}}></div>
 
                                             <DropDown className={!this.state.priorityId && this.state.className} isRequired={true} label='Priority'
-                                                      value={this.state.priorityId}
-                                                      onChange={this.priorityChange}
-                                                      optionsArr={this.props.priority}
-                                                      optionKey='priorityName'/>
+                                                disabled={disabled}
+                                                value={this.state.priorityId}
+                                                onChange={this.priorityChange}
+                                                optionsArr={this.props.priority}
+                                                optionKey='priorityName'/>
                                             <DropDown className={!this.state.statusId && this.state.className} isRequired={true} label='Status'
-                                                      value={this.state.statusId}
-                                                      onChange={this.statusChange}
-                                                      optionsArr={this.props.status}
-                                                      optionKey='statusName'/>
+                                                value={this.state.statusId}
+                                                onChange={this.statusChange}
+                                                optionsArr={this.props.status}
+                                                optionKey='statusName'/>
                                             <DropDown label='Resolved By'
-                                                      value={this.state.resolved_by_Id}
-                                                      onChange={this.resolvedByChange}
-                                                      optionsArr={this.props.users}
-                                                      optionKey='full_name'/>
+                                                value={this.state.resolved_by_Id}
+                                                onChange={this.resolvedByChange}
+                                                optionsArr={this.props.users}
+                                                optionKey='full_name'/>
 
 
                                             <div className="col-sm-12" style={{height: '20px'}}></div>
