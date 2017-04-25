@@ -115,10 +115,12 @@ class filterableTable extends React.Component{
     }
 
     render() {
+        const addbutton = /Admin|Requester/.test(store.userType) ? <button className="btn btn-default text-right" style={{float: 'right'}} onClick={this.props.onAddItem}>{this.props.addItemDisplayName}</button> : null;
+ 
         return (
             <div className="container">
                 <div className="row">
-                    <button className="btn btn-default text-right" style={{float: 'right'}} onClick={this.props.onAddItem}>{this.props.addItemDisplayName}</button>
+                    {addbutton}
                     <div className="panel panel-primary filterable" style={{marginTop: '50px'}}>
                         <div className="panel-heading">
                             <h3 className="panel-title">{this.props.panelTitle}</h3>
