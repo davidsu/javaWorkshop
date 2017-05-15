@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;

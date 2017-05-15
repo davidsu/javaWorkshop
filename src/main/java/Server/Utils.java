@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 
 import javax.ws.rs.core.Response;

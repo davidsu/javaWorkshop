@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 import com.mysql.cj.jdbc.result.ResultSetImpl;
 import org.w3c.dom.Document;
@@ -7,12 +7,9 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.sql.*;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
 public class JDBC {

@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 import org.w3c.dom.Document;
 import javax.ws.rs.*;

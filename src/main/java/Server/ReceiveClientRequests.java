@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 import java.io.*;
 import java.net.URL;

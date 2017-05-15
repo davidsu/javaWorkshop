@@ -1,11 +1,9 @@
-package example;
+package Server;
 
 import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.ParserConfigurationException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;

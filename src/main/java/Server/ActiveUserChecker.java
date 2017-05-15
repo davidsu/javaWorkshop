@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 /*
     Checker for removing expired users from active sessions
