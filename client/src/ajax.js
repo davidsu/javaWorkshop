@@ -45,6 +45,7 @@ function xmlToJson(data, elementName){
 function defaultOops(err){
     console.log(arguments)
     store.setOops(err)
+    store.setUserType(null)
     store.setActiveMenu('oops')
     window.rootComponent && window.rootComponent.forceUpdate()
 }
@@ -57,7 +58,7 @@ function getTasks(callback, page = 1, filters = {}){
             filter = filter + key + '=' + val + '&'
         }
     })
-    $.get('tasks?page='+page+filter, (data, status) => {
+    const jqxhr = $.get('tasks?page='+page+filter, (data, status) => {
         store.setTasks(xmlToJsonArray(data, 'task'))
         const metaData = xmlToJson(data, 'PageInfo')
         _.forEach(metaData, (val, key) => {
@@ -66,6 +67,7 @@ function getTasks(callback, page = 1, filters = {}){
         store.setTasksMetadata(metaData)
         callback();
     })
+    jqxhr.fail(defaultOops)
 }
 
 function getUserMetadata(callback, onFail = defaultOops){

@@ -27,6 +27,9 @@ const setCurrentTask = (task) => store.tasks.currentTask = task
 const getCurrentTask = () =>  store.tasks.currentTask
 
 const setActiveMenu = (activeMenu) => {
+    if (activeMenu === 'login') {
+        setUserType(null)
+    }
     store.activeMenu = activeMenu
 }
 const getActiveMenu = () => store.activeMenu
@@ -43,7 +46,7 @@ const getUsersFilter = () =>  store.users.filter;
 const setCurrentUser = (user) => store.users.currentUser = user
 const getCurrentUser = () =>  store.users.currentUser
 
-const setOops = ({status, statusText}) => store.oops = {status, statusText}
+const setOops = ({status, statusText, responseText}) => store.oops = {status, statusText, responseText}
 const getOops = () => store.oops
 
 const setUserType = userType => store.userType = userType
