@@ -85,7 +85,7 @@ public class SessionHandler implements ContainerRequestFilter {
     private ActiveUser getActiveUserForToken(String token){
         ActiveUser user = activeUsers.get(token);
         if(user == null || user.isExpired()){
-            return null;
+            return user;
         }
         user.refreshExpirationDate();
         return user;
@@ -108,7 +108,13 @@ public class SessionHandler implements ContainerRequestFilter {
 
         if(user == null){
             requestContext.abortWith(
-                    Response.status(Response.Status.UNAUTHORIZED).build());
+                    Response.status(Response.Status.UNAUTHORIZED)
+                            .build());
+        }else if(user.isExpired()){
+            requestContext.abortWith(
+                    Response.status(Response.Status.UNAUTHORIZED)
+                            .entity("Your session has expired. Please Log In again.")
+                            .build());
         }
         requestContext.setSecurityContext(new InternalSecurityContext(user));
     }
