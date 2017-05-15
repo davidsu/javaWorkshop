@@ -1,4 +1,4 @@
-package example;
+package Server;
 
 import javax.annotation.Priority;
 import javax.ws.rs.NotAuthorizedException;

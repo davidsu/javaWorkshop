@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import FilterableTable from './filterableTable.jsx'
 
-//see example here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
+//see Server here: http://bootsnipp.com/snippets/featured/panel-table-with-filters-per-column
 const columns = [
     'id',
     'taskType',

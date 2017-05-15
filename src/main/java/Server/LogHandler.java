@@ -1,4 +1,4 @@
-package example;
+package Server;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
 import java.io.IOException;
