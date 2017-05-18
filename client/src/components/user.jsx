@@ -47,6 +47,7 @@ class user extends React.Component{
     render() {
         return (
             <div className="container">
+                <h1 style={{textAlign: 'center', fontFamily:'arialBlack', fontSize:'5em', marginTop:'40px'}}>User Form</h1>
                 <div className="row" style={{marginTop:40 + 'px'}}>
                     <div className="col-md-6 col-md-offset-3 ">
                         <div className="panel panel-default">

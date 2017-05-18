@@ -75,6 +75,7 @@ class task extends React.Component {
 
         return (
             <div className="container">
+                <h1 style={{textAlign: 'center', fontFamily:'arialBlack', fontSize:'5em', marginTop:'40px'}}>Task Form</h1>
                 <div className="row" style={{marginTop:40 + 'px'}}>
                     <div className="col-md-12 ">
                         <div className="panel panel-default">

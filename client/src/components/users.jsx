@@ -21,6 +21,7 @@ class users extends React.Component {
     render() {
         return (
             <div className="container">
+                <h1 style={{textAlign: 'center', fontFamily:'arialBlack', fontSize:'5em', marginTop:'40px'}}>User List</h1>
                 <FilterableTable
                     onAddItem={this.addUser}
                     addItemDisplayName='Add User'
