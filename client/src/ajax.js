@@ -115,6 +115,19 @@ function getTask(taskId, callback, onFail = defaultOops){
     })
     jqxhr.fail(onFail)
 }
+function uploadFile(file, success, fail = defaultOops){
+    const data = new FormData();
+    data.append('file', file);
+    $.ajax({
+        type: "POST",
+        url: "/file/upload",
+        data: data,
+        processData: false,
+        contentType: false,
+        success: success,
+        error: fail
+    });
+}
 function createOrUpdateTask(taskObj, success, fail = defaultOops){
     const updateObj = _.reduce(taskObj, (acc, val, key) =>{
         if(val !== store.getCurrentTask()[key] || (key === 'id' && val)){
@@ -186,5 +199,5 @@ module.exports = {
     getUserMetadata,
     createOrUpdateTask,
     login,
-    getUser
+    getUser,uploadFile
 }

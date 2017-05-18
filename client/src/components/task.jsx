@@ -7,25 +7,29 @@ import _ from 'lodash'
 import DatePicker from 'react-datepicker';
 
 class task extends React.Component {
+    //todo: add files links on top of upload files button. remove upload file button for users that can only view the bloddy file. add a way to remove the file
+    //add file entry into the database and teach the server to handle these files    
     constructor(props) {
         super(props)
         this.state = {
-            id: props.task.id,//used
-            taskTypeId: props.task.taskTypeId || undefined,//used
-            productId: props.task.productId || undefined,//used
-            envId: props.task.envId || undefined,//used
-            requesterId: props.task.requesterId || undefined,//used
-            priorityId: props.task.priorityId || undefined,//used
-            open_date: props.task.open_date || moment().format('YYYY-MM-DD'),//used
+            id: props.task.id,
+            taskTypeId: props.task.taskTypeId || undefined,
+            productId: props.task.productId || undefined,
+            envId: props.task.envId || undefined,
+            requesterId: props.task.requesterId || undefined,
+            priorityId: props.task.priorityId || undefined,
+            open_date: props.task.open_date || moment().format('YYYY-MM-DD'),
             exec_date: props.task.exec_date|| moment().format('YYYY-MM-DD'),
-            statusId: props.task.statusId || undefined,//used
-            qaGO: !!props.task.qaGO,//used
-            rollBack: !!props.task.rollBack,//used
-            urgent: !!props.task.urgent,//used
+            statusId: props.task.statusId || undefined,
+            qaGO: !!props.task.qaGO,
+            rollBack: !!props.task.rollBack,
+            urgent: !!props.task.urgent,
             assigneeId: props.task.assigneeId || undefined,
             resolved_by_Id: props.task.resolved_by_Id || undefined,
-            additionalInfo: props.task.additionalInfo//used
+            additionalInfo: props.task.additionalInfo,
+            files: props.task.files || ''
         }
+        this.uploadFile = this.uploadFile.bind(this)
         this.submitClicked = this.submitClicked.bind(this)
         this.isEmptyTask = _.isEmpty(this.props.task)
         this.typeChange = e => this.setState({taskTypeId: e.target.value})
@@ -58,6 +62,20 @@ class task extends React.Component {
             return;
         }
         this.props.createOrUpdate(_.pickBy(this.state, (val, key) => key !== 'className'))
+    }
+
+    uploadFile(e){
+        const fileName = ajax.uploadFile(e.target.files[0], (fileName) => {
+            let files = this.state.files;
+            if (!files) {
+                files = [];
+            } else {
+                files = files.split('.');
+            }
+            this.setState({files: files.concat([fileName]).join(',')})
+        })
+        console.log('uploadFile')
+
     }
 
     render() {
@@ -166,12 +184,22 @@ class task extends React.Component {
 
 
                                             <div className="col-sm-12" style={{height: '20px'}}></div>
+
+                                            <div className="col-sm-offset-2 col-sm-8" >
+                                                <label className="btn btn-lg btn-primary btn-block"
+                                                    style={{padding: '5px'}}
+                                                    readOnly={true}>Upload File
+                                                    <input type='file' style={{display:'none'}} onChange={this.uploadFile}/>
+                                                    </label>
+                                            </div>
+                                            <div className="col-sm-12" style={{height: '40px'}}></div>
                                             <CheckBox checked={this.state.qaGO} onChange={this.qaGoChanged} label='QA GO'/>
                                             <CheckBox checked={this.state.rollBack} onChange={this.rollBackChanged} label='Rollback included'/>
                                             <CheckBox checked={this.state.urgent} onChange={this.urgentChanged} label='Urgent'/>
                                         </div>
                                         <div className='col-sm-12' style={{padding:0}}>
-                                            <div className='col-sm-6'></div>
+                                            <div className='col-sm-6'>
+                                            </div>
                                             <div className='col-sm-6'>
                                                 <div className="col-sm-4 col-sm-offset-8" style={{paddingTop:'15px'}}>
                                                     <input className="btn btn-lg btn-success btn-block"
