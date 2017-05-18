@@ -26,7 +26,6 @@ public class SessionHandler implements ContainerRequestFilter {
     //todo implement the whole thing - add active user on login, provide a logout, verify active user upon request...
 
     private static HashMap<String, ActiveUser> activeUsers = new HashMap<>();
-    private static SecureRandom random = new SecureRandom();
     private static Object locker = new Object();
 
     public static void init(){
@@ -44,7 +43,7 @@ public class SessionHandler implements ContainerRequestFilter {
     }
 
     public static String generateToken(String userType) {
-        String sessionId = new BigInteger(130, random).toString(32);
+        String sessionId = GUID_Generator.generateGuid();
         String token = userType + "_" + sessionId;
         if(activeUsers.containsKey(token))
         {
