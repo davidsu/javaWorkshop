@@ -26,6 +26,7 @@ class systemLogin extends React.Component {
     render() {
         return (
             <div className="container">
+                <h1 style={{textAlign: 'center', fontFamily:'arialBlack', fontSize:'5em', marginTop:'40px'}}>Task Manager System</h1>
                 <div className="row" style={{marginTop:120 + 'px'}}>
                     <div className="col-md-4 col-md-offset-4 ">
                         <div className="panel panel-default">
