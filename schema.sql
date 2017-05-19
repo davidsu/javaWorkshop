@@ -94,7 +94,9 @@ INSERT INTO users (full_name,type,email,password) VALUES ('Ido kaka', 3, 'idokak
 INSERT INTO users (full_name,type,email,password) VALUES ('Blu ash', 2, 'bluash@gmail.com', '098');
 INSERT INTO users (full_name,type,email,password) VALUES ('Arthur L', 2, 'arthurl@gmail.com', 'asdf');
 INSERT INTO users (full_name,type,email,password) VALUES ('Katman Du', 1, 'katmandu@gmail.com', 'Katman Du');
-INSERT INTO users (full_name,type,email,password) VALUES ('d', 1, 'd', 'd');
+INSERT INTO users (full_name,type,email,password) VALUES ('u', 1, 'u', 'u');
+INSERT INTO users (full_name,type,email,password) VALUES ('d', 2, 'd', 'd');
+INSERT INTO users (full_name,type,email,password) VALUES ('t', 3, 't', 't');
 
 
 INSERT INTO products (productName) VALUES ('WebApp1');
