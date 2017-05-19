@@ -5,7 +5,7 @@ SHOULD_INSTALL=$1
 if [ -n "$SHOULD_INSTALL" ]; then
     echo recreating database from schema
     sleep 2 &&
-    mysql -uroot -e "SOURCE ./schema"
+    mysql -uroot -e "SOURCE ./schema.sql"
 
     echo running mvn clean install
     mvn clean install

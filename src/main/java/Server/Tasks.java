@@ -140,10 +140,6 @@ public class Tasks {
         } catch (Exception e) {
             logger.severe(String.format("Failed to delete task id = %1s. Error: %2s", id, e.getMessage()));
             return Utils.generateError(e);
-//            return Response.status(Response.Status.BAD_REQUEST)
-//                    .type("text/plain")
-//                    .entity(String.format("Couldn't delete task id = %1s", id))
-//                    .build();
         }
     }
 }

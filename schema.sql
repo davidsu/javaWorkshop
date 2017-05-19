@@ -65,6 +65,7 @@ CREATE TABLE tasks(
     rollBack bool NOT NULL,
     urgent bool NOT NULL,
     additionalInfo TEXT,
+    files TEXT,
     assigneeId int,
     resolved_by_Id int,
     -- you can't delete a user from the database without first assigning its tasks to some other user
