@@ -29,6 +29,7 @@ class task extends React.Component {
             additionalInfo: props.task.additionalInfo,
             files: props.task.files || ''
         }
+        this.generateDownloadFilesAnchors = this.generateDownloadFilesAnchors.bind(this)
         this.uploadFile = this.uploadFile.bind(this)
         this.submitClicked = this.submitClicked.bind(this)
         this.isEmptyTask = _.isEmpty(this.props.task)
@@ -70,12 +71,23 @@ class task extends React.Component {
             if (!files) {
                 files = [];
             } else {
-                files = files.split('.');
+                files = files.split(',');
             }
             this.setState({files: files.concat([fileName]).join(',')})
         })
-        console.log('uploadFile')
+    }
 
+    generateDownloadFilesAnchors() {
+        if (!this.state.files){
+            return null
+        }
+        return _.map(this.state.files.split(','), fileName => {
+            return(
+                <div className="col-sm-12">
+                    <a className="col-sm-12" href={'file/download/'+fileName} download>{fileName.replace(/_[^_]+_/, '')}</a>
+                </div>
+            )
+        })
     }
 
     render() {
@@ -185,6 +197,7 @@ class task extends React.Component {
 
                                             <div className="col-sm-12" style={{height: '20px'}}></div>
 
+                                            {this.generateDownloadFilesAnchors()}
                                             <div className="col-sm-offset-2 col-sm-8" >
                                                 <label className="btn btn-lg btn-primary btn-block"
                                                     style={{padding: '5px'}}
