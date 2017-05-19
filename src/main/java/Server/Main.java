@@ -5,6 +5,8 @@ import java.net.URI;
 
 import javax.ws.rs.core.UriBuilder;
 
+import Server.Requests.*;
+import Server.Security.SessionHandler;
 import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -12,7 +14,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import java.util.logging.Logger;
-public class JAX_RS_Entry {
+public class Main {
 
     public static void main(String[] args) {
 

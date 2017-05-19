@@ -1,5 +1,6 @@
-package Server;
+package Server.Database;
 
+import Server.Utils;
 import com.mysql.cj.jdbc.result.ResultSetImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -20,11 +21,9 @@ public class JDBC {
     private static JDBC instance = null;
 
     private static HashMap<String, Integer> environmentsDict = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> productsDict = new HashMap<String, Integer>();
     private static HashMap<String, Integer> prioritiesDict = new HashMap<String, Integer>();
     private static HashMap<String, Integer> statusesDict = new HashMap<String, Integer>();
     private static HashMap<String, Integer> taskTypesDict = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> usersDict = new HashMap<String, Integer>();
 
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -32,24 +31,19 @@ public class JDBC {
 
     }
 
-    private static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         if (instance == null) {
             instance = new JDBC();
-            try {
-                init();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
+            init();
         }
         return instance;
     }
 
-    private static void init() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException
-    {
+    private static void init() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         Connection conn = getInstance().conn;
         ResultSet rs;
         String _sql;
-        Statement stmt = conn.createStatement();
+        Statement stmt;
 
         stmt = conn.createStatement();
         _sql = "select * from environments";
@@ -58,19 +52,18 @@ public class JDBC {
         stmt = conn.createStatement();
         _sql = "select * from priority";
         rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, prioritiesDict ,2, 1);
+        Utils.resultSetToDictionary(rs, prioritiesDict, 2, 1);
         stmt = conn.createStatement();
         _sql = "select * from status";
         rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, statusesDict,2, 1);
+        Utils.resultSetToDictionary(rs, statusesDict, 2, 1);
         stmt = conn.createStatement();
         _sql = "select * from taskTypes";
         rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, taskTypesDict,2,1);
+        Utils.resultSetToDictionary(rs, taskTypesDict, 2, 1);
     }
 
-    public static <K,V> void StaticTableToDict(String tableName, HashMap<K,V> dict, int keyIndex, int valIndex ) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
-    {
+    public static <K, V> void StaticTableToDict(String tableName, HashMap<K, V> dict, int keyIndex, int valIndex) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
         stmt = getInstance().conn.createStatement();
@@ -78,8 +71,7 @@ public class JDBC {
         Utils.resultSetToDictionary(rs, dict, keyIndex, valIndex);
     }
 
-    public static int getUserType(String user, String password) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
-    {
+    public static int getUserType(String user, String password) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
         stmt = getInstance().conn.createStatement();
@@ -95,8 +87,7 @@ public class JDBC {
         return Utils.createDocumentFromResultSet((ResultSetImpl) rs, "user");
     }
 
-    public static Document getUser(String userId) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException
-    {
+    public static Document getUser(String userId) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
         String _sql;
@@ -141,7 +132,7 @@ public class JDBC {
         return String.join(", ", arralistresult);
     }
 
-    private static void updateTable(String tableName, Document doc, String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private static void updateTable(String tableName, Document doc, String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         String update = "UPDATE " + tableName + " ";
         String set = "SET " + updateFieldsFromDocument(doc) + " ";
         String where = "WHERE id=" + id + ";";
@@ -150,7 +141,7 @@ public class JDBC {
         getInstance().conn.createStatement().executeUpdate(sql);
     }
 
-    private static void insertIntoTable(String tableName, Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private static void insertIntoTable(String tableName, Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         ArrayList<String> columns = new ArrayList<>();
         ArrayList<String> values = new ArrayList<>();
         NodeList children = doc.getFirstChild().getChildNodes();
@@ -170,55 +161,21 @@ public class JDBC {
         String sql = "" +
                 "INSERT INTO " +
                 tableName +
-                " ("+ String.join(",", columns) + ") "+
+                " (" + String.join(",", columns) + ") " +
                 "VALUES (" + String.join(",", values) + ");";
         System.out.println(sql);
         getInstance().conn.createStatement().executeUpdate(sql);
 
     }
-
-    private static Integer insertIntoTableReturnID(String tableName, Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        ArrayList<String> columns = new ArrayList<>();
-        ArrayList<String> values = new ArrayList<>();
-        NodeList children = doc.getFirstChild().getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            Node curr = children.item(i);
-            String text = curr.getTextContent().trim();
-            if (text != null && text.length() == 0) {
-                text = "NULL";
-            }
-            if (needToQuote(text)) {
-                text = "'" + text + "'";
-            }
-            values.add(text);
-            columns.add(curr.getNodeName());
-        }
-        String sql = "" +
-                "INSERT INTO " +
-                tableName +
-                " ("+ String.join(",", columns) + ") "+
-                "VALUES (" + String.join(",", values) + ");";
-        System.out.println(sql);
-        getInstance().conn.createStatement().executeUpdate(sql);
-        sql =  "Select LAST_INSERT_ID() as 'id';";
-        ResultSet rs = getInstance().conn.createStatement().executeQuery(sql);
-        return !rs.next() ? 0 : rs.getInt("id");
-
-    }
-
 
     //builds an insert command with sql injection protection - currently only checks for the free text "additionalInfo" column (in Tasks)
-    private static String buildProtectedInsertCommand(String tableName, ArrayList<String> columns, ArrayList<String> values) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
+    private static String buildProtectedInsertCommand(String tableName, ArrayList<String> columns, ArrayList<String> values) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         String columnList = String.join(",", columns);
         StringBuilder valuePlaceHolders = new StringBuilder();
-        for(int i=0; i < columns.size(); i++)
-        {
-            if(columns.get(i) == "additionalInfo")
-            {
+        for (int i = 0; i < columns.size(); i++) {
+            if (columns.get(i) == "additionalInfo") {
                 valuePlaceHolders.append("?,");
-            }
-            else
-            {
+            } else {
                 valuePlaceHolders.append(values.get(i) + ",");
             }
             //valuePlaceHolders.append("?,");
@@ -227,17 +184,15 @@ public class JDBC {
         valuePlaceHolders.setLength(valuePlaceHolders.length() - 1);
         String insert = String.format("INSERT INTO %1s(%2s) VALUES(%3s)", tableName, columnList, valuePlaceHolders.toString());
         PreparedStatement ps = getInstance().conn.prepareStatement(insert);
-        for(int i=0; i < values.size(); i++)
-        {
-            if(columns.get(i) == "additionalInfo")
-            {
+        for (int i = 0; i < values.size(); i++) {
+            if (columns.get(i) == "additionalInfo") {
                 ps.setString(1, values.get(i));
             }
         }
         return ps.toString();
     }
 
-    private static void updateTableFromDocument(Document doc, String tableName) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static void updateTableFromDocument(Document doc, String tableName) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, ParserConfigurationException {
         Node idNode;
         String id;
 
@@ -248,17 +203,15 @@ public class JDBC {
         updateTable(tableName, doc, id);
     }
 
-    public static void createOrUpdateTask(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        if(doc.getElementsByTagName("id").getLength() == 1){
+    public static void createOrUpdateTask(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+        if (doc.getElementsByTagName("id").getLength() == 1) {
             updateTableFromDocument(doc, "tasks");
-        }else{
-           insertIntoTable("tasks", doc);
+        } else {
+            insertIntoTable("tasks", doc);
         }
     }
 
-
-    public static void deleteTask(String taskId) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException
-    {
+    public static void deleteTask(String taskId) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         Statement stmt;
         ResultSet rs;
         String _sql;
@@ -269,13 +222,14 @@ public class JDBC {
         stmt.executeUpdate(_sql);
     }
 
-    public static void createOrUpdateUser(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-        if(doc.getElementsByTagName("id").getLength() == 1){
+    public static void createOrUpdateUser(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+        if (doc.getElementsByTagName("id").getLength() == 1) {
             updateTableFromDocument(doc, "users");
-        }else{
-           insertIntoTable("users", doc);
+        } else {
+            insertIntoTable("users", doc);
         }
     }
+
     public static Document getUserMetadata() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         Connection conn = getInstance().conn;
         ResultSet rs;
@@ -289,6 +243,7 @@ public class JDBC {
         return doc;
 
     }
+
     public static Document getTaskMetadata() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         Connection conn = getInstance().conn;
         ResultSet rs;
@@ -348,42 +303,16 @@ public class JDBC {
 
     }
 
-    public static Document getTasks(Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Statement stmt;
-        ResultSet rs;
-        String _sql;
-
-        stmt = getInstance().conn.createStatement();
-        page = ( page == null ? 1 : page );
-
-        _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from Tasks ",pageSize, page);
-        rs = stmt.executeQuery(_sql);
-        Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
-
-
-        _sql = "" +
-                "select t.id, open_date, statusName as status, exec_date, taskType " +
-                "from tasks t " +
-                "join taskTypes tt on t.taskTypeId = tt.id " +
-                "join status s on t.statusId = s.id order by id" +
-                String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
-        rs = stmt.executeQuery(_sql);
-        Document tasksDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
-        Document[] docs = {pageDoc, tasksDoc};
-
-        return Utils.mergeDocs(docs);
-    }
-
     public static Document getFilteredTasks(String filter, Integer page) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         Statement stmt;
         ResultSet rs;
 
         stmt = getInstance().conn.createStatement();
-        page = ( page == null ? 1 : page );
-        String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from v_Tasks %3s",pageSize, page, filter);
+        page = (page == null ? 1 : page);
+        String _sql = String.format("select ceil(count(*)/%1s) as 'TotalPages', %2s as 'Page' from v_Tasks %3s", pageSize, page, filter);
         rs = stmt.executeQuery(_sql);
         Document pageDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "PageInfo");
-        String pageFilter = String.format(" limit %1s offset %2s",pageSize, (page-1)*pageSize);
+        String pageFilter = String.format(" limit %1s offset %2s", pageSize, (page - 1) * pageSize);
         _sql = "select * from v_Tasks " + filter + pageFilter;
         rs = stmt.executeQuery(_sql);
         Document resDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
@@ -391,51 +320,26 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
-    /*
-    SP Parameters:
-        IN taskTypeId int,
-        IN productId int,
-        IN envId int,
-        IN requesterId int,
-        IN priority int,
-        IN open_date DATE,
-        IN status VARCHAR(20),
-        IN qaGO bool,
-        IN rollBack bool,
-        IN urgent bool,
-        IN additionalInfoText TEXT
-     */
-//    public boolean saveTask(Task task) throws SQLException, ParserConfigurationException {
-//        Statement stmt;
-//        ResultSet rs;
-//        stmt = conn.createStatement();
-//        String date = new SimpleDateFormat("yyyy-MM-dd").format(task.getOpenDate());
-//        String sqlCommand = String.format("CALL addTask (%1s,%2s,%3s,%4s,%5s,'%6s','%7s',%8s,%9s,%10s,'%11s')",
-//                task.getTaskTypeId(), task.getProductId(), task.getEnvId(), task.getRequesterId(), task.getPriority(),
-//                date, task.getStatus(), task.getQaGo(), task.getRollback(), task.getUrgent(), task.getAdditionalInfo());
-//        stmt.execute(sqlCommand);
-//        return true;
-//    }
-
+    //todo delete this main - it was ever only about debugging
     public static void main(String[] args) {
         try {
             JDBC jdbc = new JDBC();
-            ArrayList<String> cols = new ArrayList<String>(){{
+            ArrayList<String> cols = new ArrayList<String>() {{
                 add("a");
                 add("b");
                 add("c");
                 add("additionalInfo");
             }};
-            ArrayList<String> vals = new ArrayList<String>(){{
+            ArrayList<String> vals = new ArrayList<String>() {{
                 add("val1");
                 add("val2");
                 add("val3");
                 add("555");
             }};
-            String vv = jdbc.buildProtectedInsertCommand("xxx",cols,vals);
+            String vv = jdbc.buildProtectedInsertCommand("xxx", cols, vals);
             //Document doc = jdbc.getFilteredTasks(null, null, null, "2017-03-10","2017-03-20", 1);
 
-           //Document doc = jdbc.getUsers();
+            //Document doc = jdbc.getUsers();
             //System.out.println(Utils.DocumentToString(doc, true));
         } catch (Exception ex) {
             System.out.println("threw exception");

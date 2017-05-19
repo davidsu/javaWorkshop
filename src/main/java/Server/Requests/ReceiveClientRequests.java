@@ -1,4 +1,4 @@
-package Server;
+package Server.Requests;
 
 import java.io.*;
 import java.net.URL;
@@ -10,9 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * Created by davidsu on 01/02/2017.
- */
 @Path("/")
 public class ReceiveClientRequests {
     @GET
@@ -25,8 +22,7 @@ public class ReceiveClientRequests {
     @Path("/static/{fileName : (.+/?)+(html|js|css|map)}")
     public Response getStaticFile(@PathParam("fileName") String fileName) {
         try {
-            System.out.println("../" + fileName);
-            URL url = getClass().getResource("../" + fileName);
+            URL url = getClass().getResource("../../" + fileName);
             File file = new File(url.getPath());
             return Response.ok(new FileInputStream(file)).build();
         } catch (Exception e) {

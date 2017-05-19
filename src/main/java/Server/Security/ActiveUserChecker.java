@@ -1,4 +1,4 @@
-package Server;
+package Server.Security;
 
 /*
     Checker for removing expired users from active sessions

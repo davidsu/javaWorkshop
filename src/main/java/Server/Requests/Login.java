@@ -1,5 +1,9 @@
-package Server;
+package Server.Requests;
 
+
+import Server.Security.ActiveUser;
+import Server.Database.JDBC;
+import Server.Security.SessionHandler;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +27,7 @@ public class Login {
         ActiveUser aUser = null;
         try
         {
-            userType = JDBC.getUserType(user,password);
+            userType = JDBC.getUserType(user, password);
             aUser = (userType != 0) ? new ActiveUser(user, userType): null;
         }
         catch (Exception e)

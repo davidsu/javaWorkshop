@@ -19,4 +19,4 @@ cd client
 npm run build
 cd ../
 cp -R ./client/target/ src/main/resources
-mvn compile && mvn exec:java -Dexec.mainClass="Server.JAX_RS_Entry"
+mvn compile && mvn exec:java -Dexec.mainClass="Server.Main"

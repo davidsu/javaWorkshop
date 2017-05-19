@@ -31,8 +31,7 @@ public class LogHandler
 
     }
 
-    private static Path getLogPath()
-    {
+    private static Path getLogPath() {
         Integer year = Calendar.getInstance().get(Calendar.YEAR);
         Integer month = Calendar.getInstance().get(Calendar.MONTH) + 1; //months are indexed from 0
         Integer day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -47,7 +46,6 @@ public class LogHandler
             }
         }
         return logFolder;
-
     }
 
 }

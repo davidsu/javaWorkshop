@@ -1,4 +1,4 @@
-package Server;
+package Server.Security;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;

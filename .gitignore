@@ -2,6 +2,7 @@
 *.iml
 *.log
 *.lck
+npm-debug.log.*
 target/
 client/node_modules/
 client/target/

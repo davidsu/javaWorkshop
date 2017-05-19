@@ -1,5 +1,9 @@
-package Server;
+package Server.Requests;
 
+import Server.Database.JDBC;
+import Server.Security.Secured;
+import Server.Security.SessionHandler;
+import Server.Utils;
 import org.w3c.dom.Document;
 import javax.ws.rs.*;
 import javax.annotation.security.RolesAllowed;
@@ -87,8 +91,7 @@ public class Users {
     @GET
     @Secured
     @Path("/logoutUser")
-    public Response logoutUser(@PathParam("token") String token)
-    {
+    public Response logoutUser(@PathParam("token") String token) {
         logger.info(String.format("Logging out user (token: '%1s'", token));
         if(SessionHandler.removeUser(token))
         {

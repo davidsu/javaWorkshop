@@ -1,5 +1,8 @@
-package Server;
+package Server.Requests;
 
+import Server.Database.JDBC;
+import Server.Security.Secured;
+import Server.Utils;
 import org.w3c.dom.Document;
 
 import javax.ws.rs.*;
@@ -18,7 +21,6 @@ public class Tasks {
     private static Logger logger = Logger.getLogger("javaWorkshop");
     @GET
     @Secured
-    //@Path("/filteredTasks")
     public Response getFilteredTasks(@QueryParam("id") String id,
                                    @QueryParam("status") String status,
                                    @QueryParam("taskType") String type,
@@ -117,8 +119,7 @@ public class Tasks {
     @GET
     @Secured
     @Path("/deleteTask")
-    public Response deleteTask(@PathParam("id") String id)
-    {
+    public Response deleteTask(@PathParam("id") String id) {
         if(!Utils.isNumeric(id))
         {
             return Response.status(Response.Status.BAD_REQUEST)

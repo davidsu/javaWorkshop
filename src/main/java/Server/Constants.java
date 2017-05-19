@@ -7,5 +7,5 @@ import java.math.BigInteger;
  */
 public class Constants {
     public static final String UPLOAD_DIR = "/tmp/javaWorkshopUploads";
-
+    public static final int USER_TYPE_ADMIN = 1;
 }

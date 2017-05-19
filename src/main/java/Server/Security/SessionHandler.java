@@ -1,4 +1,9 @@
-package Server;
+package Server.Security;
+
+import Server.GUID_Generator;
+import Server.Security.ActiveUser;
+import Server.Security.ActiveUserChecker;
+import Server.Security.Secured;
 
 import javax.annotation.Priority;
 import javax.ws.rs.NotAuthorizedException;
@@ -8,8 +13,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
-import java.security.SecureRandom;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -115,6 +118,6 @@ public class SessionHandler implements ContainerRequestFilter {
                             .entity("Your session has expired. Please Log In again.")
                             .build());
         }
-        requestContext.setSecurityContext(new InternalSecurityContext(user));
+        requestContext.setSecurityContext(user);
     }
 }

@@ -131,8 +131,7 @@ public class Utils {
         }
     }
 
-    public static String buildIdFilter(String ids)
-    {
+    public static String buildIdFilter(String ids) {
         if (ids == null) return null;
         String[] idsArr = ids.split(",");
         String retVal = "";
@@ -147,8 +146,7 @@ public class Utils {
         return retVal;
     }
 
-    public static boolean checkIds(String ids)
-    {
+    public static boolean checkIds(String ids) {
         if (ids == null) return true;
         String[] idsArr = ids.split(",");
         if (idsArr.length == 1 && isNumeric(idsArr[0]))
@@ -162,16 +160,14 @@ public class Utils {
         return false;
     }
 
-    public static boolean isNumeric(String id)
-    {
+    public static boolean isNumeric(String id) {
         if (id.matches("\\d+")) {
             return true;
         }
         return false;
     }
 
-    public static boolean checkDates(String dates)
-    {
+    public static boolean checkDates(String dates) {
         if (dates == null) return true;
         String[] datesArr = dates.split(",");
         if (datesArr.length == 1 && dateValid(datesArr[0]))
@@ -197,8 +193,7 @@ public class Utils {
         return false;
     }
 
-    public static boolean dateValid(String date)
-    {
+    public static boolean dateValid(String date) {
         if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
             return true;
         }
@@ -206,8 +201,7 @@ public class Utils {
     }
 
     //builds a filter for none date column with multiple values separated by *
-    public static String buildFilter(String values, String columnName)
-    {
+    public static String buildFilter(String values, String columnName) {
         if(values == null) return null;
         String[] valuesArr = values.split("\\*");
         for (int i=0; i < valuesArr.length; i++)
@@ -218,8 +212,7 @@ public class Utils {
     }
 
     //builds a filter for dates
-    public static String buildDatesFilter(String dates, String dateColumn)
-    {
+    public static String buildDatesFilter(String dates, String dateColumn) {
         if (dates == null) return null;
         String[] datesArr = dates.split(",");
         String filter = "";
@@ -258,8 +251,7 @@ public class Utils {
     }
 
     //ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException
-    public static Response generateError(Exception e)
-    {
+    public static Response generateError(Exception e) {
         if (e instanceof SQLException)
         {
            if (((SQLException) e).getSQLState().startsWith("08"))
@@ -285,5 +277,3 @@ public class Utils {
     }
 
 }
-
-

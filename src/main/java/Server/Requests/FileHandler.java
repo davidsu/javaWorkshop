@@ -1,5 +1,7 @@
-package Server;
+package Server.Requests;
 
+import Server.Constants;
+import Server.GUID_Generator;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -45,6 +47,7 @@ public class FileHandler {
         return Response.status(200).entity(uploadedFileName).build();
 
     }
+
     private void saveToFile(InputStream uploadedInputStream,
                             String uploadedFileLocation) throws IOException {
 
