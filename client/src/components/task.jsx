@@ -33,6 +33,7 @@ class task extends React.Component {
         this.uploadFile = this.uploadFile.bind(this)
         this.submitClicked = this.submitClicked.bind(this)
         this.isEmptyTask = _.isEmpty(this.props.task)
+        this.deleteFile = this.deleteFile.bind(this)
         this.typeChange = e => this.setState({taskTypeId: e.target.value})
         this.productChange = e => this.setState({productId: e.target.value})
         this.environmentChange = e => this.setState({envId: e.target.value})
@@ -77,14 +78,24 @@ class task extends React.Component {
         })
     }
 
+    deleteFile (fileName) {
+        const files = _.filter(this.state.files.split(','), fname => fname !== fileName).join(',')
+        this.setState({files})
+    }
+
     generateDownloadFilesAnchors() {
         if (!this.state.files){
             return null
         }
         return _.map(this.state.files.split(','), fileName => {
             return(
-                <div className="col-sm-12" key={fileName}>
-                    <a className="col-sm-12" href={'file/download/'+fileName} download>{fileName.replace(/_[^_]+_/, '')}</a>
+                <div className="col-sm-12" key={fileName} style={{border:"1px solid #dadada", marginBottom:"5px"}}>
+                    <div className="col-sm-10">
+                        <a className="col-sm-12" href={'file/download/'+fileName} download>{fileName.replace(/_[^_]+_/, '')}</a>
+                    </div>
+                    <div className="col-sm-2">
+                        <button type="button" className="close" onClick={() => this.deleteFile(fileName)}>x</button>
+                    </div>
                 </div>
             )
         })
