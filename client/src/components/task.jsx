@@ -83,7 +83,7 @@ class task extends React.Component {
         }
         return _.map(this.state.files.split(','), fileName => {
             return(
-                <div className="col-sm-12">
+                <div className="col-sm-12" key={fileName}>
                     <a className="col-sm-12" href={'file/download/'+fileName} download>{fileName.replace(/_[^_]+_/, '')}</a>
                 </div>
             )
