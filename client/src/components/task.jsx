@@ -29,6 +29,7 @@ class task extends React.Component {
             additionalInfo: props.task.additionalInfo,
             files: props.task.files || ''
         }
+        this.disableUpdateButton = {disabled: this.state.statusId == _.filter(props.status, {statusName: 'Done'})[0].id}
         this.generateDownloadFilesAnchors = this.generateDownloadFilesAnchors.bind(this)
         this.uploadFile = this.uploadFile.bind(this)
         this.submitClicked = this.submitClicked.bind(this)
@@ -76,6 +77,7 @@ class task extends React.Component {
             }
             this.setState({files: files.concat([fileName]).join(',')})
         })
+        e.target.value = ''
     }
 
     deleteFile (fileName) {
@@ -93,7 +95,7 @@ class task extends React.Component {
                     <div className="col-sm-10">
                         <a className="col-sm-12" href={'file/download/'+fileName} download>{fileName.replace(/_[^_]+_/, '')}</a>
                     </div>
-                    <div className="col-sm-2">
+                <div className="col-sm-2" style={{visibility: (this.props.shouldEnableTaskEdit && !this.disableUpdateButton.disabled) ? 'visible' : 'hidden'}}>
                         <button type="button" className="close" onClick={() => this.deleteFile(fileName)}>x</button>
                     </div>
                 </div>
@@ -209,7 +211,7 @@ class task extends React.Component {
                                             <div className="col-sm-12" style={{height: '20px'}}></div>
 
                                             {this.generateDownloadFilesAnchors()}
-                                            <div className="col-sm-offset-2 col-sm-8" >
+                                            <div className="col-sm-offset-2 col-sm-8" style={{visibility: (this.props.shouldEnableTaskEdit && !this.disableUpdateButton.disabled) ? 'visible' : 'hidden'}}>
                                                 <label className="btn btn-lg btn-primary btn-block"
                                                     style={{padding: '5px'}}
                                                     readOnly={true}>Upload File
@@ -228,7 +230,9 @@ class task extends React.Component {
                                                 <div className="col-sm-4 col-sm-offset-8" style={{paddingTop:'15px'}}>
                                                     <input className="btn btn-lg btn-success btn-block"
                                                            onClick={this.submitClicked}
-                                                           value={this.isEmptyTask ? 'Add Task' : 'Update'} readOnly={true}/>
+                                                           value={this.isEmptyTask ? 'Add Task' : 'Update'}
+                                                           {...this.disableUpdateButton}
+                                                           readOnly={true}/>
                                                 </div>
                                             </div>
                                         </div>
