@@ -21,8 +21,7 @@ public class Login {
 
     private static Logger logger = Logger.getLogger("javaWorkshop");
     private static HashMap<Integer, String> userTypesDict = new HashMap<Integer, String>();
-    private ActiveUser authenticate(String user, String password)
-    {
+    private ActiveUser authenticate(String user, String password) {
         int userType;
         ActiveUser aUser = null;
         try
@@ -45,7 +44,8 @@ public class Login {
             try {
                 JDBC.StaticTableToDict("UserTypes", userTypesDict, 1, 2);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.severe("Unable to read userTypes from database");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
         }
         ActiveUser aUser =  authenticate(user, password);
