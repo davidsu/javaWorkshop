@@ -5,6 +5,8 @@ import Server.Security.Secured;
 import Server.Security.SessionHandler;
 import Server.Utils;
 import org.w3c.dom.Document;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import javax.ws.rs.*;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -102,5 +104,16 @@ public class Users {
                 .entity(String.format("Couldn't logout user's session (token: '%1s')", token))
                 .build();
     }
+
+    @GET
+    @Secured
+    @Path("/delete/{id : [0-9]+}")
+    public Response deleteTask(@PathParam("id") String id) {
+        //todo: implement this
+        System.out.println("deleting user id = " + id);
+        throw new NotImplementedException();
+    }
+
+
 
 }

@@ -34,11 +34,19 @@ const addNewUser = () => ajax.getUserMetadata((usersMetadata) => {
 })
 const getCurrentUser = store.getCurrentUser
 
+const deleteUser = (userId) => {
+    ajax.deleteUser(userId, () => {
+        store.setActiveMenu('users')
+        window.rootComponent && window.rootComponent.forceUpdate()
+    })
+}
+
 module.exports = {
     getUsers,
     goToUsers: getUsers,
     addNewUser,
     getUser,
     createOrUpdate,
-    getCurrentUser
+    getCurrentUser,
+    deleteUser
 }

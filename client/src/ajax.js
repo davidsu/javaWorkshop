@@ -18,6 +18,12 @@ function jsonToXml(jsonObj){
     return xmlString;
 }
 
+function deleteUser(userId, success){
+    const jqxhr = $.get('users/delete/' + userId, (data, status) => {
+        callback();
+    })
+    jqxhr.fail(defaultOops)
+}
 //todo remove xmlUtils from here, stopr parsing the result here, let controllers do that instead
 function xmlToJsonArray(data, elementName){
     const parser = new DOMParser()
@@ -199,5 +205,7 @@ module.exports = {
     getUserMetadata,
     createOrUpdateTask,
     login,
-    getUser,uploadFile
+    getUser,
+    uploadFile,
+    deleteUser
 }

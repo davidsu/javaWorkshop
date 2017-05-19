@@ -13,8 +13,17 @@ class user extends React.Component{
             user: this.isEmptyUser() ? _.omit(props.user, ['id']) : props.user
         }
         this.submitClicked = this.submitClicked.bind(this);
+        this.deleteClicked = this.deleteClicked.bind(this);
         this.close = () => userController.goToUsers()
         this.userTypeChange = this.userTypeChange.bind(this)
+    }
+
+    deleteClicked() {
+        if (this.isEmptyUser()) {
+            this.close()
+        } else {
+            userController.deleteUser(this.props.user.id)
+        }
     }
 
     submitClicked() {
@@ -93,8 +102,16 @@ class user extends React.Component{
                                                 )
                                         })}
                                         <br/>
-                                        <input className="btn btn-lg btn-success btn-block" onClick={this.submitClicked}
-                                               value={this.isEmptyUser() ? 'Add User' : 'Update'} readOnly={true}/>
+                                        <div className="col-sm-12">
+                                            <div className="col-sm-6">
+                                                <input className="btn btn-lg btn-danger btn-block" onClick={this.deleteClicked}
+                                                    value={this.isEmptyUser() ? 'Cancel' : 'Delete'} readOnly={true}/>
+                                            </div>
+                                            <div className="col-sm-6">
+                                                <input className="btn btn-lg btn-success btn-block" onClick={this.submitClicked}
+                                                    value={this.isEmptyUser() ? 'Add User' : 'Update'} readOnly={true}/>
+                                            </div>
+                                        </div>
                                     </fieldset>
                                 </form>
                             </div>
