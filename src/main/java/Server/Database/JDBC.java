@@ -178,9 +178,7 @@ public class JDBC {
             } else {
                 valuePlaceHolders.append(values.get(i) + ",");
             }
-            //valuePlaceHolders.append("?,");
         }
-        //valuePlaceHolders.append("?");
         valuePlaceHolders.setLength(valuePlaceHolders.length() - 1);
         String insert = String.format("INSERT INTO %1s(%2s) VALUES(%3s)", tableName, columnList, valuePlaceHolders.toString());
         PreparedStatement ps = getInstance().conn.prepareStatement(insert);
@@ -203,12 +201,27 @@ public class JDBC {
         updateTable(tableName, doc, id);
     }
 
-    public static void createOrUpdateTask(Document doc) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-        if (doc.getElementsByTagName("id").getLength() == 1) {
+    public static void createOrUpdateTask(Document doc, String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
+        if (id != null && isTaskDone(id)) //Don't update tasks that are already done
+        {
             updateTableFromDocument(doc, "tasks");
         } else {
             insertIntoTable("tasks", doc);
         }
+    }
+
+    private static boolean isTaskDone (String id) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException
+    {
+        Statement stmt;
+        ResultSet rs;
+        String _sql;
+        Connection conn = getInstance().conn;
+
+        stmt = conn.createStatement();
+        _sql = "Select * from tasks where id = " + id + " and statusId <> (select id from status where statusName = 'Done')";
+        rs = stmt.executeQuery(_sql);
+
+        return rs.first();
     }
 
     public static void deleteTask(String taskId) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
