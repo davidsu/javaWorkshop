@@ -272,7 +272,7 @@ public class Utils {
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type("text/plain")
-                .entity(String.format("Unknown error. Error: %1s", e.getMessage()))
+                .entity(String.format("Error: %1s", e.getMessage()))
                 .build();
     }
 
