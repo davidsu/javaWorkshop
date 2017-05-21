@@ -20,7 +20,7 @@ function jsonToXml(jsonObj){
 
 function deleteUser(userId, success){
     const jqxhr = $.get('users/delete/' + userId, (data, status) => {
-        callback();
+        success();
     })
     jqxhr.fail(defaultOops)
 }

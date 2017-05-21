@@ -14,6 +14,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.ParserConfigurationException;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /*
@@ -22,7 +24,6 @@ import java.util.logging.Logger;
 @Path("/users")
 public class Users {
     private static Logger logger = Logger.getLogger("javaWorkshop");
-    //todo shouldn't type be enum?
     @GET
     @Secured
     @RolesAllowed("admin")
@@ -43,7 +44,6 @@ public class Users {
     @Consumes("application/xml")
     @Secured
     @RolesAllowed("admin")
-    //todo return proper errors to client when failing
     public Response createOrUpdate(String incomingXML) {
             try {
                 Document doc = Utils.createDocumentFromString(incomingXML);
@@ -108,10 +108,10 @@ public class Users {
     @GET
     @Secured
     @Path("/delete/{id : [0-9]+}")
-    public Response deleteTask(@PathParam("id") String id) {
-        //todo: implement this
+    public Response deleteTask(@PathParam("id") String id) throws ClassNotFoundException, SQLException, InstantiationException, ParserConfigurationException, IllegalAccessException {
         System.out.println("deleting user id = " + id);
-        throw new NotImplementedException();
+        JDBC.deleteUser(id);
+        return Response.ok().build();
     }
 
 

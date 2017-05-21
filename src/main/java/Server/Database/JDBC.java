@@ -107,6 +107,10 @@ public class JDBC {
         return Utils.mergeDocs(docs);
     }
 
+    public static void deleteUser(String userId) throws ClassNotFoundException, SQLException, InstantiationException, ParserConfigurationException, IllegalAccessException {
+        getInstance().conn.createStatement().executeUpdate("delete from users where id = " + userId);
+    }
+
     private static boolean needToQuote(String str) {
         if (str.matches("^(\\d+|true|false|NULL)$")) {
             return false;
