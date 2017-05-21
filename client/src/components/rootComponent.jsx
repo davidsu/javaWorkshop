@@ -55,6 +55,7 @@ class rootComponent extends React.Component {
                 return <Task {...store.getCurrentTask()}
                     onClose={taskController.goToTasks}
                     createOrUpdate={taskController.createOrUpdateTask}
+                    deleteTask={taskController.deleteTask}
                     shouldEnableTaskEdit={/Admin|Requester/.test(store.getUserType())}></Task>
             case /users/.test(store.getActiveMenu()):
                 return <Users users={store.getUsers()}

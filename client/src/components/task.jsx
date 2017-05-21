@@ -48,9 +48,17 @@ class task extends React.Component {
         this.rollBackChanged = e => this.props.shouldEnableTaskEdit && this.setState({rollBack: !this.state.rollBack})
         this.urgentChanged = e => this.props.shouldEnableTaskEdit && this.setState({urgent: !this.state.urgent})
         this.additionalInfoChanged = e => {console.log(e.target.value); this.props.shouldEnableTaskEdit && this.setState({additionalInfo: e.target.value})}
+        this.deleteClicked = this.deleteClicked.bind(this);
         this.onClose = () => props.onClose()
     }
 
+    deleteClicked() {
+        if (this.isEmptyTask) {
+            this.close()
+        } else {
+            this.props.deleteTask(this.props.task.id)
+        }
+    }
     
      submitClicked(){
         if (!_.every(['taskTypeId',
@@ -227,7 +235,14 @@ class task extends React.Component {
                                             <div className='col-sm-6'>
                                             </div>
                                             <div className='col-sm-6'>
-                                                <div className="col-sm-4 col-sm-offset-8" style={{paddingTop:'15px'}}>
+                                                <div className="col-sm-6" style={{paddingTop:'15px'}}>
+                                                    <input className="btn btn-lg btn-danger btn-block"
+                                                        onClick={this.deleteClicked}
+                                                        value={this.isEmptyTask ? 'Cancel' : 'Delete'} 
+                                                        {...this.disableUpdateButton}
+                                                        readOnly={true}/>
+                                                </div>
+                                                <div className="col-sm-6" style={{paddingTop:'15px'}}>
                                                     <input className="btn btn-lg btn-success btn-block"
                                                            onClick={this.submitClicked}
                                                            value={this.isEmptyTask ? 'Add Task' : 'Update'}

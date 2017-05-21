@@ -16,7 +16,6 @@ import java.util.logging.Logger;
  */
 @Path("/tasks")
 public class Tasks {
-    //todo return proper errors to client when failing - should we show the client a different screen if the filter is bad? currently we ignore invalid values in the filter.
 
     private static Logger logger = Logger.getLogger("javaWorkshop");
     @GET
@@ -115,10 +114,9 @@ public class Tasks {
         }
     }
 
-    //todo should we do something to prevent multiple actions on the same task ? (relevant also on multiple updates) - return proper error to indicate that the id doesn't exist
     @GET
     @Secured
-    @Path("/deleteTask")
+    @Path("/delete/{id : [0-9]+}")
     public Response deleteTask(@PathParam("id") String id) {
         if(!Utils.isNumeric(id))
         {

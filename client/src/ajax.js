@@ -24,6 +24,12 @@ function deleteUser(userId, success){
     })
     jqxhr.fail(defaultOops)
 }
+function deleteTask(taskId, success){
+    const jqxhr = $.get('tasks/delete/' + taskId, (data, status) => {
+        success();
+    })
+    jqxhr.fail(defaultOops)
+}
 //todo remove xmlUtils from here, stopr parsing the result here, let controllers do that instead
 function xmlToJsonArray(data, elementName){
     const parser = new DOMParser()
@@ -207,5 +213,6 @@ module.exports = {
     login,
     getUser,
     uploadFile,
-    deleteUser
+    deleteUser,
+    deleteTask
 }

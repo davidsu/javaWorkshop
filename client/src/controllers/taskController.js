@@ -37,6 +37,10 @@ function createOrUpdateTask(task, success){
     ajax.createOrUpdateTask(task, () => goToTasks())
 }
 
+function deleteTask(taskId) {
+    ajax.deleteTask(taskId, () => { goToTasks(undefined, store.getTasksMetadata().Page) })
+}
+
 const getActiveFilter = store.getTasksFilter
 
 module.exports = {
@@ -47,5 +51,6 @@ module.exports = {
     goToTasks,
     setCurrentTask,
     getTasksMetadata,
-    setTasksFilter
+    setTasksFilter,
+    deleteTask
 }
