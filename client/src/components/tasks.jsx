@@ -21,7 +21,7 @@ class tasks extends React.Component {
     filterChanged(evt, filters){
         this.props.setTasksFilter(filters)
         if(evt.key === 'Enter'){
-            this.props.refreshTasks()
+            this.props.refreshTasks(undefined, 1)
         }
     }
 
@@ -63,19 +63,7 @@ class tasks extends React.Component {
                 </FilterableTable>
                 <nav>
                     <ul className="pagination">
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                <span>&laquo;</span>
-                                <span className="sr-only">Previous</span>
-                            </a>
-                        </li>
                         {this.getPagination()}
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                <span>&raquo;</span>
-                                <span className="sr-only">Next</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
             </div>
