@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import sun.jvm.hotspot.oops.ExceptionTableElement;
 
 public class JDBC {
     //todo move logic from this class to the specific classes (the relevant classes for the logic)

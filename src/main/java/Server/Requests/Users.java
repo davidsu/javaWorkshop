@@ -5,7 +5,6 @@ import Server.Security.Secured;
 import Server.Security.SessionHandler;
 import Server.Utils;
 import org.w3c.dom.Document;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.ws.rs.*;
 import javax.annotation.security.RolesAllowed;
