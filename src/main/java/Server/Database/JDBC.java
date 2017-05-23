@@ -14,8 +14,6 @@ import java.util.HashMap;
 import org.apache.commons.lang.StringEscapeUtils;
 
 public class JDBC {
-    //todo move logic from this class to the specific classes (the relevant classes for the logic)
-    //todo do we need the dictionaries? how do we pass info from static tables (id or value)?
     private Connection conn;
     private static final int pageSize = 20;
     private static JDBC instance = null;
@@ -353,33 +351,5 @@ public class JDBC {
         Document resDoc = Utils.createDocumentFromResultSet((ResultSetImpl) rs, "task");
         Document[] docs = {pageDoc, resDoc};
         return Utils.mergeDocs(docs);
-    }
-
-    //todo delete this main - it was ever only about debugging
-    public static void main(String[] args) {
-        try {
-            JDBC jdbc = new JDBC();
-            ArrayList<String> cols = new ArrayList<String>() {{
-                add("a");
-                add("b");
-                add("c");
-                add("additionalInfo");
-            }};
-            ArrayList<String> vals = new ArrayList<String>() {{
-                add("val1");
-                add("val2");
-                add("val3");
-                add("555");
-            }};
-            String vv = jdbc.buildProtectedInsertCommand("xxx", cols, vals);
-            //Document doc = jdbc.getFilteredTasks(null, null, null, "2017-03-10","2017-03-20", 1);
-
-            //Document doc = jdbc.getUsers();
-            //System.out.println(Utils.DocumentToString(doc, true));
-        } catch (Exception ex) {
-            System.out.println("threw exception");
-            System.out.println(ex);
-            // handle the error
-        }
     }
 }
