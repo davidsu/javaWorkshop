@@ -48,3 +48,7 @@ you may now run the build script and open your browser in the url `localhost:999
 
 
 
+### Resources
+[initial specs file](https://docs.google.com/document/d/1R6Ug87oJscQ7fA0fw_LfXq90quj-QVgwCN1T3MKQ7FA/edit)
+[Program functionality file](https://docs.google.com/document/d/153SUs22-XVdvB4vqe8dW5so5oXgFDS-ecwxDQaL23t0/edit)
+[System architecture file](https://docs.google.com/document/d/1qE9lefUQwB58AUssr5YL_uT2vp7hU8sorGmTDJF8qJU/edit)

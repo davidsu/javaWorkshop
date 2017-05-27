@@ -1,9 +1,6 @@
 package Server.Security;
 
 import Server.GUID_Generator;
-import Server.Security.ActiveUser;
-import Server.Security.ActiveUserChecker;
-import Server.Security.Secured;
 
 import javax.annotation.Priority;
 import javax.ws.rs.NotAuthorizedException;
