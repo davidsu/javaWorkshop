@@ -85,6 +85,7 @@ INSERT INTO userTypes (userType) VALUES ('Admin');
 INSERT INTO userTypes (userType) VALUES ('Requester');
 INSERT INTO userTypes (userType) VALUES ('Executor');
 
+INSERT INTO users (full_name,type,email,password) VALUES ('Default Admin', 1, 'Admin', '5555');
 INSERT INTO users (full_name,type,email,password) VALUES ('David Susskind', 1, 'dchamud@gmail.com', 'bla');
 INSERT INTO users (full_name,type,email,password) VALUES ('Barak Obama', 2, 'barakobama@gmail.com',  'bla');
 INSERT INTO users (full_name,type,email,password) VALUES ('Luiz Inacio', 2, 'luizinacio@gmail.com', 'bla');
