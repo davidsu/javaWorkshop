@@ -68,7 +68,6 @@ CREATE TABLE tasks(
     files TEXT,
     assigneeId int,
     resolved_by_Id int,
-    -- you can't delete a user from the database without first assigning its tasks to some other user
     FOREIGN KEY (requesterId) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (assigneeId) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (resolved_by_Id) REFERENCES users(id) ON DELETE SET NULL,

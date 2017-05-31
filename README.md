@@ -9,9 +9,9 @@ manage tasks lifecycle: assignement, execution, qa...
 
 ## How to run
 the following explanations are applicable for Mac OSX. They likely work without any modifications on most UNIX systems. <br>
-If you need to run it on windows then, well, you're on your own.<br>
+If you need to run it on windows: <br>
 In this scenario please read the code contained in build.sh and run their equivalent for a windows cmdline.<br>
-I haven't tried but I hear that windows has now support for bash, it's a simple script and likely to work if indeed there is such a support on windows.<br>
+Windows should probably have by now a support for bash, it's a simple script and likely to work if indeed there is such a support on windows.<br>
 Else you may try running the sh script through [git bash](https://git-for-windows.github.io/), it might just work.
 
 
