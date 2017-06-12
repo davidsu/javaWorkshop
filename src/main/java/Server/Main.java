@@ -38,7 +38,8 @@ public class Main {
                 );
         config.register(MultiPartFeature.class);
         SessionHandler.init();
-
+        //Note - user testuser created in this init. curl should take the following form
+        //curl -H "Authorization: Bearer testuser" http://localhost:9998/users
 
         Server server = JettyHttpContainerFactory.createServer(baseUri, config);
         logger.info("***** Server status is UP *****");
