@@ -120,28 +120,6 @@ INSERT INTO priority (priorityName) VALUES ('Medium');
 INSERT INTO priority (priorityName) VALUES ('Low');
 INSERT INTO priority (priorityName) VALUES ('Irrelevant');
 
-DROP PROCEDURE IF EXISTS `addTask`;
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addTask`
-(
-    IN taskTypeId int,
-    IN productId int,
-    IN envId int,
-    IN requesterId int,
-    IN priorityId int,
-    IN open_date DATE,
-    IN statusId int,
-    IN qaGO bool,
-    IN rollBack bool,
-    IN urgent bool,
-    IN additionalInfo TEXT
-)
-BEGIN
-     INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)
-     VALUE (taskTypeId,productId,envId,requesterId,priorityId,open_date,NULL,statusId,qaGO,rollBack,urgent,additionalInfo,NULL,NULL);
-END;
-$$
-
 
 CREATE OR REPLACE VIEW v_Tasks AS
 SELECT t.id, open_date, statusName as status, exec_date, taskType
@@ -158,8 +136,6 @@ ORDER BY u.id;
 
 INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)
 VALUE (1, 1, 3, 2, 1, '2017-03-11', '2017-03-11', 1, 1, 1, 0, NULL, NULL, NULL);
-
--- CALL addTask (1, 2, 3, 1, 2, '2017-03-11',1, 1, 1, 0,'this is a test' );
 
 
 INSERT INTO tasks (taskTypeId,productId,envId,requesterId,priorityId,open_date,exec_date,statusId,qaGO,rollBack,urgent,additionalInfo,assigneeId,resolved_by_Id)

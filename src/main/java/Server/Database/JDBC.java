@@ -18,11 +18,6 @@ public class JDBC {
     private static final int pageSize = 20;
     private static JDBC instance = null;
 
-    private static HashMap<String, Integer> environmentsDict = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> prioritiesDict = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> statusesDict = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> taskTypesDict = new HashMap<String, Integer>();
-
     public JDBC() throws ClassNotFoundException, IllegalAccessException, InstantiationException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
         conn = DriverManager.getConnection("jdbc:mysql://localhost/java_workshop?autoReconnect=true&useSSL=false", "root", "");
@@ -32,33 +27,8 @@ public class JDBC {
     private static JDBC getInstance() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
         if (instance == null) {
             instance = new JDBC();
-            init();
         }
         return instance;
-    }
-
-    private static void init() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-        Connection conn = getInstance().conn;
-        ResultSet rs;
-        String _sql;
-        Statement stmt;
-
-        stmt = conn.createStatement();
-        _sql = "select * from environments";
-        rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, environmentsDict, 2, 1);
-        stmt = conn.createStatement();
-        _sql = "select * from priority";
-        rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, prioritiesDict, 2, 1);
-        stmt = conn.createStatement();
-        _sql = "select * from status";
-        rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, statusesDict, 2, 1);
-        stmt = conn.createStatement();
-        _sql = "select * from taskTypes";
-        rs = stmt.executeQuery(_sql);
-        Utils.resultSetToDictionary(rs, taskTypesDict, 2, 1);
     }
 
     public static <K, V> void StaticTableToDict(String tableName, HashMap<K, V> dict, int keyIndex, int valIndex) throws SQLException, ParserConfigurationException, InstantiationException, IllegalAccessException, ClassNotFoundException {
