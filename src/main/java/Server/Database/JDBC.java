@@ -170,28 +170,6 @@ public class JDBC {
 
     }
 
-    //builds an insert command with sql injection protection - currently only checks for the free text "additionalInfo" column (in Tasks)
-    private static String buildProtectedInsertCommand(String tableName, ArrayList<String> columns, ArrayList<String> values) throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, ParserConfigurationException {
-        String columnList = String.join(",", columns);
-        StringBuilder valuePlaceHolders = new StringBuilder();
-        for (int i = 0; i < columns.size(); i++) {
-            if (columns.get(i) == "additionalInfo") {
-                valuePlaceHolders.append("?,");
-            } else {
-                valuePlaceHolders.append(values.get(i) + ",");
-            }
-        }
-        valuePlaceHolders.setLength(valuePlaceHolders.length() - 1);
-        String insert = String.format("INSERT INTO %1s(%2s) VALUES(%3s)", tableName, columnList, valuePlaceHolders.toString());
-        PreparedStatement ps = getInstance().conn.prepareStatement(insert);
-        for (int i = 0; i < values.size(); i++) {
-            if (columns.get(i) == "additionalInfo") {
-                ps.setString(1, values.get(i));
-            }
-        }
-        return ps.toString();
-    }
-
     private static void updateTableFromDocument(Document doc, String tableName) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException, ParserConfigurationException {
         Node idNode;
         String id;

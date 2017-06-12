@@ -7,8 +7,6 @@ import _ from 'lodash'
 import DatePicker from 'react-datepicker';
 
 class task extends React.Component {
-    //todo: add files links on top of upload files button. remove upload file button for users that can only view the bloddy file. add a way to remove the file
-    //add file entry into the database and teach the server to handle these files    
     constructor(props) {
         super(props)
         this.state = {

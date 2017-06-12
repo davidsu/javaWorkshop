@@ -23,7 +23,6 @@ import java.util.Map;
 @Priority(Priorities.AUTHENTICATION)
 //http://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
 public class SessionHandler implements ContainerRequestFilter {
-    //todo implement the whole thing - add active user on login, provide a logout, verify active user upon request...
 
     private static HashMap<String, ActiveUser> activeUsers = new HashMap<>();
     private static Object locker = new Object();

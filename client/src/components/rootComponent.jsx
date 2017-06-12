@@ -51,7 +51,6 @@ class rootComponent extends React.Component {
                               onAddingTask={taskController.addNewTask}
                               refreshTasks={taskController.goToTasks}></Tasks>
             case /task:.*/.test(store.getActiveMenu()):
-                //todo find what logic lives in task and put it in task controller, pass as prop
                 return <Task {...store.getCurrentTask()}
                     onClose={taskController.goToTasks}
                     createOrUpdate={taskController.createOrUpdateTask}

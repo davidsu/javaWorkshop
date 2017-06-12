@@ -37,8 +37,6 @@ public class Main {
                         FileHandler.class
                 );
         config.register(MultiPartFeature.class);
-        //todo - (just a comment, nothing todo here) - note testuser created in this init. curl should take the following form
-        //curl -H "Authorization: Bearer testuser" http://localhost:9998/users
         SessionHandler.init();
 
 

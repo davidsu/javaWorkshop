@@ -95,7 +95,6 @@ public class Tasks {
         }
     }
 
-    //todo when adding a new task, the exec time is missing! (fails to add it) + we have to inforce values on mandatory fields getting a lot of failures because of missing values
     @POST
     @Secured
     @Path("/createOrUpdate")

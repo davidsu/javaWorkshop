@@ -5,15 +5,10 @@ import ajax from './ajax'
 import taskController from './controllers/taskController.js'
 import userController from './controllers/userController.js'
 
-// const init = userController.getUsers
-// init(() => {
-    ReactDOM.render(
-        <RootComponent></RootComponent>,
-        $('#root')[0]
-    )
-// })
-
-//todo add exec time to new tasks
+ReactDOM.render(
+    <RootComponent></RootComponent>,
+    $('#root')[0]
+)
 
 function prettyHtml(str = 'undefined') {
     var notIndented = str.replace(/</g, '\n<').replace(/([^\/]>)(.)/g, '$1\n$2').replace(/\u200b/g, '%u200B');
@@ -33,7 +28,6 @@ function prettyHtml(str = 'undefined') {
         } else if (val.indexOf('<') === 0 && !isBr) {
             changeIndent++;
         }
-        //val = '\'' + val + '\' +';
         var res = indentStr.repeat(indent) + val;
         if(!/\/>/.test(val)) {
             indent += changeIndent;

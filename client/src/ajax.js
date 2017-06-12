@@ -30,7 +30,7 @@ function deleteTask(taskId, success){
     })
     jqxhr.fail(defaultOops)
 }
-//todo remove xmlUtils from here, stopr parsing the result here, let controllers do that instead
+
 function xmlToJsonArray(data, elementName){
     const parser = new DOMParser()
     const xmlDoc = parser.parseFromString(data, 'text/xml');
@@ -62,7 +62,6 @@ function defaultOops(err){
     window.rootComponent && window.rootComponent.forceUpdate()
 }
 
-//todo onFail
 function getTasks(callback, page = 1, filters = {}){
     let filter = '&'
     _.forEach(filters, (val, key) => {
@@ -87,10 +86,6 @@ function getUserMetadata(callback, onFail = defaultOops){
         const usersMetadata = {
             userTypes: xmlToJsonArray(data, 'userTypeEntry')
         }
-        // store.setCurrentUser({
-        //     user: {},
-        //     userTypes: xmlToJsonArray(data, 'user')
-        // })
         callback(usersMetadata)
     })
     jqxhr.fail(onFail)
@@ -202,7 +197,7 @@ function getUser(userId, callback, onFail = defaultOops){
     })
     jqxhr.fail(onFail)
 }
-module.exports = {
+window.ajax = module.exports = {
     createOrUpdateUser,
     getTask,
     getTaskMetadata,
